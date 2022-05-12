@@ -6,6 +6,7 @@ export default function Home() {
       <Banner />
       <BestCollection />
       <NFTsFavorite />
+      <NFTCreator />
     </>
   );
 }
