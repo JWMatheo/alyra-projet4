@@ -147,7 +147,7 @@ const Card = styled.div`
   background-color: var(--body-color);
   padding: 1rem;
   border-radius: 0.25rem;
-  border-top: 5px solid var(--first-color-alt);
+  border-top: 3px solid var(--first-color);
   cursor: pointer;
   font-size: var(--normal-font-size);
 

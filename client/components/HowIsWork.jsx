@@ -23,7 +23,7 @@ const HowIsWork = () => {
         </Card>
 
         <Card>
-          <img src="https://opensea.io/static/images/icons/wallet.svg" alt="wallet" />
+          <img src="https://opensea.io/static/images/icons/collection.svg" alt="wallet" />
           <h3>Create your collection</h3>
           <p>
             Click{' '}
@@ -36,7 +36,7 @@ const HowIsWork = () => {
         </Card>
 
         <Card>
-          <img src="https://opensea.io/static/images/icons/wallet.svg" alt="wallet" />
+          <img src="https://opensea.io/static/images/icons/nft.svg" alt="wallet" />
           <h3>Add your NFTs</h3>
           <p>
             Upload your work (image, video, audio, or 3D art), add a title and description, and customize your NFTs with
@@ -45,7 +45,7 @@ const HowIsWork = () => {
         </Card>
 
         <Card>
-          <img src="https://opensea.io/static/images/icons/wallet.svg" alt="wallet" />
+          <img src="https://opensea.io/static/images/icons/sale.svg" alt="wallet" />
           <h3>List them for sale</h3>
           <p>
             Choose between auctions, fixed-price listings, and declining-price listings. You choose how you want to sell
