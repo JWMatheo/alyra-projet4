@@ -42,6 +42,13 @@ export const Section = styled.section`
       background-color: var(--first-color);
     }
   }
+
+  @media screen and (min-width: 1040px) {
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
 `;
 
 export const Button = styled.button`
