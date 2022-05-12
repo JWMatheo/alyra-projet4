@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { connectWallet } from '../../utils/authHandler';
 import { Button } from '../style';
 
 const Header = () => {
   const [toggle, setToggle] = useState(false);
   const [width, setWidth] = useState(0);
   const [sticky, setSticky] = useState(0);
-
+  
   useEffect(() => {
+
     setWidth(window.innerWidth);
 
     const headerObserver = new IntersectionObserver(handleSticky, {
@@ -51,7 +53,7 @@ const Header = () => {
   return (
     <Container sticky={sticky} stickyStyle={stickyStyle}>
       <Nav>
-        <a href="#" passHref>
+        <a href="/home" >
           NFT <span>Set</span>
         </a>
 
@@ -64,7 +66,7 @@ const Header = () => {
               <Link href="#team">Our Team</Link>
             </li>
             <li className="nav__item">
-              <Button>
+              <Button onClick={connectWallet}>
                 <Wallet>
                   <i className="bx bxs-wallet-alt" />
                   Connect

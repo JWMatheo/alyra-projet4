@@ -16,7 +16,7 @@ const HowIsWork = () => {
           <p>
             Once you’ve set up your wallet of choice, connect it to OpenSea by clicking the wallet icon in the top right
             corner. Learn about the{' '}
-            <Link target={'_blank'} href="">
+            <Link target={'_blank'} href="#">
               wallets we support
             </Link>{' '}
           </p>
@@ -27,7 +27,7 @@ const HowIsWork = () => {
           <h3>Create your collection</h3>
           <p>
             Click{' '}
-            <Link target={'_blank'} href="">
+            <Link target={'_blank'} href="#">
               My Collections
             </Link>{' '}
             and set up your collection. Add social links, a description, profile & banner images, and set a secondary

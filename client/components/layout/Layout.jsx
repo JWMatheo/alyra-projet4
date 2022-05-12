@@ -1,9 +1,32 @@
 import Head from 'next/head';
-import React from 'react';
+import { useEffect } from 'react';
+import { networkConnected } from '../../utils/authHandler';
 import Footer from './Footer';
 import Header from './Header';
 
 const Layout = ({ children }) => {
+  useEffect(() => {
+    const init = async () => {
+      // Check Network connected et Ru
+      const network = await networkConnected();
+
+      network !== 'rinkeby' && 'Notification';
+    };
+
+    // detect Network account change
+    window.ethereum.on('networkChanged', function (networkId) {
+      // If network is not 4, so rinkeby
+      if (networkId === 4) {
+        setAllow(true);
+      } else {
+        alert("This app doesn't work on mainet ethereum");
+        setAllow(false);
+      }
+    });
+
+    init();
+  }, []);
+
   return (
     <>
       <Head>
@@ -15,7 +38,7 @@ const Layout = ({ children }) => {
 
       <main>{children}</main>
 
-      <Footer/>
+      <Footer />
     </>
   );
 };
