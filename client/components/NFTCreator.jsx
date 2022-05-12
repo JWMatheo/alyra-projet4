@@ -5,7 +5,6 @@ import Slider from './Slider';
 import { Button, Section } from './style';
 
 const NFTCreator = () => {
-
   const settings = {
     640: {
       slidesPerView: 2,
@@ -129,18 +128,18 @@ const Container = styled.section`
     padding-bottom: 3rem;
   }
 
-  .swiper-pagination-bullet{
-  width: 1rem!important;
-  height: 3px!important;
-  border-radius: 0.5rem!important;
-  background: var(--first-color-alt)!important
-  /*background-color: var(--purple)!important;*/
-}
+  .swiper-pagination-bullet {
+    width: 1rem !important;
+    height: 3px !important;
+    border-radius: 0.5rem !important;
+    background: var(--first-color-alt) !important;
+    /*background-color: var(--purple)!important;*/
+  }
 
-.swiper-pagination-bullet-active{
-  width: 1.5rem!important;
-  background: var(--first-color)!important;
-}
+  .swiper-pagination-bullet-active {
+    width: 1.5rem !important;
+    background: var(--first-color) !important;
+  }
 `;
 
 const Card = styled.div`
@@ -150,12 +149,13 @@ const Card = styled.div`
   border-radius: 0.25rem;
   border-top: 5px solid var(--first-color-alt);
   cursor: pointer;
+  font-size: var(--normal-font-size);
 
-div{
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
+  div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
 
   img {
     width: 80px;

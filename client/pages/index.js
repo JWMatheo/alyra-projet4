@@ -1,5 +1,5 @@
 
-import { Banner, BestCollection, NFTCreator, NFTsFavorite } from '../components';
+import { Banner, BestCollection, HowIsWork, NFTCreator, NFTsFavorite } from '../components';
 export default function Home() {
   return (
     <>
@@ -7,6 +7,7 @@ export default function Home() {
       <BestCollection />
       <NFTsFavorite />
       <NFTCreator />
+      <HowIsWork/>
     </>
   );
 }
