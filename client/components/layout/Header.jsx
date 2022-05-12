@@ -16,7 +16,7 @@ const Header = () => {
       threshold: 0.9,
     });
 
-    // headerObserver.observe(document.querySelector('#banner'));
+   headerObserver.observe(document.querySelector('#banner'));
 
     window.addEventListener('resize', handleWidth);
     return () => {
