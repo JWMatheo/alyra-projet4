@@ -51,6 +51,52 @@ export const Section = styled.section`
   
 `;
 
+
+export const containerCard = () => {
+  return`
+  user-select: none;
+  width: 100%;
+  ${({ maxWidth }) =>
+    maxWidth &&
+    css`
+      max-width: 300px;
+    `}
+  border: 1px solid #ffffff22;
+  border-radius: 0.5rem;
+  background-color: #282c34;
+  background: linear-gradient(0deg, #282c34 0%, rgba(17, 0, 32, 0.5) 100%);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  overflow: hidden;
+  transition: 1s all;
+
+  & ::before {
+    content: '';
+    position: fixed;
+    box-shadow: 0 0 100px 40px #ffffff08;
+    top: -10%;
+    left: -130%;
+    transform: rotate(-45deg);
+    height: 60rem;
+    transition: 1s all;
+  }
+
+  &:hover {
+    border: 1px solid #ffffff44;
+    transform: scale(1.015);
+    filter: brightness(1.1);
+  }
+
+  &:hover ::before {
+    filter: brightness(0.5);
+    top: -100%;
+    left: 200%;
+  }
+  `
+}
+
+
+
 export const Button = styled.button`
   display: inline-block;
   background-color: var(--first-color);
@@ -81,4 +127,12 @@ export const Button = styled.button`
         transition: 0.7s;
       }
     `}
+`;
+
+export const largeLayout = css`
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+`;
+
+export const smallLayout = css`
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 `;

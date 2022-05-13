@@ -8,8 +8,8 @@ import koruko from '../public/assets/bestOf01.jpeg';
 import kagami from '../public/assets/bestOf2.jpeg';
 import aomine from '../public/assets/bestOf3.jpeg';
 
-export default function Explore() {
-  const [switchLayout, setSwitchLayout] = useState(false);
+export default function Explore({ setSwitchLayout, switchLayout }) {
+  
 
   const largeLayout = css`
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

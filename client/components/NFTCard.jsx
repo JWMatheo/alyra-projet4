@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { css } from 'styled-components';
 
-import { Button } from './style';
+import { Button, containerCard } from './style';
 
 const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, maxWidth }) => {
  const slug = NFTname.toLowerCase().trim()
@@ -47,45 +47,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
 };
 
 const Container = styled.div`
-  user-select: none;
-  width: 100%;
-  ${({ maxWidth }) =>
-    maxWidth &&
-    css`
-      max-width: 300px;
-    `}
-  //
-  border: 1px solid #ffffff22;
-  background-color: #282c34;
-  background: linear-gradient(0deg, #282c34 0%, rgba(17, 0, 32, 0.5) 100%);
-  border-radius: 0.7rem;
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
-  overflow: hidden;
-  transition: 1s all;
-
-  & ::before {
-    content: '';
-    position: fixed;
-    box-shadow: 0 0 100px 40px #ffffff08;
-    top: -10%;
-    left: -130%;
-    transform: rotate(-45deg);
-    height: 60rem;
-    transition: 1s all;
-  }
-
-  &:hover {
-    border: 1px solid #ffffff44;
-    transform: scale(1.015);
-    filter: brightness(1.1);
-  }
-
-  &:hover ::before {
-    filter: brightness(0.5);
-    top: -100%;
-    left: 200%;
-  }
+${containerCard}
 `;
 const Card = styled.div`
   user-select: none;
