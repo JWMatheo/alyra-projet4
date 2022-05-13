@@ -215,6 +215,7 @@ const Menu = styled.div`
       img {
         position: static;
         border-color: var(--dark-color);
+        width: 40px;
       }
     }
   }

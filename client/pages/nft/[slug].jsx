@@ -2,15 +2,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
-import { useRouter } from "next/router";
 import { Heading } from '../../components';
 import { Button, Section } from '../../components/style';
 import koruko from '../../public/assets/bestOf01.jpeg';
 
-export default function Nft({ slug, sensei, owner }) {
-  const router = useRouter();
+export default function Nft({ slug,  owner }) {
 
-  
   return (
     <>
       <Heading
