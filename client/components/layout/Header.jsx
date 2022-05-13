@@ -16,21 +16,32 @@ const Header = ({ isConnected, setIsConnected }) => {
       root: null,
       threshold: 0.9,
     });
+
     if (document.querySelector('#banner')) {
       headerObserver.observe(document.querySelector('#banner'));
-    }else{
-      setSticky(true)
+    } else {
+      setSticky(true);
     }
-
+    if (toggle) {
+      window.addEventListener('click', (e) => {
+        if (e.target !== document.querySelector('.button-sort')) {
+          setToggle(false);
+        }
+      });
+    }
     window.addEventListener('resize', handleWidth);
     return () => {
+      window.removeEventListener('click', setToggle(false));
       window.removeEventListener('resize', handleWidth);
     };
   }, [sticky]);
 
   // Handle Function Toggle
   const handleWidth = () => setWidth(window.innerWidth);
-  const handleToggle = () => setToggle(!toggle);
+  const handleToggle = (e) => {
+    e.stopPropagation();
+    setToggle(!toggle);
+  };
   // Handle Observer
   function handleSticky(entries) {
     const [entry] = entries;
@@ -64,14 +75,16 @@ const Header = ({ isConnected, setIsConnected }) => {
   return (
     <Container sticky={sticky} stickyStyle={stickyStyle}>
       <Nav>
-        <a href="/home">
-          NFT <span>Set</span>
-        </a>
+        <Link href={'/'}>
+          <a>
+            NFT <span>Set</span>
+          </a>
+        </Link>
 
         <Menu toggle={toggle} id="menu">
           <ul>
             <li className="nav__item">
-              <Link href="explore">Explore</Link>
+              <Link href="/explore">Explore</Link>
             </li>
             <li className="nav__item">
               <Link href="#team">Our Team</Link>

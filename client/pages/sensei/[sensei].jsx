@@ -82,6 +82,7 @@ const Container = styled.div`
 const ContainerProfil = styled.section`
   img {
     width: 120px;
+    box-shadow: var(--shadow);
   }
 
   p {
