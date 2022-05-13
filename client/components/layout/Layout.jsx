@@ -1,6 +1,10 @@
 import Head from 'next/head';
 import { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { networkConnected } from '../../utils/authHandler';
+import { notification } from '../../utils/notification';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -14,13 +18,13 @@ const Layout = ({ children }) => {
     };
 
     // detect Network account change
-    window.ethereum.on('networkChanged', function (networkId) {
+    window.ethereum.on('chainChanged', function (networkId) {
       // If network is not 4, so rinkeby
-      if (networkId === 4) {
-        setAllow(true);
+      console.log(typeof networkId);
+      if (networkId === '4') {
+        return notification('success', 'Good choose ! Welcome back 😃');
       } else {
-        alert("This app doesn't work on mainet ethereum");
-        setAllow(false);
+        return notification('warn', 'You doesn\'t use Rinkeby network');
       }
     });
 
@@ -36,7 +40,10 @@ const Layout = ({ children }) => {
 
       <Header />
 
-      <main>{children}</main>
+      <main>
+        {children}
+        <ToastContainer />
+      </main>
 
       <Footer />
     </>
