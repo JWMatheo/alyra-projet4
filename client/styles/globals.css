@@ -1,5 +1,5 @@
 /*=============== GOOGLE FONTS ===============*/
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
 /*=============== VARIABLES CSS ===============*/
 :root {
@@ -9,8 +9,8 @@
   /*Color mode HSL(hue, saturation, lightness)*/
   --first-color: hsl(175, 98%, 40%);
   --first-color-alt: hsl(175, 98%, 57%);
-  --dark-color: 	hsl(217, 60%, 19%);
-  --dark-color-alt: 	hsl(217, 89%, 15%);
+  --dark-color: hsl(217, 60%, 19%);
+  --dark-color-alt: hsl(217, 89%, 15%);
   --card-color: hsl(0, 0%, 90%);
   --title-color: hsl(206, 12%, 12%);
   --text-color: hsl(206, 4%, 42%);
@@ -25,9 +25,9 @@
   --h1-font-size: 1.5rem;
   --h2-font-size: 1.25rem;
   --h3-font-size: 1rem;
-  --normal-font-size: .938rem;
-  --small-font-size: .813rem;
-  --smaller-font-size: .75rem;
+  --normal-font-size: 0.938rem;
+  --small-font-size: 0.813rem;
+  --smaller-font-size: 0.75rem;
 
   /*========== Font weight ==========*/
   --font-bold: 700;
@@ -36,7 +36,7 @@
   --z-tooltip: 10;
   --z-fixed: 100;
   /*===== Shadow =====*/
-  --shadow: 0 4px 12px hsla(206, 4%, 4%, .2);
+  --shadow: 0 4px 12px hsla(206, 4%, 4%, 0.2);
 }
 
 @media screen and (min-width: 968px) {
@@ -46,8 +46,8 @@
     --h2-font-size: 1.5rem;
     --h3-font-size: 1.25rem;
     --normal-font-size: 1rem;
-    --small-font-size: .875rem;
-    --smaller-font-size: .813rem;
+    --small-font-size: 0.875rem;
+    --smaller-font-size: 0.813rem;
   }
 }
 
@@ -70,12 +70,17 @@ body {
   overflow-x: hidden;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   color: var(--title-color);
   font-weight: var(--font-bold);
 }
 
-h1, h2, h3, p {
+h1,
+h2,
+h3,
+p {
   line-height: 140%;
 }
 
@@ -97,4 +102,10 @@ button {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.hm_hyperModalContentWrapper .hm_hyperCloseIconWrapper {
+  width: 25px !important;
+  height: 25px !important;
+  font-weight: var(--font-bold);
 }

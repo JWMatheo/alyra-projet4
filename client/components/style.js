@@ -129,6 +129,40 @@ export const Button = styled.button`
     `}
 `;
 
+
+export const input = () => {
+  return`
+  input,textarea {
+    width: 100%;
+    height: 4rem;
+    display: block;
+    border: none;
+    font-family: inherit;
+    font-weight: 400;
+    font-size: 1rem;
+    padding: 0 1.5rem;
+    color: var(--dark-color);
+    background-color: var(--white-40);
+    border-radius: 0.5rem;
+    transition: border-color 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+    &::placeholder {
+      font-weight: 300;
+      color: var(--text-color-light);
+      opacity: 0.8;
+    }
+
+    &:focus,
+    &:focus-visible {
+      outline: 1px solid var(--dark-color-alt);
+    }
+  }
+
+  `
+}
+
 export const largeLayout = css`
 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 `;

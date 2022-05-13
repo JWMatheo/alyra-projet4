@@ -91,7 +91,9 @@ const Header = ({ isConnected, setIsConnected }) => {
             </li>
             <li className="nav__item">
               {isConnected ? (
+                <Link href={'/sensei/me'} passHref>
                 <img src="https://nftavatarmaker.com/assets/main-nft.png" />
+                </Link>
               ) : (
                 <Button onClick={connectWallet}>
                   <Wallet onClick={connectHandler}>
