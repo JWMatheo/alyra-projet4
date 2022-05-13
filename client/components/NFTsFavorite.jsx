@@ -49,10 +49,6 @@ const NFTContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   align-items: center;
   gap: 1rem;
-
-  @media screen and (max-width: 560px) {
-    transform: translateX(20%);
-  }
 `;
 
 export default NFTsFavorite;

@@ -38,6 +38,7 @@ const Container = styled.section`
       font-size: var(--biggest-font-size);
       color: var(--body-color);
       text-transform: uppercase;
+      text-align: center;
     }
   }
 `;

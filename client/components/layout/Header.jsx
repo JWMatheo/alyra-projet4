@@ -166,9 +166,9 @@ const Menu = styled.div`
       position: absolute;
       top: 4rem;
       right: 5rem;
-      width: 40px;
+      width: 60px;
       border-radius: 50%;
-      border: 3px solid var(--dark-color);
+      border: 3px solid var(--body-color);
       cursor: pointer;
 
       &:hover {
@@ -214,6 +214,7 @@ const Menu = styled.div`
 
       img {
         position: static;
+        border-color: var(--dark-color);
       }
     }
   }

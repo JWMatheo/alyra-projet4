@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
 import styled from 'styled-components';
 import { Filter, Heading, NFTCard } from '../../components';
 import NFTCollection from '../../components/NFTCollection';

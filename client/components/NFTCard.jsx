@@ -11,7 +11,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
  
   return (
     <Container maxWidth={maxWidth}>
-      <Link href={`nft/${slug}`}>
+      <Link href={`/nft/${slug}`}>
         <Card maxWidth={maxWidth}>
           <ContainerImage>
             <Image src={NFTimage} alt={alt} layout="intrinsic" />
