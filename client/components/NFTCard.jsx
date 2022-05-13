@@ -6,45 +6,55 @@ import { css } from 'styled-components';
 
 import { Button } from './style';
 
-const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator }) => {
+const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, maxWidth }) => {
+ const slug = NFTname.toLowerCase().trim()
+ 
   return (
-    <Container>
-      <Card>
-        <ContainerImage>
-          <Image src={NFTimage} alt={alt} layout="intrinsic" />
-        </ContainerImage>
+    <Container maxWidth={maxWidth}>
+      <Link href={`nft/${slug}`}>
+        <Card maxWidth={maxWidth}>
+          <ContainerImage>
+            <Image src={NFTimage} alt={alt} layout="intrinsic" />
+          </ContainerImage>
 
-        <ContainerData>
-          <div>
-            <h2>{NFTname} </h2>
-            <p>{description} </p>
-          </div>
-          <ContainerInfo>
-            <Price>
-              <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
-              <span>{price}</span>
-            </Price>
+          <ContainerData>
+            <div>
+              <h2>{NFTname} </h2>
+              <p>{description} </p>
+            </div>
+            <ContainerInfo>
+              <Price>
+                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
+                <span>{price}</span>
+              </Price>
 
-            <Time>
-              <i className="bx bxs-time" />
-              <span>{date}</span>
-            </Time>
-          </ContainerInfo>
+              <Time>
+                <i className="bx bxs-time" />
+                <span>{date}</span>
+              </Time>
+            </ContainerInfo>
 
-          <hr />
-          <ContainerAction>
-            <Link href="#">{creator}</Link>
-            <Button>Place a bid</Button>
-          </ContainerAction>
-        </ContainerData>
-      </Card>
+            <hr />
+            <ContainerAction>
+              <Link href="#">{creator}</Link>
+              <Button>Place a bid</Button>
+            </ContainerAction>
+          </ContainerData>
+        </Card>
+      </Link>
     </Container>
   );
 };
 
 const Container = styled.div`
   user-select: none;
-  max-width: 300px;
+  width: 100%;
+  ${({ maxWidth }) =>
+    maxWidth &&
+    css`
+      max-width: 300px;
+    `}
+  //
   border: 1px solid #ffffff22;
   background-color: #282c34;
   background: linear-gradient(0deg, #282c34 0%, rgba(17, 0, 32, 0.5) 100%);
@@ -59,7 +69,7 @@ const Container = styled.div`
     position: fixed;
     box-shadow: 0 0 100px 40px #ffffff08;
     top: -10%;
-    left: -100%;
+    left: -130%;
     transform: rotate(-45deg);
     height: 60rem;
     transition: 1s all;
@@ -79,16 +89,24 @@ const Container = styled.div`
 `;
 const Card = styled.div`
   user-select: none;
-  max-width: 300px;
+  width: 100%;
+  ${({ maxWidth }) =>
+    maxWidth &&
+    css`
+      max-width: 300px;
+    `}
+  //max-width: 300px;
   border: 1px solid #ffffff22;
   background-color: var(--dark-color);
   background: linear-gradient(0deg, hsl(217, 60%, 19%) 0%, hsla(217, 89%, 15%, 0.8) 100%);
   border-radius: 0.7rem;
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
-  overflow: hidden;
-  transition: 0.5s all;
   padding: 1rem;
+  overflow: hidden;
+  box-shadow: inset var(--shadow);
+  transition: 0.5s all;
+  cursor: pointer;
 `;
 
 const ContainerImage = styled.div`
@@ -154,6 +172,8 @@ const ContainerAction = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 `;
 
 export default NFTCard;

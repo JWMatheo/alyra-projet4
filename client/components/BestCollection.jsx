@@ -43,6 +43,7 @@ const BestCollection = () => {
       <Content id="best">
         <ContainerCard animated={animated}>
           <NFTCard
+            maxWidth={true}
             NFTimage={koruko}
             NFTname="Kuroko #1"
             alt="Koruko"
@@ -53,6 +54,7 @@ const BestCollection = () => {
           />
           <SecondCard id="second">
             <NFTCard
+              maxWidth={true}
               NFTimage={kagami}
               NFTname="Kagami #2"
               alt="Koruko"
@@ -65,6 +67,7 @@ const BestCollection = () => {
 
           <LastCard id="last">
             <NFTCard
+              maxWidth={true}
               NFTimage={aomine}
               NFTname="Aomine #3"
               alt="Koruko"

@@ -6,3 +6,4 @@ export { default as NFTCreator } from './NFTCreator';
 export { default as HowIsWork } from './HowIsWork';
 export { default as Heading } from './Heading';
 export { default as SearchBar } from './SearchBar';
+export { default as Filter } from './Filter';

@@ -166,7 +166,7 @@ const Menu = styled.div`
       position: absolute;
       top: 4rem;
       right: 5rem;
-      width: 50px;
+      width: 40px;
       border-radius: 50%;
       border: 3px solid var(--dark-color);
       cursor: pointer;

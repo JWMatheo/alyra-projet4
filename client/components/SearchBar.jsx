@@ -28,6 +28,7 @@ const SearchBar = () => {
 const Form = styled.form`
   position: relative;
   max-width: 750px;
+  width: 100%;
   margin: auto;
   height: max-content;
 
