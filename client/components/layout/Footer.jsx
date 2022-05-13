@@ -10,6 +10,7 @@ const Footer = () => {
 };
 
 const Container = styled.footer`
+  width: 100%;
   margin-top: 3rem;
   padding-block: 2rem;
   background: var(--dark-color);

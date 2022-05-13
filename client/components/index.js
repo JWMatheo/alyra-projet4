@@ -4,3 +4,5 @@ export { default as BestCollection } from './BestCollection';
 export { default as NFTsFavorite } from './NFTsFavorite';
 export { default as NFTCreator } from './NFTCreator';
 export { default as HowIsWork } from './HowIsWork';
+export { default as Heading } from './Heading';
+export { default as SearchBar } from './SearchBar';

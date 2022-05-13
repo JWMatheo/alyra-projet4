@@ -35,6 +35,8 @@
   /*========== z index ==========*/
   --z-tooltip: 10;
   --z-fixed: 100;
+  /*===== Shadow =====*/
+  --shadow: 0 4px 12px hsla(206, 4%, 4%, .2);
 }
 
 @media screen and (min-width: 968px) {

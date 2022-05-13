@@ -1,11 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
 import illutration from '../public/assets/illutration.jpg';
-import {Button} from './style'
-
+import { Button } from './style';
 
 const Banner = () => {
   return (
@@ -21,15 +21,17 @@ const Banner = () => {
             <Data>
               <h2>20K</h2>
               <h3>NFTs created</h3>
-              <p>Find your favorite NFT with  NFT's collection listed</p>
-              <Button>Explore</Button>
+              <p>Find your favorite NFT with NFT's collection listed</p>
+              <Button>
+                <Link href="explore">Explore</Link>
+              </Button>
             </Data>
 
             <Data>
               <h2>200</h2>
               <h3>Creators</h3>
               <p>Become a NFT creator easily with ous marketplace</p>
-              <Button outline={true} >Create</Button>
+              <Button outline={true}>Create</Button>
             </Data>
           </div>
         </Content>
