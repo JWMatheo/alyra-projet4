@@ -63,6 +63,11 @@ display: grid;
 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 gap: 2.5rem;
 margin: auto;
+
+@media screen and (min-width: 740px) {
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+}
 `;
 
 const Card = styled.div`

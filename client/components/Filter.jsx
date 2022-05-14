@@ -123,6 +123,7 @@ const ListOptions = styled.ul`
   //width: 100%;
   background: white;
   border-radius: 0.5rem;
+  z-index: var(--z-fixed);
 
   li {
     width: 100%;

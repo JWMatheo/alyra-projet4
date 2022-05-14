@@ -3,10 +3,9 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import HyperModal from 'react-hyper-modal';
-
 import Heading from './Heading';
 import { Button, input, Section } from './style';
-import { css } from 'styled-components';
+
 
 const NFTForm = () => {
   const [NFTImage, setNFTImage] = useState(null);
@@ -15,7 +14,7 @@ const NFTForm = () => {
   const [NFTPropertie, setNFTPropertie] = useState([1]);
 
   const clickHandler = () => hiddenFileInput.current.click();
-  const uploadHandler = (e) => e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));
+  const uploadHandler = (e) => {e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));}
   const resetUpload = () => setNFTImage(null);
 
   const handleModal = (e) => {
@@ -27,7 +26,7 @@ const NFTForm = () => {
 
   return (
     <>
-      <Heading image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg" title="Explore" />
+      <Heading image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg" title="Create collection" />
 
       <Section id="form">
         <h2 className="title">Create new collection </h2>
@@ -62,6 +61,7 @@ const NFTForm = () => {
               type="file"
               onChange={(e) => uploadHandler(e)}
               style={{ display: 'none' }}
+              multiple
             />
           </ContainerInputImage>
 
@@ -91,6 +91,9 @@ const NFTForm = () => {
               <i className="bx bxs-add-to-queue"></i>
             </Button>
           </ContainerProperties>
+
+
+          <Button style={{marginTop: '2rem'}}>Create</Button>
         </Form>
         <HyperModal isFullscreen={true} isOpen={isModalOpen} requestClose={handleModal}>
           <Section style={{ padding: '1rem' }}>

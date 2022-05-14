@@ -145,6 +145,10 @@ const ContainerTitle = styled.div`
   align-items: baseline;
   button {
     color: var(--dark-color);
+
+    &:hover {
+color: var(--dark-color);
+  }
   }
 `;
 
@@ -167,6 +171,8 @@ const ContainerProfil = styled.section`
   button i {
     font-size: 1.4rem;
   }
+
+
 `;
 
 const Form = styled.form`
