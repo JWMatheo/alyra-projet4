@@ -87,7 +87,7 @@ const Header = ({ isConnected, setIsConnected }) => {
               <Link href="/explore">Explore</Link>
             </li>
             <li className="nav__item">
-              <Link href="#team">Our Team</Link>
+              <Link href="/team">Our Team</Link>
             </li>
             <li className="nav__item">
               {isConnected ? (

@@ -104,8 +104,39 @@ button {
   cursor: pointer;
 }
 
+
+.swiper {
+  padding-bottom: 3rem;
+}
+
+.swiper-pagination-bullet {
+  width: 1rem !important;
+  height: 3px !important;
+  border-radius: 0.5rem !important;
+  background: var(--text-color) !important;
+  /*background-color: var(--purple)!important;*/
+  box-shadow: var(--shadow);
+}
+
+.swiper-pagination-bullet-active {
+  width: 1.5rem !important;
+  background: var(--first-color) !important;
+}
+
+
 .hm_hyperModalContentWrapper .hm_hyperCloseIconWrapper {
   width: 25px !important;
   height: 25px !important;
   font-weight: var(--font-bold);
+}
+
+#form .hm_hyperModalWrapper .hm_hyperModalContentWrapper {
+  width: 95% !important;
+  position: relative;
+}
+
+@media screen and (min-width: 710px) {
+  #form .hm_hyperModalWrapper .hm_hyperModalContentWrapper {
+    width: 80% !important;
+  }
 }

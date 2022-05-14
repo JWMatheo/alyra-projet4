@@ -1,8 +1,11 @@
 import React from 'react'
+import { NFTForm } from '../../components'
 
 const create = () => {
   return (
-    <div>create</div>
+    <div>
+        <NFTForm/>
+    </div>
   )
 }
 

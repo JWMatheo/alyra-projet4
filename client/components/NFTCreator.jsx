@@ -124,22 +124,7 @@ const Container = styled.section`
     color: var(--body-color);
   }
 
-  .swiper {
-    padding-bottom: 3rem;
-  }
 
-  .swiper-pagination-bullet {
-    width: 1rem !important;
-    height: 3px !important;
-    border-radius: 0.5rem !important;
-    background: var(--first-color-alt) !important;
-    /*background-color: var(--purple)!important;*/
-  }
-
-  .swiper-pagination-bullet-active {
-    width: 1.5rem !important;
-    background: var(--first-color) !important;
-  }
 `;
 
 const Card = styled.div`

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import styled from 'styled-components';
-import HyperModal, { ModalStack } from 'react-hyper-modal';
+import HyperModal from 'react-hyper-modal';
 import { useState } from 'react';
 
 import NFTCollection from './NFTCollection';
@@ -10,6 +10,7 @@ import kagami from '../public/assets/bestOf2.jpeg';
 import aomine from '../public/assets/bestOf3.jpeg';
 import NFTCard from './NFTCard';
 import Filter from './Filter';
+import Link from 'next/link';
 
 const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +43,11 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
         <section>
           <ContainerTitle>
             <h2 className="title">Collections</h2>
-            {senseiConnected && <Button outline={true}>New collection</Button>}
+            {senseiConnected && (
+              <Link href="/collection/create">
+                <Button outline={true}>New collection</Button>
+              </Link>
+            )}
           </ContainerTitle>
           <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
           <Container switchLayout={switchLayout} largeLayout={largeLayout} smallLayout={smallLayout}>
@@ -59,7 +64,11 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
         <section>
           <ContainerTitle>
             <h2 className="title">Items</h2>
-            {senseiConnected && <Button outline={true}>New item</Button>}
+            {senseiConnected && (
+              <Link href="/nft/create">
+                <Button outline={true}>New iten</Button>
+              </Link>
+            )}
           </ContainerTitle>
 
           <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
@@ -167,6 +176,7 @@ const Form = styled.form`
   gap: 1.5rem;
 
   ${input}
+
   textarea {
     height: 8rem;
     resize: vertical;

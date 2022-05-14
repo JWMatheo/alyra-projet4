@@ -16,7 +16,7 @@ const Container = styled.section`
   position: relative;
   width: 100vw;
   height: 250px;
-  margin-top: 4.5rem;
+  margin-top: 3rem;
   img {
     height: 100%;
     width: 100%;

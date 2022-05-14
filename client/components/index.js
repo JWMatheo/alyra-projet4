@@ -9,3 +9,4 @@ export { default as SearchBar } from './SearchBar';
 export { default as Filter } from './Filter';
 export { default as NFTCard } from './NFTCard';
 export { default as SenseiProfil } from './SenseiProfil';
+export { default as NFTForm } from './NFTForm';
