@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
-// https://nftavatarmaker.com/assets/main-nft.png
-function MyApp({ Component, pageProps }) {
+import sanity from '../lib/sanity';
+
+function MyApp({ Component, pageProps, data }) {
   const [isConnected, setIsConnected] = useState(false);
   const [switchLayout, setSwitchLayout] = useState(false);
-
-
+console.log(data);
 
   return (
     <Layout isConnected={isConnected} setIsConnected={setIsConnected}>
@@ -19,5 +19,6 @@ function MyApp({ Component, pageProps }) {
     </Layout>
   );
 }
+
 
 export default MyApp;

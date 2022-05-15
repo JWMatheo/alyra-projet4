@@ -23,7 +23,7 @@ const Banner = () => {
               <h3>NFTs created</h3>
               <p>Find your favorite NFT with NFT's collection listed</p>
               <Button>
-                <Link href="explore">Explore</Link>
+                <Link href="/explore">Explore</Link>
               </Button>
             </Data>
 
