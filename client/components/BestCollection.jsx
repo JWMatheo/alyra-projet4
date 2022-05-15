@@ -3,12 +3,10 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import NFTCard from './NFTCard';
 import { Button, Section } from './style';
-import koruko from '../public/assets/bestOf01.jpeg';
-import kagami from '../public/assets/bestOf2.jpeg';
-import aomine from '../public/assets/bestOf3.jpeg';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-const BestCollection = () => {
+const BestCollection = ({ bestNFTs }) => {
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
@@ -28,6 +26,36 @@ const BestCollection = () => {
     }
   }, [animated]);
 
+  // Day Left
+  const getDayLeft = (endDate) => {
+    const today = new Date();
+    const endDay = new Date(endDate);
+
+    const difference = today.getHours() - endDay.getHours();
+
+    if (difference === 0) return false;
+    if (difference < 0) return 'bid finished';
+    return `${difference.toString().slice(1)} day${difference > 1 && 's'} `;
+  };
+
+  const countdownMidnight = () => {
+    const day = new Date();
+    const hours = 24 - day.getHours();
+    const min = 60 - day.getMinutes();
+    const sec = 60 - day.getSeconds();
+
+    // add 0 if min or sec < 10
+    const customTime = (params) => {
+      if (params < 10) {
+        return (params = `0${params}`);
+      } else {
+        return params;
+      }
+    };
+
+    return `${hours}:${customTime(min)}:${customTime(sec)}`;
+  };
+
   return (
     <Section>
       <h2 className="title">Best week's collection </h2>
@@ -37,44 +65,57 @@ const BestCollection = () => {
           impedit distinctio unde velit mollitia. Neque, exercitationem error molestiae eum fugit eos harum illo ducimus
           incidunt unde quas facere. Quia aut animi provident fugiat et.
         </p>
-
-        <Button outline={true}>View Collection</Button>
+        <Link href={'/collection/kuroko-no-basket'}>
+          <Button outline={true}>View Collection</Button>
+        </Link>
       </DetailCollection>
       <Content id="best">
         <ContainerCard animated={animated}>
           <NFTCard
             maxWidth={true}
-            NFTimage={koruko}
-            NFTname="Kuroko #1"
-            alt="Koruko"
-            description="Our Kibertopiks will give you nothing"
-            price="1.3"
-            date="11 days left"
-            creator="ShonenJump"
+            NFTimage={bestNFTs[0].image}
+            NFTname={bestNFTs[0].name}
+            alt={bestNFTs[0].name}
+            description={bestNFTs[0].description}
+            price={bestNFTs[0].price}
+            date={`${
+              getDayLeft(bestNFTs[0].endOfAuction)
+                ? getDayLeft(bestNFTs[0].endOfAuction)
+                : countdownMidnight(getDayLeft(bestNFTs[0].endOfAuction))
+            } left`}
+            creator={bestNFTs[0].sensei.username}
           />
           <SecondCard id="second">
             <NFTCard
               maxWidth={true}
-              NFTimage={kagami}
-              NFTname="Kagami #2"
-              alt="Koruko"
-              description="Our Kibertopiks will give you nothing"
-              price="1.5"
-              date="11 days left"
-              creator="ShonenJump"
+              NFTimage={bestNFTs[2].image}
+              NFTname={bestNFTs[2].name}
+              alt={bestNFTs[2].name}
+              description={bestNFTs[2].description}
+              price={bestNFTs[2].price}
+              date={`${
+                getDayLeft(bestNFTs[2].endOfAuction)
+                  ? getDayLeft(bestNFTs[2].endOfAuction)
+                  : countdownMidnight(getDayLeft(bestNFTs[2].endOfAuction))
+              } left`}
+              creator={bestNFTs[2].sensei.username}
             />
           </SecondCard>
 
           <LastCard id="last">
             <NFTCard
               maxWidth={true}
-              NFTimage={aomine}
-              NFTname="Aomine #3"
-              alt="Koruko"
-              description="Our Kibertopiks will give you nothing"
-              price="2.3"
-              date="11 days left"
-              creator="ShonenJump"
+              NFTimage={bestNFTs[1].image}
+              NFTname={bestNFTs[1].name}
+              alt={bestNFTs[1].name}
+              description={bestNFTs[1].description}
+              price={bestNFTs[1].price}
+              date={`${
+                getDayLeft(bestNFTs[1].endOfAuction)
+                  ? getDayLeft(bestNFTs[1].endOfAuction)
+                  : countdownMidnight(getDayLeft(bestNFTs[1].endOfAuction))
+              } left`}
+              creator={bestNFTs[1].sensei.username}
             />
           </LastCard>
         </ContainerCard>

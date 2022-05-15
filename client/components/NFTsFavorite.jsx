@@ -4,41 +4,27 @@ import styled from 'styled-components';
 import NFTCard from './NFTCard';
 import { Section } from './style';
 
-import koruko from '../public/assets/bestOf01.jpeg';
-import kagami from '../public/assets/bestOf2.jpeg';
-import aomine from '../public/assets/bestOf3.jpeg';
-const NFTsFavorite = () => {
+import { countdownMidnight, getDayLeft } from '../utils/handlerFactory';
+
+const NFTsFavorite = ({ featuresNFT }) => {
+  console.log(featuresNFT);
   return (
     <Section>
       <h2 className="title">popular feature artwork</h2>
       <NFTContainer>
-        <NFTCard
-          NFTimage={koruko}
-          NFTname="Kuroko #1"
-          alt="Koruko"
-          description="Our Kibertopiks will give you nothing"
-          price="1.3"
-          date="11 days left"
-          creator="ShonenJump"
-        />
-        <NFTCard
-          NFTimage={kagami}
-          NFTname="Kagami #2"
-          alt="Koruko"
-          description="Our Kibertopiks will give you nothing"
-          price="1.5"
-          date="11 days left"
-          creator="ShonenJump"
-        />
-        <NFTCard
-          NFTimage={aomine}
-          NFTname="Aomine #3"
-          alt="Koruko"
-          description="Our Kibertopiks will give you nothing"
-          price="2.3"
-          date="11 days left"
-          creator="ShonenJump"
-        />
+        {featuresNFT.map((feature) => (
+          <NFTCard
+            key={feature._key}
+            maxWidth={true}
+            NFTimage={feature.image}
+            NFTname={feature.name}
+            alt={feature.name}
+            description={feature.description}
+            price={feature.price}
+            date={`${getDayLeft(feature.endOfAuction) ? getDayLeft(feature.endOfAuction) : countdownMidnight()} left`}
+            creator={feature.sensei.username}
+          />
+        ))}
       </NFTContainer>
     </Section>
   );
@@ -47,8 +33,16 @@ const NFTsFavorite = () => {
 const NFTContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-rows: 1fr;
   align-items: center;
   gap: 1rem;
+
+  & > div {
+    height: 100%;
+    & > div {
+      display: grid;
+    }
+  }
 `;
 
 export default NFTsFavorite;

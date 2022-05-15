@@ -4,18 +4,22 @@ import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 import { css } from 'styled-components';
+import { urlFor } from '../lib/sanity';
 
 import { Button, containerCard } from './style';
 
 const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, maxWidth }) => {
- const slug = NFTname.toLowerCase().trim()
- 
+ const slug = NFTname.toLowerCase().replaceAll(' ', '-')
+
+
   return (
     <Container maxWidth={maxWidth}>
       <Link href={`/nft/${slug}`}>
         <Card maxWidth={maxWidth}>
           <ContainerImage>
-            <Image src={NFTimage} alt={alt} layout="intrinsic" />
+         
+            <img src={NFTimage} alt={alt} />
+      
           </ContainerImage>
 
           <ContainerData>
@@ -25,7 +29,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
             </div>
             <ContainerInfo>
               <Price>
-                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
+                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt={slug} />
                 <span>{price}</span>
               </Price>
 
@@ -37,7 +41,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
 
             <hr />
             <ContainerAction>
-              <Link href="#">{creator}</Link>
+              <Link href={`/sensei/${creator}`}>{creator}</Link>
               <Button>Place a bid</Button>
             </ContainerAction>
           </ContainerData>
@@ -50,9 +54,12 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
 const Container = styled.div`
 ${containerCard}
 `;
+
+
 const Card = styled.div`
-  user-select: none;
   width: 100%;
+  height: 100%;
+  user-select: none;
   ${({ maxWidth }) =>
     maxWidth &&
     css`

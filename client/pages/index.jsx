@@ -1,37 +1,36 @@
-
 import { Banner, BestCollection, HowIsWork, NFTCreator, NFTsFavorite } from '../components';
-import sanity from '../lib/sanity'
+import { bestNFTsQuery, featuresQuery, NFTsQuery, senseiQuery } from '../lib/query';
+import { client } from '../lib/sanity';
 
-export default function Home({data}) {
-  console.log(data);
+export default function Home({ NFTs, allSenseis, bestNFTs, featuresNFT }) {
+
+  
   return (
     <>
       <Banner />
-      <BestCollection />
-      <NFTsFavorite />
+      <BestCollection bestNFTs={bestNFTs} />
+      <NFTsFavorite featuresNFT={featuresNFT} />
       <NFTCreator />
-      <HowIsWork/>
+      <HowIsWork />
     </>
   );
 }
 
-
 // This gets called on every request
 export async function getServerSideProps() {
-  const query = '*[ _type == "home"]';
-  const data = await sanity.fetch('*[ _type == "nft"]');
+  const NFTs = await client.fetch(NFTsQuery);
+  const allSenseis = await client.fetch(senseiQuery);
+  const result = await client.fetch(bestNFTsQuery);
+  const resultFeature = await client.fetch(featuresQuery);
+  const bestNFTs = result[0].nfts;
+ const featuresNFT = resultFeature[0].nfts
 
-  if (!data.length) {
-    return {
-      props: {
-        data: 'error',
-      },
-    };
-  } else {
-    return {
-      props: {
-        data,
-      },
-    };
-  }
+  return {
+    props: {
+      NFTs,
+      allSenseis,
+      bestNFTs,
+      featuresNFT,
+    },
+  };
 }
