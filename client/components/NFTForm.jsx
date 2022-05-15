@@ -3,9 +3,10 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import HyperModal from 'react-hyper-modal';
+
 import Heading from './Heading';
 import { Button, input, Section } from './style';
-
+import { css } from 'styled-components';
 
 const NFTForm = () => {
   const [NFTImage, setNFTImage] = useState(null);
@@ -14,7 +15,7 @@ const NFTForm = () => {
   const [NFTPropertie, setNFTPropertie] = useState([1]);
 
   const clickHandler = () => hiddenFileInput.current.click();
-  const uploadHandler = (e) => {e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));}
+  const uploadHandler = (e) => e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));
   const resetUpload = () => setNFTImage(null);
 
   const handleModal = (e) => {
