@@ -78,12 +78,13 @@ const BestCollection = ({ bestNFTs }) => {
             alt={bestNFTs[0].name}
             description={bestNFTs[0].description}
             price={bestNFTs[0].price}
+            slug={bestNFTs[0].slug.current}
             date={`${
               getDayLeft(bestNFTs[0].endOfAuction)
                 ? getDayLeft(bestNFTs[0].endOfAuction)
                 : countdownMidnight(getDayLeft(bestNFTs[0].endOfAuction))
             } left`}
-            creator={bestNFTs[0].sensei.username}
+            sensei={bestNFTs[0].sensei.username}
           />
           <SecondCard id="second">
             <NFTCard
@@ -93,12 +94,13 @@ const BestCollection = ({ bestNFTs }) => {
               alt={bestNFTs[2].name}
               description={bestNFTs[2].description}
               price={bestNFTs[2].price}
+              slug={bestNFTs[2].slug.current}
               date={`${
                 getDayLeft(bestNFTs[2].endOfAuction)
                   ? getDayLeft(bestNFTs[2].endOfAuction)
                   : countdownMidnight(getDayLeft(bestNFTs[2].endOfAuction))
               } left`}
-              creator={bestNFTs[2].sensei.username}
+              sensei={bestNFTs[2].sensei.username}
             />
           </SecondCard>
 
@@ -110,12 +112,13 @@ const BestCollection = ({ bestNFTs }) => {
               alt={bestNFTs[1].name}
               description={bestNFTs[1].description}
               price={bestNFTs[1].price}
+              slug={bestNFTs[1].slug.current}
               date={`${
                 getDayLeft(bestNFTs[1].endOfAuction)
                   ? getDayLeft(bestNFTs[1].endOfAuction)
                   : countdownMidnight(getDayLeft(bestNFTs[1].endOfAuction))
               } left`}
-              creator={bestNFTs[1].sensei.username}
+              sensei={bestNFTs[1].sensei.username}
             />
           </LastCard>
         </ContainerCard>
@@ -134,6 +137,21 @@ const Content = styled.div`
 const ContainerCard = styled.div`
   position: relative;
   z-index: var(--z-tooltip);
+
+  @media screen and (max-width: 460px) {
+    & > div {
+      width: 200px;
+
+      p{
+        height: 100px;
+      }
+
+      #image{
+        height: 180px;
+      }
+    }
+  }
+
 
   ${({ animated }) =>
     animated
@@ -154,6 +172,10 @@ const ContainerCard = styled.div`
             @media screen and (max-width: 610px) {
               right: 3rem;
             }
+
+            @media screen and (max-width: 410px) {
+              right: 2.5rem;
+            }
           }
 
           #last {
@@ -162,6 +184,10 @@ const ContainerCard = styled.div`
 
             @media screen and (max-width: 610px) {
               left: 3rem;
+            }
+
+            @media screen and (max-width: 410px) {
+              left: 2.5rem;
             }
           }
         `}

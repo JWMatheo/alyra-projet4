@@ -16,13 +16,14 @@ const NFTsFavorite = ({ featuresNFT }) => {
           <NFTCard
             key={feature._key}
             maxWidth={true}
+            slug={feature.slug.current}
             NFTimage={feature.image}
             NFTname={feature.name}
             alt={feature.name}
             description={feature.description}
             price={feature.price}
             date={`${getDayLeft(feature.endOfAuction) ? getDayLeft(feature.endOfAuction) : countdownMidnight()} left`}
-            creator={feature.sensei.username}
+            sensei={feature.sensei.username}
           />
         ))}
       </NFTContainer>
@@ -39,6 +40,8 @@ const NFTContainer = styled.div`
 
   & > div {
     height: 100%;
+    margin: auto;
+
     & > div {
       display: grid;
     }

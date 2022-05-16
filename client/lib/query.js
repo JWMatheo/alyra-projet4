@@ -5,6 +5,7 @@ name,
 price,
 ipfs,
 tokeId,
+slug,
 metadata,
 description,
 endOfAuction,
@@ -43,5 +44,7 @@ export const featuresQuery = `*[ _type == "features"]{
 }`;
 
 export const NFTQuery = (pageSlug) => {
-  return `*[_type == "nft" && slug.current == "${pageSlug}"][0]`;
+  return `*[_type == "nft" && slug.current == "${pageSlug}"][0]{
+    ${NFTsDetails}
+  }`;
 };

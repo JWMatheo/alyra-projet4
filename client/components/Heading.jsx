@@ -21,6 +21,7 @@ const Container = styled.section`
     height: 100%;
     width: 100%;
     object-fit: cover;
+    filter: grayscale(90%);
   }
 
   div {

@@ -1,6 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components';
 import { Button, Section } from '../../components/style';
@@ -14,27 +15,64 @@ export async function getServerSideProps(pageContext) {
 
   return {
     props: {
-      NftData
+      NftData,
+      name: NftData.name,
+      image: NftData.image,
+      description: NftData.description,
+      category: NftData.category,
+      collection: NftData.collection.name,
+      endOfAuction: NftData.endOfAuction,
+      ipfs: NftData.ipfs,
+      owner: NftData.otaku,
+      sensei: NftData.sensei,
+      metadata: NftData.metadata,
+      price: NftData.price,
+      sellable: NftData.sellable,
     },
   };
 }
 
-export default function Nft({ NftData }) {
-  console.log(NftData);
+export default function Nft({
+  name,
+  image,
+  collection,
+  description,
+  category,
+  endOfAuction,
+  ipfs,
+  owner,
+  sensei,
+  metadata,
+  price,
+  sellable,
+  NftData,
+}) {
+  const [priceUSDT, setpriceUSDT] = useState('');
+
+  useEffect(() => {
+    const convert = async () => {
+      const ethValue = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum')
+        .then((data) => data.json())
+        .then((result) => result[0].current_price);
+
+      setpriceUSDT(parseFloat(ethValue * price).toFixed(4));
+    };
+
+    setTimeout(() => {
+      convert();
+    }, 1000);
+  }, [price]);
 
   return (
     <>
-      <Heading
-        title="Kuroko #1"
-        image="https://www.japanfm.fr/wp-content/uploads/2020/12/Kurokos-Basketball-Saison-4-Pouvons-nous-nous-attendre-a-une-suite.jpg"
-      />
+      <Heading title={name} image={image} />
       <Section>
         <Container>
           <RightSide>
             <NFT>
               <TopNFT>
-                <Link href={`collection/${'NftData.name'}`}>
-                  <i>Kuroko No Basket</i>
+                <Link href={`collection/${collection}`}>
+                  <i>{collection}</i>
                 </Link>
                 <ContainerLike>
                   <i className="bx bx-heart" />
@@ -44,14 +82,14 @@ export default function Nft({ NftData }) {
                 </ContainerLike>
               </TopNFT>
               <ContainerImage>
-                <Image src={koruko} alt="" />
+                <img src={image} alt={`nft-${collection}-${name}`} />
               </ContainerImage>
               <BottomNFT>
                 <p>
-                  Owned by <Link href={`sensei/${'NftData.owner'}`}>NFT Set </Link>
+                  Owned by <Link href={`sensei/${owner}`}>NFT Set </Link>
                 </p>
                 <p>
-                  Sensei by <Link href={`/pages/sensei/1`}>Shonen Jump </Link>{' '}
+                  Sensei by <a href={`/sensei/${sensei.username.split(' ').join('')}`}>{sensei.username} </a>
                 </p>
               </BottomNFT>
             </NFT>
@@ -61,8 +99,10 @@ export default function Nft({ NftData }) {
                 <i>Current price</i>
                 <div>
                   <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
-                  <p>1.5</p>
-                  <span>(450 USDT)</span>
+                  <p>{price}</p>
+                  <span>
+                    (<b>{priceUSDT}</b> USDT)
+                  </span>
                 </div>
               </Price>
               <div>
@@ -79,19 +119,19 @@ export default function Nft({ NftData }) {
               <details>
                 <summary>Description</summary>
                 <br /> <hr /> <br />
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut cupiditate harum consequuntur inventore
-                sint! Et alias fugit maiores est doloribus odio! Delectus iure facilis maxime tenetur. Iusto, mollitia!
-                Voluptatem, officia.
+                <small>created by {sensei.username}</small>
+                <p>{description}</p>
               </details>
 
               <details>
                 <summary>Propreties</summary>
                 <br /> <hr /> <br />
                 <ul>
-                  <li>hair: blue</li>
-                  <li>team: Koruko</li>
-                  <li>eyes: blue</li>
-                  <li>post: fantom</li>
+                  {metadata.map((property) => (
+                    <li key={property._key}>
+                      {property.property}: {property.value}
+                    </li>
+                  ))}
                 </ul>
               </details>
 
@@ -115,6 +155,11 @@ const Container = styled.section`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-content: space-between;
   gap: 2rem;
+
+  h2 {
+    font-size: var(--h2-font-size);
+    color: var(--dark-color);
+  }
 `;
 
 const RightSide = styled.div`
@@ -150,6 +195,7 @@ const ContainerLike = styled.div`
   i {
     font-size: 1.2rem;
   }
+
   & > em::before {
     content: '';
     height: 10px;
@@ -164,12 +210,14 @@ const ContainerImage = styled.div`
   border-radius: 0.5rem;
   overflow-y: hidden;
   box-shadow: var(--shadow);
+
   &:hover {
     border: 1px solid #ffffff44;
     transform: scale(1.015);
     filter: brightness(1.02);
     transition: all 0.5s;
   }
+
   img {
     object-fit: cover;
   }
@@ -188,6 +236,7 @@ const BottomNFT = styled.div`
 const ContainerAction = styled.div`
   display: grid;
   gap: 2rem;
+
   & > div:last-child {
     display: flex;
     gap: 1.5rem;
@@ -234,5 +283,14 @@ const LeftSide = styled.div`
     border-radius: 0.5rem;
     color: var(--dark-color);
     font-size: var(--normal-font-size);
+
+    p {
+      font-size: var(--small-font-size);
+      color: var(--text-color);
+    }
+
+    small{
+      color: var(--first-color);
+    }
   }
 `;

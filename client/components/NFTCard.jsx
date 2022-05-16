@@ -8,18 +8,15 @@ import { urlFor } from '../lib/sanity';
 
 import { Button, containerCard } from './style';
 
-const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, maxWidth }) => {
- const slug = NFTname.toLowerCase().replaceAll(' ', '-')
-
-
+const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sensei, maxWidth }) => {
+ console.log(slug);
+ 
   return (
     <Container maxWidth={maxWidth}>
       <Link href={`/nft/${slug}`}>
         <Card maxWidth={maxWidth}>
-          <ContainerImage>
-         
+          <ContainerImage id='image'>
             <img src={NFTimage} alt={alt} />
-      
           </ContainerImage>
 
           <ContainerData>
@@ -41,7 +38,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
 
             <hr />
             <ContainerAction>
-              <Link href={`/sensei/${creator}`}>{creator}</Link>
+              <Link href={`/sensei/${sensei}`}>{sensei}</Link>
               <Button>Place a bid</Button>
             </ContainerAction>
           </ContainerData>
@@ -52,9 +49,8 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, creator, ma
 };
 
 const Container = styled.div`
-${containerCard}
+  ${containerCard}
 `;
-
 
 const Card = styled.div`
   width: 100%;
@@ -74,7 +70,7 @@ const Card = styled.div`
   -webkit-backdrop-filter: blur(7px);
   padding: 1rem;
   overflow: hidden;
-  box-shadow: inset var(--shadow);
+  box-shadow:  var(--shadow);
   transition: 0.5s all;
   cursor: pointer;
 `;
@@ -94,6 +90,11 @@ const ContainerData = styled.div`
   display: grid;
   gap: 1rem;
   margin-top: 1rem;
+
+  P {
+    height: 150px;
+    display: inline-block;
+  }
 
   h2 {
     color: var(--body-color);
