@@ -179,7 +179,6 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
  // le contrat est mis en pause,  ce qui permet au owner d'administrer ses nft, prix, nombre de mint que peut faire un acheteur
     // function ActiverContract(bool _contractEnPause) public onlyOwner {
     //     contractEnPause = _contractEnPause;
-
     // }
 }
 
