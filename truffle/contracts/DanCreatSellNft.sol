@@ -5,7 +5,7 @@
  dans la fonction _mint, la fonction _setTokenURI crée la correspondance  id <-> uri */
 // ipfs://ipfs/QmWpgK9kZNokMgLWSe8PSwN7FS4KgHuzBerRaYkMFyaST2/creerParMoiDatacopy
 
-pragma solidity 0.8.7;
+pragma solidity 0.8.13;
 
 import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol';
