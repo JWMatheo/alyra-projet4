@@ -19,20 +19,21 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 // 2 pour incrémenter u n id a chaque qu'on crée un token
 // import'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Counters.sol';
 import "@openzeppelin/contracts/utils/Counters.sol";
-// 6 
+// 6
 // import'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 // import'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol';
 import "@openzeppelin/contracts/utils/Strings.sol";
+
 //   using Counters for Counters.Counter; // Counter structure uint contenue dans la librairie Counters du fichier importé Counter.sol
- 
+
 //    Counters.Counter private idArticles; // création du compteur idArticles
 
 // ERC721URIStorage,
 
 contract MonNft is ERC721Enumerable {
     using Strings for uint256;
-    event CreatedURI(string _realisedURI, uint _tokenId);
+    event CreatedURI(string _realisedURI, uint256 _tokenId);
     string public extension = ".json";
     // uint256 public maxSupply= 20;
     string _baseCollectionURI;
@@ -42,54 +43,62 @@ contract MonNft is ERC721Enumerable {
     // bool public _AffCollection = false; // front pour hidden collection
 
     using Counters for Counters.Counter; // Counter structure uint contenue dans la librairie Counters du fichier importé Counter.sol
- 
+
     Counters.Counter private _tokenId; // création du compteur idArticles
 
-    constructor (string memory _Collectionname,
-                 string memory _Collectionsymbol,
-                 string memory _CollectionBaseUri,
-                 address _marketplaceAddres) ERC721(_Collectionname,_Collectionsymbol){
-
+    constructor(
+        string memory _Collectionname,
+        string memory _Collectionsymbol,
+        string memory _CollectionBaseUri,
+        address _marketplaceAddres
+    ) ERC721(_Collectionname, _Collectionsymbol) {
         _baseCollectionURI = _CollectionBaseUri;
         setMarketplaceAddress(_marketplaceAddres);
     }
-function setMarketplaceAddress(address _marketplaceAddres) public {
-  _marketPlaceAdress = _marketplaceAddres;
-}
-function setApprovalForAll(address operator, bool approved) public virtual override(ERC721, IERC721) {
+
+    function setMarketplaceAddress(address _marketplaceAddres) public {
+        _marketPlaceAdress = _marketplaceAddres;
+    }
+
+    function setApprovalForAll(address operator, bool approved)
+        public
+        virtual
+        override(ERC721, IERC721)
+    {
         _setApprovalForAll(NFTcreators, operator, approved);
     }
-function transferFrom(
+
+    function transferFrom(
         address from,
         address to,
         uint256 tokenId
     ) public virtual override(ERC721, IERC721) {
         //solhint-disable-next-line max-line-length
-        require(_isApprovedOrOwner(from, tokenId), "ERC721: transfer caller is not owner nor approved");
+        require(
+            _isApprovedOrOwner(from, tokenId),
+            "ERC721: transfer caller is not owner nor approved"
+        );
 
         _transfer(from, to, tokenId);
     }
-address NFTcreators;
 
-function mint(address ownerOfNFTContratIs) public returns(uint){
-    _tokenId.increment();     
-    uint256 id = _tokenId.current();
-    NFTcreators = ownerOfNFTContratIs;
-    _mint(ownerOfNFTContratIs, id);
-    return (id);
-    // string memory _uri;
-    // require(!contractEnPause,"Attendre l'ouverture de la creation");      
+    address NFTcreators;
+
+    function mint(address ownerOfNFTContratIs) public returns (uint256) {
+        _tokenId.increment();
+        uint256 id = _tokenId.current();
+        NFTcreators = ownerOfNFTContratIs;
+        _mint(ownerOfNFTContratIs, id);
+        return (id);
+        // string memory _uri;
+        // require(!contractEnPause,"Attendre l'ouverture de la creation");
         // _uri= tokenURI(id);
         // _setTokenURI(id, _uri);
         // Collection[id]=Article(id,msg.sender,_uri, _prix,address(0));
-   // }
-}
+        // }
+    }
 
-
-
-
-
-// fonction qui retourne à partir de l'index , un tableau du nombre de  token détenus par un propriétaire 
+    // fonction qui retourne à partir de l'index , un tableau du nombre de  token détenus par un propriétaire
     // function walletOfowner(address _owner) view public returns(uint256[] memory) {
 
     //     // balance des tokens du propriétaire
@@ -106,8 +115,7 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
     // return tokenIds;
     // }
 
-
-  /**   BaseURI
+    /**   BaseURI
      * @dev Base URI for computing {tokenURI}. If set, the resulting URI for each
      * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
      * by default, can be overridden in child contracts.
@@ -122,7 +130,7 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
     //     baseURI = _baseUri;
     // }
 
-   /**   Vient de URIstorage.sol
+    /**   Vient de URIstorage.sol
      * @dev Sets `_tokenURI` as the tokenURI of `tokenId`.
      *
      * Requirements:
@@ -134,12 +142,18 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
     //     _tokenURIs[tokenId] = _tokenURI;
     // }
 
-
-
     // renvoie le uri du token
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-
-        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        require(
+            _exists(tokenId),
+            "ERC721Metadata: URI query for nonexistent token"
+        );
 
         // if (_AffCollection==false){
 
@@ -147,18 +161,28 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
         // }
         // localisation de l'image dans l'ipfs
 
-        return (bytes(_baseCollectionURI).length > 0 ? string(abi.encodePacked(_baseCollectionURI, tokenId.toString(), extension)) : "");
-        
-      //  return bytes(actual).length > 0 ? string(abi.encodePacked(actual, tokenId.toString(), extension)) : "";
+        return (
+            bytes(_baseCollectionURI).length > 0
+                ? string(
+                    abi.encodePacked(
+                        _baseCollectionURI,
+                        tokenId.toString(),
+                        extension
+                    )
+                )
+                : ""
+        );
+
+        //  return bytes(actual).length > 0 ? string(abi.encodePacked(actual, tokenId.toString(), extension)) : "";
     }
 
- // pour autorisation affichage collection only owner
+    // pour autorisation affichage collection only owner
     // function EnabledAff()public onlyOwner {
     //         _AffCollection=true;
 
     // }
 
- // pour cacher affichage collection only owner
+    // pour cacher affichage collection only owner
     // function DisabledAff()public onlyOwner {
     //         _AffCollection=false;
 
@@ -176,23 +200,8 @@ function mint(address ownerOfNFTContratIs) public returns(uint){
 
     // }
 
- // le contrat est mis en pause,  ce qui permet au owner d'administrer ses nft, prix, nombre de mint que peut faire un acheteur
+    // le contrat est mis en pause,  ce qui permet au owner d'administrer ses nft, prix, nombre de mint que peut faire un acheteur
     // function ActiverContract(bool _contractEnPause) public onlyOwner {
     //     contractEnPause = _contractEnPause;
     // }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
