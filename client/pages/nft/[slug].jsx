@@ -4,9 +4,23 @@ import React from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components';
 import { Button, Section } from '../../components/style';
+import { NFTQuery } from '../../lib/query';
+import { client } from '../../lib/sanity';
 import koruko from '../../public/assets/bestOf01.jpeg';
 
-export default function Nft({ slug,  owner }) {
+// This gets called on every request
+export async function getServerSideProps(pageContext) {
+  const NftData = await client.fetch(NFTQuery(pageContext.query.slug));
+
+  return {
+    props: {
+      NftData
+    },
+  };
+}
+
+export default function Nft({ NftData }) {
+  console.log(NftData);
 
   return (
     <>
@@ -19,7 +33,7 @@ export default function Nft({ slug,  owner }) {
           <RightSide>
             <NFT>
               <TopNFT>
-                <Link href={`collection/${slug}`}>
+                <Link href={`collection/${'NftData.name'}`}>
                   <i>Kuroko No Basket</i>
                 </Link>
                 <ContainerLike>
@@ -34,10 +48,10 @@ export default function Nft({ slug,  owner }) {
               </ContainerImage>
               <BottomNFT>
                 <p>
-                  Owned by <Link href={`sensei/${owner}`}>NFT Set </Link>
+                  Owned by <Link href={`sensei/${'NftData.owner'}`}>NFT Set </Link>
                 </p>
                 <p>
-                  Sensei by <Link href={`/sensei/1`}>Shonen Jump </Link>{' '}
+                  Sensei by <Link href={`/pages/sensei/1`}>Shonen Jump </Link>{' '}
                 </p>
               </BottomNFT>
             </NFT>

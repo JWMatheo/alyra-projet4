@@ -28,9 +28,7 @@ export const NFTsQuery = `*[ _type == "nft"]{
    ${NFTsDetails}
 }`;
 
-
 export const senseiQuery = `*[ _type == "otaku"]`;
-
 
 export const bestNFTsQuery = `*[ _type == "best"]{
     nfts[]->{
@@ -38,9 +36,12 @@ export const bestNFTsQuery = `*[ _type == "best"]{
     }
 }`;
 
-
 export const featuresQuery = `*[ _type == "features"]{
   nfts[]->{
     ${NFTsDetails}
   }
 }`;
+
+export const NFTQuery = (pageSlug) => {
+  return `*[_type == "nft" && slug.current == "${pageSlug}"][0]`;
+};
