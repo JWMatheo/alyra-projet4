@@ -10,19 +10,27 @@ contract Market {
 
     struct Listing {
         ListingStatus status;
+        address Creator;
         address seller;
         address tokenContract;
-        address Creator;
         uint tokenId;
         uint price;
         string collection;
         string JSONTokenURI;
     }
+    struct MyBuyedNFT {
+        address tokenContract;
+        uint tokenId;
+        string collection;
+        string JSONTokenURI;
+        uint myindex;
+    }
  
-// ajouter aux event Creator
+
     event  Showed(
         ListingStatus status,
         uint listingId,
+        address Creator,
         address seller,
         address token,
         uint tokenId,
@@ -33,6 +41,7 @@ contract Market {
     event  Listed(
         ListingStatus status,
         uint listingId,
+        address Creator,
         address seller,
         address token,
         uint tokenId,
@@ -44,20 +53,24 @@ contract Market {
     event Buyed(
         ListingStatus status,
         uint listingId,
-        address buyer,
+        address Creator,
+        address seller,
         address token,
         uint tokenId,
         uint price,
+        string collection,
         string JSONTokenURI
     );
 
     event Cancelled(
         ListingStatus status,
         uint listingId,
+        address Creator,
         address seller,
         address token,
         uint tokenId,
         uint price,
+        string collection,
         string JSONTokenURI
     );
     
@@ -72,9 +85,9 @@ contract Market {
     uint private _defaultPrice = 1000 ether;
     address private _factoryAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
     mapping(uint=>Listing) private _listings;
-    mapping(address =>address[]) CollectionsOfOwner;
-    mapping(uint=>address[]) SellActivty;
-    mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser;
+    mapping(address =>address[]) CollectionsOfOwner; // stocke les collections créer par une addresse
+    mapping(uint=>address[]) SellActivty; // stocke pour 1 NFT donné, la liste des addresses ayant ete en possesion du nft
+    mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser; // stocke Uniquement les NFT achetés.
     // mapping(address=>uint[]) private _listingsOfCollection;
     // mapping (address=>uint[])) collection; // tableau des tokenID d'une collection pour les afficher sur la pages collections. on commence par l'addresse du contrat pour éviter les problèmes si 2 noms identiques.
 
@@ -92,6 +105,11 @@ contract Market {
     function getListOfNFTfromUser(address _youraddress) public view returns(MyBuyedNFT[] memory) {
         return ListOfNFTfromUser[_youraddress];
     }
+    // _thisCollection provient du frontend
+    function addItemToCollection(address _thisCollection) public {
+        uint _tokenId = MonNft(_thisCollection).mint(msg.sender);
+        showToken(_thisCollection, _tokenId);
+    } 
     // function isListingExist(uint _thelistingId) internal view returns(bool) {
     //     return _listings[_thelistingId].tokenContract != address(0);
     // }
@@ -105,8 +123,8 @@ contract Market {
         Listing memory listing = Listing(
             ListingStatus.Showable,
             msg.sender,
-            _tokenContract,
             msg.sender,
+            _tokenContract,
             _tokenId,   
             _defaultPrice,
             _collectionName,
@@ -115,7 +133,7 @@ contract Market {
 
         _listingId++;
         _listings[_listingId] = listing;
-        emit Showed(listing.status ,_listingId, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI);
+        emit Showed(listing.status ,_listingId, msg.sender, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI);
     }
 
     // function testPush(address _token, string calldata _collectionName) public view returns(uint[] memory) {
@@ -131,11 +149,13 @@ contract Market {
 
         listing.price = _price;
         listing.status = ListingStatus.Active;
+        //ERC721(listing.tokenContract).modifyNFTCreator(msg.sender);
         ERC721(listing.tokenContract).setApprovalForAll(testadress, _forApproved);
         IERC721(listing.tokenContract).transferFrom(msg.sender, testadress, listing.tokenId);   
 
-        emit Listed(listing.status ,_listingId, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);   
+        emit Listed(listing.status, _listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);   
     }
+    // Pour verifier si token bien supprime du tableau
     function deleteToken(address _precedentAcheteur, uint _indexOfDeletedItem) public view returns(MyBuyedNFT memory) {
         return ListOfNFTfromUser[_precedentAcheteur][_indexOfDeletedItem];
     }
@@ -149,6 +169,7 @@ contract Market {
         // Pour le front si listing.tokenContract = address(0) alors pas afficher else afficher
         // plutot un if require(listing.seller != listing.creator) // Ajouter address Creator dans la struct Listing
         // ListOfNFTfromUser[listing.seller].pull(indexOfNFt)
+        // si le vendeur est le créateur alors pas besoin de retirer de ListOfNFTfromUser 
         if (listing.seller != listing.Creator) {
             uint indexOfDeletedNFT;
             for (uint256 i = 0; i < lengthOfListOfNFTfromUser; i++) {
@@ -177,7 +198,7 @@ contract Market {
             lengthOfListOfNFTfromUser
         ));
 
-        emit Buyed(listing.status, listingId, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.JSONTokenURI);
+        emit Buyed(listing.status, listingId, listing.Creator, listing.seller, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
     }
 
     function cancel(uint listingId) public payable {
@@ -191,7 +212,7 @@ contract Market {
 
         IERC721(listing.tokenContract).transferFrom(address(this), msg.sender, listing.tokenId);
 
-        emit Cancelled(listing.status ,listingId, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.JSONTokenURI);
+        emit Cancelled(listing.status ,listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
     }
 
     function DeployMyNFT(
@@ -209,17 +230,5 @@ contract Market {
             SellActivty[_tokenId].push(msg.sender);
         }
     }
-
-    // _thisCollection provient du frontend
-    function addItemToCollection(address _thisCollection) public {
-        uint _tokenId = MonNft(_thisCollection).mint(msg.sender);
-        showToken(_thisCollection, _tokenId);
-    }  
-    struct MyBuyedNFT {
-        address tokenContract;
-        uint tokenId;
-        string collection;
-        string JSONTokenURI;
-        uint myindex;
-    }
+    
 }
