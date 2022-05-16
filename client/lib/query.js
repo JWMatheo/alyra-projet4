@@ -15,13 +15,17 @@ collection->{
 category -> {
   categories
 } ,
+"senseiRef": sensei._ref,
+"otakuRef": otaku._ref,
 sensei-> {
   address,
   username,
+  _id
 },
 otaku->{
   address,
   username,
+  _id
 },
 `;
 

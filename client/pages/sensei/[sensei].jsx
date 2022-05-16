@@ -1,6 +1,9 @@
 import { Heading, SenseiProfil } from '../../components';
+import { client } from '../../lib/sanity';
 
-export default function Sensei({ setSwitchLayout, switchLayout }) {
+export default function Sensei({ setSwitchLayout, switchLayout, data, slug }) {
+console.log(data, slug);
+
   return (
     <>
       <Heading
@@ -10,4 +13,18 @@ export default function Sensei({ setSwitchLayout, switchLayout }) {
       <SenseiProfil switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />;
     </>
   );
+}
+
+
+export async function getServerSideProps(pageContext) {
+  //pageContext.query.slug
+  console.log(pageContext.query.slug);
+  const data = await client.fetch(`*[_type == "nft" && otaku._ref == "${pageContext.query.sensei}" ]`);
+
+  return {
+    props: {
+      data,
+      slug: pageContext.query
+    },
+  };
 }

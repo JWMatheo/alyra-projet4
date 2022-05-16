@@ -66,7 +66,9 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
             <h2 className="title">Items</h2>
             {senseiConnected && (
               <Link href="/nft/create">
-                <Button outline={true}>New iten</Button>
+                <a>
+                  <Button outline={true}>New iten</Button>
+                </a>
               </Link>
             )}
           </ContainerTitle>
@@ -80,7 +82,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
               description="Our Kibertopiks will give you nothing"
               price="1.3"
               date="11 days left"
-              creator="ShonenJump"
+              sensei="ShonenJump"
             />
             <NFTCard
               NFTimage={kagami}
@@ -89,7 +91,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
               description="Our Kibertopiks will give you nothing"
               price="1.5"
               date="11 days left"
-              creator="ShonenJump"
+              sensei="ShonenJump"
             />
             <NFTCard
               NFTimage={aomine}
@@ -98,7 +100,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
               description="Our Kibertopiks will give you nothing"
               price="2.3"
               date="11 days left"
-              creator="ShonenJump"
+              sensei="ShonenJump"
             />
           </Container>
         </section>
@@ -147,8 +149,8 @@ const ContainerTitle = styled.div`
     color: var(--dark-color);
 
     &:hover {
-color: var(--dark-color);
-  }
+      color: var(--dark-color);
+    }
   }
 `;
 
@@ -171,8 +173,6 @@ const ContainerProfil = styled.section`
   button i {
     font-size: 1.4rem;
   }
-
-
 `;
 
 const Form = styled.form`

@@ -7,7 +7,7 @@ import { Heading } from '../../components';
 import { Button, Section } from '../../components/style';
 import { NFTQuery } from '../../lib/query';
 import { client } from '../../lib/sanity';
-import koruko from '../../public/assets/bestOf01.jpeg';
+
 
 // This gets called on every request
 export async function getServerSideProps(pageContext) {
@@ -28,6 +28,8 @@ export async function getServerSideProps(pageContext) {
       metadata: NftData.metadata,
       price: NftData.price,
       sellable: NftData.sellable,
+      ownerRef: NftData.otakuRef,
+      senseiRef: NftData.senseiRef,
     },
   };
 }
@@ -45,7 +47,8 @@ export default function Nft({
   metadata,
   price,
   sellable,
-  NftData,
+  senseiRef,
+  ownerRef,
 }) {
   const [priceUSDT, setpriceUSDT] = useState('');
 
@@ -62,6 +65,7 @@ export default function Nft({
       convert();
     }, 1000);
   }, [price]);
+
 
   return (
     <>
@@ -86,10 +90,10 @@ export default function Nft({
               </ContainerImage>
               <BottomNFT>
                 <p>
-                  Owned by <Link href={`sensei/${owner}`}>NFT Set </Link>
+                  Owned by <Link href={`/sensei/${ownerRef}`} passHref><a >{owner.username} </a></Link> 
                 </p>
                 <p>
-                  Sensei by <a href={`/sensei/${sensei.username.split(' ').join('')}`}>{sensei.username} </a>
+                  Sensei by <Link href={`/sensei/${senseiRef}`} passHref><a >{sensei.username} </a></Link> 
                 </p>
               </BottomNFT>
             </NFT>
