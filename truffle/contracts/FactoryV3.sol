@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
-import "./8_NFTtest2.sol";
+import "./5_NFTCopy.sol";
 
 contract NFTFactory {
     event Deploy(address _address);

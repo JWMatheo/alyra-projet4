@@ -149,7 +149,7 @@ contract Market {
 
         listing.price = _price;
         listing.status = ListingStatus.Active;
-        //ERC721(listing.tokenContract).modifyNFTCreator(msg.sender);
+        MonNft(listing.tokenContract).setAddressToMsgSenderOfListTokenFromMarketPlaceContract(msg.sender);
         ERC721(listing.tokenContract).setApprovalForAll(testadress, _forApproved);
         IERC721(listing.tokenContract).transferFrom(msg.sender, testadress, listing.tokenId);   
 
@@ -175,7 +175,7 @@ contract Market {
             for (uint256 i = 0; i < lengthOfListOfNFTfromUser; i++) {
                 if (listing.tokenContract == ListOfNFTfromUser[listing.seller][i].tokenContract && listing.tokenId == ListOfNFTfromUser[listing.seller][i].tokenId) {
                     indexOfDeletedNFT = i; 
-                    return;            
+                    break;            
                 }
             }
             // uint indexOfListOfNFTfromUser = ListOfNFTfromUser[listing.seller].myindex;
@@ -230,5 +230,9 @@ contract Market {
             SellActivty[_tokenId].push(msg.sender);
         }
     }
+
+     
+
+
     
 }

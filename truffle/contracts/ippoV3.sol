@@ -37,6 +37,7 @@ contract MonNft is ERC721Enumerable {
     // uint256 public maxSupply= 20;
     string _baseCollectionURI;
     address _marketPlaceAdress; // = MARKETPLACE ADDRESS;
+    address MsgSenderAddress;
     bool _approved = true;
     // bool public contractEnPause = true; // front pour hidden collection
     // bool public _AffCollection = false; // front pour hidden collection
@@ -56,8 +57,12 @@ contract MonNft is ERC721Enumerable {
 function setMarketplaceAddress(address _marketplaceAddres) public {
   _marketPlaceAdress = _marketplaceAddres;
 }
+function setAddressToMsgSenderOfListTokenFromMarketPlaceContract(address _MsgSenderAddress) public {
+    MsgSenderAddress = _MsgSenderAddress;
+}
+// Remplacer NFTcreators par une variable dynamique
 function setApprovalForAll(address operator, bool approved) public virtual override(ERC721, IERC721) {
-        _setApprovalForAll(NFTcreators, operator, approved);
+        _setApprovalForAll(MsgSenderAddress, operator, approved);
     }
 function transferFrom(
         address from,
