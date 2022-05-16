@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
-// import "./5_NFTCopy.sol";
-// import "./4_NFTFactory.sol";
-import "./FactoryV3.sol";
-import "./ippoV3.sol";
+import "./5_NFTCopy.sol";
+import "./4_NFTFactory.sol";
+// import "./FactoryV3.sol";
+// import "./ippoV3.sol";
 
 contract Market {
     enum ListingStatus {Showable, Active}
@@ -230,9 +230,5 @@ contract Market {
             SellActivty[_tokenId].push(msg.sender);
         }
     }
-
-     
-
-
     
 }
