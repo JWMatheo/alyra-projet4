@@ -104,6 +104,10 @@ button {
   cursor: pointer;
 }
 
+/* Modal  */
+.hm_hyperDimmerWrapper {
+  background-color: hsla(217, 60%, 19%, 0.7) !important;
+}
 
 .swiper {
   padding-bottom: 3rem;
@@ -133,6 +137,10 @@ button {
 #form .hm_hyperModalWrapper .hm_hyperModalContentWrapper {
   width: 95% !important;
   position: relative;
+}
+
+.hm_hyperModalContentWrapper {
+  max-width: 800px;
 }
 
 @media screen and (min-width: 710px) {

@@ -9,14 +9,12 @@ import kagami from '../public/assets/bestOf2.jpeg';
 import aomine from '../public/assets/bestOf3.jpeg';
 
 export default function Explore({ setSwitchLayout, switchLayout }) {
-  
-
   const largeLayout = css`
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   `;
 
   const smallLayout = css`
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   `;
 
   return (

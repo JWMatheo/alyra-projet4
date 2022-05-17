@@ -6,24 +6,13 @@ import HyperModal from 'react-hyper-modal';
 
 import Heading from './Heading';
 import { Button, input, Section } from './style';
-import { css } from 'styled-components';
+import {clickHandler, uploadHandler, resetUpload, handleModal} from '../utils/handlerFactory'
 
 const NFTForm = () => {
   const [NFTImage, setNFTImage] = useState(null);
   const hiddenFileInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [NFTPropertie, setNFTPropertie] = useState([1]);
-
-  const clickHandler = () => hiddenFileInput.current.click();
-  const uploadHandler = (e) => e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));
-  const resetUpload = () => setNFTImage(null);
-
-  const handleModal = (e) => {
-    !isModalOpen && e.preventDefault();
-    setIsModalOpen(!isModalOpen);
-  };
-
-
 
   return (
     <>
@@ -45,13 +34,13 @@ const NFTForm = () => {
               <div>
                 <ImageDisplay>
                   <img src={NFTImage} alt="new nft" />
-                  <i onClick={clickHandler} className="bx bxs-image" />
-                  <i onClick={resetUpload} className="bx bx-x" />
+                  <i onClick={() => clickHandler(hiddenFileInput)} className="bx bxs-image" />
+                  <i onClick={()=> resetUpload(setNFTImage)} className="bx bx-x" />
                   <div></div>
                 </ImageDisplay>
               </div>
             ) : (
-              <div onClick={clickHandler}>
+              <div onClick={() => clickHandler(hiddenFileInput)}>
                 <i className="bx bxs-image" />
               </div>
             )}
@@ -60,7 +49,7 @@ const NFTForm = () => {
               name="media"
               accept="image/*,video/*,audio/*,.glb,.gltf"
               type="file"
-              onChange={(e) => uploadHandler(e)}
+              onChange={(e) => uploadHandler(e, setNFTImage)}
               style={{ display: 'none' }}
               multiple
             />

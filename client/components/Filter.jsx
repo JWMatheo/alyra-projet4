@@ -1,28 +1,17 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { css } from 'styled-components';
+import { SelectForm } from './style';
+import { handlerClickOutSide, openHandler } from '../utils/handlerFactory';
 
 const Filter = ({ setSwitchLayout, switchLayout }) => {
   const [selected, setSelected] = useState(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      window.addEventListener('click', (e) => {
-        if (e.target !== document.querySelector('.button-sort')) {
-          setOpen(false);
-        }
-      });
-      return () => {
-        window.removeEventListener('click', setOpen(false));
-      };
-    }
+   handlerClickOutSide(open, setOpen, '.button-sort')
   }, [open]);
 
-  const openHandler = (event) => {
-    event.stopPropagation();
-    setOpen(!open);
-  };
+
 
   const ListItem = ({ value }) => {
     return (
@@ -37,8 +26,8 @@ const Filter = ({ setSwitchLayout, switchLayout }) => {
 
   return (
     <Container>
-      <SortBy open={open}>
-        <button id="button-sort" onClick={openHandler}>
+      <SelectForm open={open}>
+        <button id="button-sort" onClick={(e) => openHandler(e, setOpen, open)}>
           <a>{selected ? selected : 'Sort by'} </a>
           <i className={`bx bx-chevron-${open ? 'up' : 'down'}`} />
         </button>
@@ -54,7 +43,7 @@ const Filter = ({ setSwitchLayout, switchLayout }) => {
             <ListItem value="Oldest" />
           </ListOptions>
         )}
-      </SortBy>
+      </SelectForm>
 
       <ContainerGrid>
         <i
@@ -72,49 +61,6 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const SortBy = styled.div`
-  position: relative;
-  button {
-    width: max-content;
-    height: max-content;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    font-family: inherit;
-    user-select: none;
-    position: relative;
-    line-height: 1.5;
-    background-color: var(--body-color);
-    border: 1px solid var(--white-40);
-    font-family: inherit;
-    padding: 10px 18px;
-    transition: color 0.6s ease;
-    border-radius: 0.5rem;
-    box-shadow: var(--shadow);
-    cursor: pointer;
-
-    &:hover a {
-      color: var(--white);
-    }
-
-    a {
-      font-size: var(--normal-font-size);
-      color: var(--dark-color);
-    }
-    i {
-      font-size: var(--h2-font-size);
-    }
-  }
-
-  button {
-    ${({ open }) =>
-      open &&
-      css`
-        box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
-      `};
-  }
-`;
 
 const ListOptions = styled.ul`
   width: 11rem;

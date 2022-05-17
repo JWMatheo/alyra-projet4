@@ -163,6 +163,52 @@ export const input = () => {
   `
 }
 
+export const SelectForm = styled.div`
+  position: relative;
+
+  button {
+    width: max-content;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    font-family: inherit;
+    user-select: none;
+    position: relative;
+    line-height: 1.5;
+    background-color: var(--body-color);
+    border: 1px solid var(--white-40);
+    font-family: inherit;
+    padding: 10px 18px;
+    transition: color 0.6s ease;
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+
+    &:hover a {
+      color: var(--white);
+    }
+
+    a {
+      font-size: var(--normal-font-size);
+      color: var(--dark-color);
+    }
+    i {
+      font-size: var(--h2-font-size);
+    }
+  }
+
+  button {
+    ${({ open }) =>
+      open &&
+      css`
+        box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+      `};
+  }
+  `
+
+
 export const largeLayout = css`
 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 `;
