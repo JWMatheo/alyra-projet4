@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
-import "./5_NFTCopy.sol";
-import "./4_NFTFactory.sol";
-// import "./FactoryV3.sol";
-// import "./ippoV3.sol";
 
+import "./FactoryV3.sol";
+import "./ippoV3.sol";
+
+/// @title A NFT marketplace example
+/// @author JWMatheo - member of NFTSet Team
+/// @notice You can use this contract in order to build a marketplace Dapp
+/// @dev NFT marketplace contract. You need to deploy FactoryV3.sol first and implement the Factory address.
 contract Market {
     enum ListingStatus {Showable, Active}
 
@@ -26,7 +29,6 @@ contract Market {
         uint myindex;
     }
  
-
     event  Showed(
         ListingStatus status,
         uint listingId,
@@ -74,52 +76,88 @@ contract Market {
         string JSONTokenURI
     );
     
-    // ajouter modifier pour les requires;
-    // modifier isOwner(address _token, uint _tokenId) {
-    //     require(ERC721(_token).ownerOf((_tokenId)) == msg.sender, "Caller is not the token owner");
-    //     _;
-    // }
     uint private _buyedTokenCounter;
     bool _forApproved = true;
     uint private _listingId = 0;
     uint private _defaultPrice = 1000 ether;
-    address private _factoryAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
+    address private _factoryAddress;
     mapping(uint=>Listing) private _listings;
     mapping(address =>address[]) CollectionsOfOwner; // stocke les collections créer par une addresse
     mapping(uint=>address[]) SellActivty; // stocke pour 1 NFT donné, la liste des addresses ayant ete en possesion du nft
     mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser; // stocke Uniquement les NFT achetés.
-    // mapping(address=>uint[]) private _listingsOfCollection;
-    // mapping (address=>uint[])) collection; // tableau des tokenID d'une collection pour les afficher sur la pages collections. on commence par l'addresse du contrat pour éviter les problèmes si 2 noms identiques.
 
+    constructor (address factoryAdress) {
+        _factoryAddress = factoryAdress;
+    }
+
+    /**
+    * @notice Get the structure for a listed NFT.
+    * @dev  Get the structure from mapping a listed NFT Id.
+    * @param listingId The listed NFT Id to check.
+    * @return Listing structure of the entered listed NFT Id.
+    */
     function getListing(uint listingId) public view returns(Listing memory){
         return _listings[listingId];
     }
+
+    /**
+    * @notice Get all collection address created of an address.
+    * @dev  Get an array wich contains all collection address created for a given address.
+    * @param _yourAddress The address to check.
+    * @return address[] The array which contains all colection address.
+    */
     function getUserCollections(address _yourAddress) public view returns(address[] memory) {
         return CollectionsOfOwner[_yourAddress];
     }
-    // Obtenir l'historique d'achat
+
+    /**
+    * @notice Get sells activities from a NFT.
+    * @dev  Get an array wich contains all addresses having been in possession of the listed nft.
+    * @param listingId The listed NFT Id to check.
+    * @return address[] The array which contains all addresses having been in possession of the listed nft.
+    */
     function getSellActivity(uint listingId) public view returns(address[] memory){
         Listing memory listing = _listings[listingId];
         return SellActivty[listing.tokenId];
     }
+
+    /**
+    * @notice Get all the NFT purchased and currently owned.
+    * @dev  Get an array wich contains a structure for each NFT purchased && currently owned.
+    * @param _youraddress The address to check.
+    * @return MyBuyedNFT[] The array wich contains a structure for each NFT purchased && currently owned.
+    */
     function getListOfNFTfromUser(address _youraddress) public view returns(MyBuyedNFT[] memory) {
         return ListOfNFTfromUser[_youraddress];
     }
-    // _thisCollection provient du frontend
-    function addItemToCollection(address _thisCollection) public {
-        uint _tokenId = MonNft(_thisCollection).mint(msg.sender);
-        showToken(_thisCollection, _tokenId);
-    } 
-    // function isListingExist(uint _thelistingId) internal view returns(bool) {
-    //     return _listings[_thelistingId].tokenContract != address(0);
-    // }
 
-    // add showable function to make it showable but not to sale
+    /**
+    * @dev Verify that the listedId '_thelistingId' exist.
+    *
+    * Requirements:
+    *
+    * - Insert an existing listed NFT Id '_thelistingId'
+    */
+    modifier isListingExist(uint _thelistingId) {
+        require(_listings[_thelistingId].tokenContract != address(0), "Insert a valid listingId");
+        _;
+    }
+
+    /**
+    * @notice Make your NFT appear in the marketplace.
+    * @dev Create a 'Listing' structure to make your NFT appear in the marketplace.
+    * '_defaultPrice' in 'Listing' is set to prevent a potentially vulnerability attack.
+    *
+    * Requirements:
+    *
+    * - 'msg.sender' is the owner of the tokenId '_tokenId' at address '_tokenContract'
+    *
+    * Emits a {Showed} event. 
+    */
     function showToken(address _tokenContract, uint _tokenId) public {
         require(ERC721(_tokenContract).ownerOf((_tokenId)) == msg.sender, "Caller is not the token owner");
         string memory _collectionName = ERC721(_tokenContract).name();
         string memory _JSONTokenURI = MonNft(_tokenContract).tokenURI(_tokenId);
-        // collection[_token][_collectionName].push(_tokenId); // tester si ça s'ajoute bien au tableau
         Listing memory listing = Listing(
             ListingStatus.Showable,
             msg.sender,
@@ -136,16 +174,23 @@ contract Market {
         emit Showed(listing.status ,_listingId, msg.sender, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI);
     }
 
-    // function testPush(address _token, string calldata _collectionName) public view returns(uint[] memory) {
-    //     return (collection[_token][_collectionName]);
-    // }
-
-    function listToken(uint listingId, uint _price) external { // price is in wei
+    /**
+    * @notice List to sale your NFT in the marketplace.
+    * @dev Set a price and status to make the NFT buyable then transfer the NFT to the marketplace.
+    *
+    * Requirements:
+    *
+    * - 'msg.sender' is the owner of the tokenId 'listing.tokenId' at address 'listing.tokenContract'
+    * - The Nft is not already listed to sale
+    *
+    * Emits a {Listed} event. 
+    */
+    function listToken(uint listingId, uint _price) external isListingExist(listingId) {
         
         Listing storage listing = _listings[listingId];
         address testadress = address(this);
-        require(ERC721(listing.tokenContract).ownerOf((listing.tokenId)) == msg.sender, "You are not the owner77"); // vérifier require
-        require(listing.status == ListingStatus.Showable, "The NFT can't be listed to sell.");
+        require(ERC721(listing.tokenContract).ownerOf((listing.tokenId)) == msg.sender, "You are not the owner");
+        require(listing.status == ListingStatus.Showable, "The NFT is already to sell.");
 
         listing.price = _price;
         listing.status = ListingStatus.Active;
@@ -155,21 +200,29 @@ contract Market {
 
         emit Listed(listing.status, _listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);   
     }
-    // Pour verifier si token bien supprime du tableau
-    function deleteToken(address _precedentAcheteur, uint _indexOfDeletedItem) public view returns(MyBuyedNFT memory) {
-        return ListOfNFTfromUser[_precedentAcheteur][_indexOfDeletedItem];
-    }
-// mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser;
-    function buyToken(uint listingId) external payable{
+
+    /**
+    * @notice Buy a Nft.
+    * @dev Buy NFT function. Transfer the NFT to the msg.sender.
+    *
+    * Requirements:
+    *
+    * - The Nft is listed to sale,
+    * - Cannot buy your own NFT.
+    * - Send the good amount.
+    *
+    * Emits a {Buyed} event. 
+    */
+    function buyToken(uint listingId) external payable isListingExist(listingId) {
         Listing storage listing = _listings[listingId];
         uint lengthOfListOfNFTfromUser = ListOfNFTfromUser[listing.seller].length;
         require(listing.status == ListingStatus.Active, "Listing is not active");
         require(msg.sender != listing.seller, "seller cannot be buyer");
-        require(msg.value >= listing.price, "Insuficient amount");
+        require(msg.value == listing.price, "Insuficient amount");
         // Pour le front si listing.tokenContract = address(0) alors pas afficher else afficher
-        // plutot un if require(listing.seller != listing.creator) // Ajouter address Creator dans la struct Listing
-        // ListOfNFTfromUser[listing.seller].pull(indexOfNFt)
-        // si le vendeur est le créateur alors pas besoin de retirer de ListOfNFTfromUser 
+        /**
+        * @dev If Creator is the seller it doesn't delete 'MyBuyedNFT' structure beacause it doesn't exist.
+        */
         if (listing.seller != listing.Creator) {
             uint indexOfDeletedNFT;
             for (uint256 i = 0; i < lengthOfListOfNFTfromUser; i++) {
@@ -178,13 +231,12 @@ contract Market {
                     break;            
                 }
             }
-            // uint indexOfListOfNFTfromUser = ListOfNFTfromUser[listing.seller].myindex;
-            // ListOfNFTfromUser[listing.seller].myindex.delete(indexOfListOfNFTfromUser);
             delete ListOfNFTfromUser[listing.seller][indexOfDeletedNFT];
         }
-
+        
+        payable(listing.seller).transfer(listing.price);
         IERC721(listing.tokenContract).transferFrom(address(this), msg.sender, listing.tokenId);
-        payable(listing.seller).transfer(listing.price); // Tester si ca marche sans payable
+        
 
         listing.status = ListingStatus.Showable;
         listing.seller = msg.sender;
@@ -201,11 +253,21 @@ contract Market {
         emit Buyed(listing.status, listingId, listing.Creator, listing.seller, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
     }
 
-    function cancel(uint listingId) public payable {
+    /**
+    * @notice Cancel a listed to sale NFT.
+    * @dev Cancel a listed to sale NFT. Transfer back the NFT from Marketplace to the msg.sender.
+    *
+    * Requirements:
+    *
+    * - Only seller can cancel listing,
+    * - The NFT is listed to sale.
+    *
+    * Emits a {Cancelled} event. 
+    */
+    function cancel(uint listingId) public payable isListingExist(listingId) {
         Listing storage listing = _listings[listingId];
 
-        // require(ERC721(listing.token).ownerOf((listing.tokenId)) == msg.sender); // vérifier require. Marche probablement pas car le token est transferer a la marketplace qd lister
-        require(msg.sender == listing.seller, "Only seller can cancel listing"); // Solution alternative
+        require(msg.sender == listing.seller, "Only seller can cancel listing");
         require(listing.status == ListingStatus.Active, "Listing is not active");
 
         listing.status = ListingStatus.Showable;
@@ -215,7 +277,14 @@ contract Market {
         emit Cancelled(listing.status ,listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
     }
 
-    function DeployMyNFT(
+    /**
+    * @notice Deploy a NFT collection.
+    * @dev Deploy a NFT collection . Can be impove by letting user set his own _salt.
+    *
+    *
+    * Emits a {Showed} event. 
+    */
+    function DeployMyNFTCollection(
         string calldata _Collectionname,
         string calldata _Collectionsymbol,
         string calldata _CollectionBaseUri,
@@ -231,8 +300,14 @@ contract Market {
         }
     }
 
-     
-
-
-    
+    /**
+    * @notice Add a NFT to an existing collection.
+    * @dev  Triggers 'mint' function in the collection address '_thisCollection'.
+    * @param _thisCollection The collection address in wich the nft is added.
+    */
+    // _thisCollection provient du frontend en faisant un getUserCollections(msg.sender).call() puis pour chaque collection retourner : MonNft(_addresseSelectionne).name() pour afficher le nom des collection sur l'interface et recuper l'addresse selctionné par l'user 
+    function addItemToCollection(address _thisCollection) public {
+        uint _tokenId = MonNft(_thisCollection).mint(msg.sender);
+        showToken(_thisCollection, _tokenId);
+    }   
 }
