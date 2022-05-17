@@ -5,14 +5,13 @@ import styled, { css } from 'styled-components';
 import { connectWallet } from '../../utils/authHandler';
 import { Button } from '../style';
 
-const Header = ({ isConnected, setIsConnected }) => {
+const Header = ({ addressConnected, setAddressConnected }) => {
   const [toggle, setToggle] = useState(false);
   const [width, setWidth] = useState(0);
   const [sticky, setSticky] = useState(0);
-const [addressConnected, setAddressConnected] = useState()
+
 
   useEffect(() => {
-    setAddressConnected(window.ethereum.selectedAddress);
     setWidth(window.innerWidth);
 
     const headerObserver = new IntersectionObserver(handleSticky, {
@@ -72,7 +71,7 @@ const [addressConnected, setAddressConnected] = useState()
 
   const connectHandler = () => {
     const connected = connectWallet;
-    connected && setIsConnected(true);
+    connected && setAddressConnected(true);
   };
 
   return (
@@ -93,7 +92,7 @@ const [addressConnected, setAddressConnected] = useState()
               <Link href="/team">Our Team</Link>
             </li>
             <li className="nav__item">
-              {isConnected ? (
+              {addressConnected ? (
                 <Link href={`/sensei/me/${addressConnected}`} passHref>
                 <img src="https://nftavatarmaker.com/assets/main-nft.png" alt={`otaku-${addressConnected}`}/>
                 </Link>

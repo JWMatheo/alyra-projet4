@@ -35,6 +35,10 @@ export default function Create() {
   };
 
 
+  const mintNFT = () =>{
+    
+  }
+
   return (
     <>
       <Heading

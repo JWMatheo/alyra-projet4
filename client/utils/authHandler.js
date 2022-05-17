@@ -48,9 +48,9 @@ export const onChangeNetwork = () => {
 
 
 // Check if wallet is already connected
-export const walletConnected = (setIsConnected) => {
+export const walletConnected = (setAddressConnected) => {
   if (window.ethereum) {
-    window.ethereum.selectedAddress ? setIsConnected(true) : setIsConnected(false)
+    window.ethereum.selectedAddress ? setAddressConnected(window.ethereum.selectedAddress) : setAddressConnected(false)
   }
 };
 
