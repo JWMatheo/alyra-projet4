@@ -2,20 +2,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import styled from 'styled-components';
-import { css } from 'styled-components';
-import { urlFor } from '../lib/sanity';
+import styled, { css } from 'styled-components';
 
 import { Button, containerCard } from './style';
 
 const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sensei, maxWidth }) => {
- console.log(slug);
- 
   return (
     <Container maxWidth={maxWidth}>
       <Link href={`/nft/${slug}`}>
         <Card maxWidth={maxWidth}>
-          <ContainerImage id='image'>
+          <ContainerImage id="image">
             <img src={NFTimage} alt={alt} />
           </ContainerImage>
 
@@ -24,7 +20,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sense
               <h2>{NFTname} </h2>
               <p>{description} </p>
             </div>
-            <ContainerInfo>
+            <ContainerInfo id='info'>
               <Price>
                 <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt={slug} />
                 <span>{price}</span>
@@ -36,8 +32,8 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sense
               </Time>
             </ContainerInfo>
 
-            <hr />
             <ContainerAction>
+            <hr />
               <Link href={`/sensei/${sensei}`}>{sensei}</Link>
               <Button>Place a bid</Button>
             </ContainerAction>
@@ -49,7 +45,44 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sense
 };
 
 const Container = styled.div`
-  ${containerCard}
+user-select: none;
+  width: 100%;
+  ${({ maxWidth }) =>
+    maxWidth &&
+    css`
+      max-width: 300px;
+    `}
+  border: 1px solid #ffffff22;
+  border-radius: 0.5rem;
+  background-color: #282c34;
+  background: linear-gradient(0deg, #282c34 0%, rgba(17, 0, 32, 0.5) 100%);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  overflow: hidden;
+  transition: 1s all;
+
+  & ::before {
+    content: '';
+    position: fixed;
+    box-shadow: 0 0 100px 40px #ffffff08;
+    top: -10%;
+    left: -250%;
+    transform: rotate(-45deg);
+    height: 60rem;
+    transition: 1s all;
+  }
+
+  &:hover {
+    border: 1px solid #ffffff44;
+    transform: scale(1.015);
+    filter: brightness(1.1);
+  }
+
+  &:hover ::before {
+    filter: brightness(0.5);
+    top: -100%;
+    left: 200%;
+  }
 `;
 
 const Card = styled.div`
@@ -70,7 +103,7 @@ const Card = styled.div`
   -webkit-backdrop-filter: blur(7px);
   padding: 1rem;
   overflow: hidden;
-  box-shadow:  var(--shadow);
+  box-shadow: var(--shadow);
   transition: 0.5s all;
   cursor: pointer;
 `;
@@ -90,10 +123,12 @@ const ContainerData = styled.div`
   display: grid;
   gap: 1rem;
   margin-top: 1rem;
+  grid-template-rows: 200px 1fr;
 
   P {
-    height: 150px;
+    height: 100%;
     display: inline-block;
+   // overflow: hidden
   }
 
   h2 {
@@ -111,6 +146,7 @@ const ContainerData = styled.div`
 const ContainerInfo = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 3rem;
 
   span {
     font-size: var(--normal-font-size);

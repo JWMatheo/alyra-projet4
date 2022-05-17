@@ -31,7 +31,7 @@ export const countdownMidnight = () => {
 // Handle onClick image's input
 export const clickHandler = (hiddenFileInput) => hiddenFileInput.current.click();
 // Display image uploaded
-export const uploadHandler = (e, setNFTImage) => e.target.files[0] && setNFTImage(URL.createObjectURL(e.target.files[0]));
+export const uploadHandler = (e, setNFTImage) => e.target.files[0] && setNFTImage(e.target.files);
 // Reset image's input
 export const resetUpload = (setNFTImage) => setNFTImage(null);
 // Handler modal

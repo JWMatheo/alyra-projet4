@@ -75,7 +75,7 @@ export const containerCard = () => {
     position: fixed;
     box-shadow: 0 0 100px 40px #ffffff08;
     top: -10%;
-    left: -130%;
+    left: -250%;
     transform: rotate(-45deg);
     height: 60rem;
     transition: 1s all;
