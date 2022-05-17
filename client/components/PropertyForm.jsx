@@ -17,7 +17,7 @@ const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
     <Form style={{ height: '350px' }}>
       {NFTImage ? (
         <ContainerImage>
-          <img src={NFTImage} alt="new nft" />
+          <img src={URL.createObjectURL(NFTImage[0])} alt="new nft" />
         </ContainerImage>
       ) : (
         <p style={{ marginBottom: '2rem', color: 'crimson' }}>You don't upload your NFT image</p>

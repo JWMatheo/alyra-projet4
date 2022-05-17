@@ -7,14 +7,13 @@ import { Section } from './style';
 import { countdownMidnight, getDayLeft } from '../utils/handlerFactory';
 
 const NFTsFavorite = ({ featuresNFT }) => {
-  console.log(featuresNFT);
   return (
     <Section>
       <h2 className="title">popular feature artwork</h2>
       <NFTContainer>
-        {featuresNFT.map((feature) => (
+        {featuresNFT.map((feature, index) => (
           <NFTCard
-            key={feature._key}
+            key={index}
             maxWidth={true}
             slug={feature.slug.current}
             NFTimage={feature.image}

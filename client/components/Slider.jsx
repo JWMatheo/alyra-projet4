@@ -11,6 +11,7 @@ const Slider = ({ children, settings }) => {
       pagination={{
         clickable: true,
       }}
+      centeredSlides = {true}
       grabCursor={true}
       breakpoints={settings}
       modules={[Pagination]}

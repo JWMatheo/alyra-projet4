@@ -57,7 +57,7 @@ export default function Create() {
             {NFTImage ? (
               <div>
                 <ImageDisplay>
-                  <img src={NFTImage} alt="new nft" />
+                  <img src={URL.createObjectURL(NFTImage[0])} alt="new nft" />
                   <i onClick={() => clickHandler(hiddenFileInput)} className="bx bxs-image" />
                   <i onClick={() => resetUpload(setNFTImage)} className="bx bx-x" />
                   <div></div>
@@ -75,7 +75,6 @@ export default function Create() {
               type="file"
               onChange={(e) => uploadHandler(e, setNFTImage)}
               style={{ display: 'none' }}
-              multiple
             />
           </ContainerInputImage>
 

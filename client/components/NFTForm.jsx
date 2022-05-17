@@ -6,7 +6,9 @@ import HyperModal from 'react-hyper-modal';
 
 import Heading from './Heading';
 import { Button, input, Section } from './style';
-import {clickHandler, uploadHandler, resetUpload, handleModal} from '../utils/handlerFactory'
+import { clickHandler, uploadHandler, resetUpload, handleModal } from '../utils/handlerFactory';
+import { SwiperSlide } from 'swiper/react';
+import Slider from './Slider';
 
 const NFTForm = () => {
   const [NFTImage, setNFTImage] = useState(null);
@@ -14,9 +16,29 @@ const NFTForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [NFTPropertie, setNFTPropertie] = useState([1]);
 
+  const settings = {
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 20,
+    },
+    1024: {
+      slidesPerView: 4,
+      spaceBetween: 20,
+    },
+  };
+
+
+
   return (
     <>
-      <Heading image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg" title="Create collection" />
+      <Heading
+        image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg"
+        title="Create collection"
+      />
 
       <Section id="form">
         <h2 className="title">Create new collection </h2>
@@ -33,9 +55,9 @@ const NFTForm = () => {
             {NFTImage ? (
               <div>
                 <ImageDisplay>
-                  <img src={NFTImage} alt="new nft" />
+                  <img src={URL.createObjectURL(NFTImage[0])} alt="new nft" />
                   <i onClick={() => clickHandler(hiddenFileInput)} className="bx bxs-image" />
-                  <i onClick={()=> resetUpload(setNFTImage)} className="bx bx-x" />
+                  <i onClick={() => resetUpload(setNFTImage)} className="bx bx-x" />
                   <div></div>
                 </ImageDisplay>
               </div>
@@ -46,7 +68,7 @@ const NFTForm = () => {
             )}
             <input
               ref={hiddenFileInput}
-              name="media"
+              name="files[]"
               accept="image/*,video/*,audio/*,.glb,.gltf"
               type="file"
               onChange={(e) => uploadHandler(e, setNFTImage)}
@@ -77,21 +99,36 @@ const NFTForm = () => {
               </div>
             </div>
 
-            <Button onClick={handleModal} outline={true}>
+            <Button onClick={(e) => handleModal(e, setIsModalOpen, isModalOpen)} outline={true}>
               <i className="bx bxs-add-to-queue"></i>
             </Button>
           </ContainerProperties>
 
-
-          <Button style={{marginTop: '2rem'}}>Create</Button>
+          <Button style={{ marginTop: '2rem' }}>Create</Button>
         </Form>
-        <HyperModal isFullscreen={true} isOpen={isModalOpen} requestClose={handleModal}>
+        <HyperModal
+          isFullscreen={true}
+          isOpen={isModalOpen}
+          requestClose={(e) => handleModal(e, setIsModalOpen, isModalOpen)}>
           <Section style={{ padding: '1rem' }}>
             <h2 className="title">Add properties</h2>
             <p>
               Properties show up underneath your item, are clickable, and can be filtered in your collection's sidebar.
             </p>
-            <Form style={{ height: '350px', overflow: 'scroll' }}>
+            <Form style={{ height: '350px' }}>
+              {NFTImage ? (
+                <Slider settings={settings}>
+                 { [...NFTImage].map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <ContainerImage>
+                      <img src={URL.createObjectURL(image)} alt="new nft" />
+                    </ContainerImage>
+                  </SwiperSlide>
+                  ))}
+                </Slider>
+              ) : (
+                <p style={{ marginBottom: '2rem', color: 'crimson' }}>You don't upload your NFT image</p>
+              )}
               {NFTPropertie.map((property, index) => (
                 <PropertieModal key={index}>
                   <div>
@@ -135,6 +172,9 @@ const Form = styled.form`
     color: crimson;
   }
 
+  .swiper-slide{
+max-width: 140px;
+  }
   #save {
     position: absolute;
     left: 50%;
@@ -296,6 +336,20 @@ const PropertieModal = styled.div`
     input {
       border-radius: 0 0.5rem 0.5rem 0;
     }
+  }
+`;
+
+const ContainerImage = styled.div`
+  width: 80px;
+  height: 80px;
+  border-radius: 0.5rem;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border: 2px solid var(--dark-color);
+    border-radius: 0.5rem;
   }
 `;
 export default NFTForm;
