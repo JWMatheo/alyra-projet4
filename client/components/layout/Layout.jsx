@@ -1,22 +1,11 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { networkConnected, onChangeNetwork, walletConnected } from '../../utils/authHandler';
 import Footer from './Footer';
 import Header from './Header';
 
-const Layout = ({ children, isConnected, setIsConnected }) => {
-  useEffect(() => {
-    const init = async () => {
-      networkConnected();
-      onChangeNetwork();
-      walletConnected(setIsConnected);
-    };
+const Layout = ({ children, addressConnected, setAddressConnected }) => {
 
-    init();
-  }, []);
 
   return (
     <>
@@ -36,7 +25,7 @@ const Layout = ({ children, isConnected, setIsConnected }) => {
         />
       </Head>
 
-      <Header isConnected={isConnected} setIsConnected={setIsConnected} />
+      <Header addressConnected={addressConnected} setAddressConnected={setAddressConnected} />
 
       <main>
         {children}

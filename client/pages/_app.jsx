@@ -1,18 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
+import { networkConnected, onChangeNetwork, walletConnected } from '../utils/authHandler';
 
 function MyApp({ Component, pageProps }) {
-  const [isConnected, setIsConnected] = useState(false);
+  const [addressConnected, setAddressConnected] = useState(false);
   const [switchLayout, setSwitchLayout] = useState(false);
 
 
+
+  useEffect(() => {
+    const init = async () => {
+      networkConnected();
+      onChangeNetwork();
+      walletConnected(setAddressConnected);
+    };
+
+    init();
+  }, []);
+
   return (
-    <Layout isConnected={isConnected} setIsConnected={setIsConnected}>
+    <Layout addressConnected={addressConnected} setAddressConnected={setAddressConnected}>
       <Component
         switchLayout={switchLayout}
         setSwitchLayout={setSwitchLayout}
-        isConnected={isConnected}
+        addressConnected={addressConnected}
         {...pageProps}
       />
     </Layout>
