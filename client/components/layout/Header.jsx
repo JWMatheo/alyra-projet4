@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
@@ -8,8 +9,10 @@ const Header = ({ isConnected, setIsConnected }) => {
   const [toggle, setToggle] = useState(false);
   const [width, setWidth] = useState(0);
   const [sticky, setSticky] = useState(0);
+const [addressConnected, setAddressConnected] = useState()
 
   useEffect(() => {
+    setAddressConnected(window.ethereum.selectedAddress);
     setWidth(window.innerWidth);
 
     const headerObserver = new IntersectionObserver(handleSticky, {
@@ -34,7 +37,7 @@ const Header = ({ isConnected, setIsConnected }) => {
       window.removeEventListener('click', setToggle(false));
       window.removeEventListener('resize', handleWidth);
     };
-  }, [sticky]);
+  }, [sticky, toggle]);
 
   // Handle Function Toggle
   const handleWidth = () => setWidth(window.innerWidth);
@@ -91,8 +94,8 @@ const Header = ({ isConnected, setIsConnected }) => {
             </li>
             <li className="nav__item">
               {isConnected ? (
-                <Link href={'/sensei/me'} passHref>
-                <img src="https://nftavatarmaker.com/assets/main-nft.png" />
+                <Link href={`/sensei/me/${addressConnected}`} passHref>
+                <img src="https://nftavatarmaker.com/assets/main-nft.png" alt={`otaku-${addressConnected}`}/>
                 </Link>
               ) : (
                 <Button onClick={connectWallet}>

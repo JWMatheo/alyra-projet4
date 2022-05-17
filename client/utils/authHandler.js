@@ -45,6 +45,8 @@ export const onChangeNetwork = () => {
     }
   });
 };
+
+
 // Check if wallet is already connected
 export const walletConnected = (setIsConnected) => {
   if (window.ethereum) {
