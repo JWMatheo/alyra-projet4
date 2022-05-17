@@ -12,10 +12,14 @@ import NFTCard from './NFTCard';
 import Filter from './Filter';
 import Link from 'next/link';
 
-const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
+const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleModal = () => setIsModalOpen(!isModalOpen);
+
+  // Format date
+  const initialDate = new Date(otaku._createdAt);
+  const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(initialDate);
+  const year = initialDate.getFullYear();
 
   return (
     <>
@@ -24,7 +28,9 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
           <div>
             <img src="https://nftavatarmaker.com/assets/main-nft.png" alt="avatar" />
             <p>Otaku #1</p>
-            <i>Joined May 2022</i>
+            <i>
+              Joined {month} {year}
+            </i>
           </div>
           {senseiConnected && (
             <Button onClick={handleModal}>
@@ -34,11 +40,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected }) => {
         </ContainerProfil>
         <section>
           <h2 className="title">Description</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint magni exercitationem unde nisi rem? Ab eius
-            distinctio, reiciendis quibusdam maiores magnam quod. Quasi dolores cum, cupiditate, harum delectus
-            aspernatur, eveniet quod sequi ab qui accusantium velit molestias ea amet sunt soluta! Sed, accusamus et
-          </p>
+          <p>{otaku.bio}</p>
         </section>
         <section>
           <ContainerTitle>
