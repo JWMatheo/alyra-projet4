@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
-import { networkConnected, onChangeNetwork, walletConnected } from '../utils/authHandler';
+import { networkConnected, onChangeNetwork, walletConnected } from '../utils/web3/authHandler';
+
+
+
 
 function MyApp({ Component, pageProps }) {
   const [addressConnected, setAddressConnected] = useState(false);

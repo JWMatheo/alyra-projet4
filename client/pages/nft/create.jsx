@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import { useRef, useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import HyperModal from 'react-hyper-modal';
 
 import { Button, input, Section, SelectForm, selectForm } from '../../components/style';
@@ -14,17 +14,40 @@ import {
   handlerClickOutSide,
 } from '../../utils/handlerFactory';
 import { Heading, PropertyForm } from '../../components';
+import { init } from '../../utils/web3/init';
+import Marketplace from '../../contracts/Marketplace.json';
+import { getCollections } from '../../utils/web3/getter';
+import { client } from '../../lib/sanity';
+import { NFTsQuery } from '../../lib/query';
 
+export async function getServerSideProps() {
+  const NFTs = await client.fetch(NFTsQuery);
 
+  return {
+    props: {
+      NFTs,
+    },
+  };
+}
 
-
-export default function Create() {
+export default function Create({ addressConnected, NFTs }) {
   const [NFTImage, setNFTImage] = useState(null);
   const hiddenFileInput = useRef(null);
   const [selected, setSelected] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [NFTPropertie, setNFTPropertie] = useState();
   const [open, setOpen] = useState(false);
+  const [addressCollection, setAddressCollection] = useState([]);
+  const [userCollections, setUserCollections] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!loading) {
+      getCollections(userCollections, setUserCollections, NFTs);
+      setNFTPropertie()
+      setLoading(true);
+    }
+  }, [NFTs, loading, userCollections]);
 
   if (open) {
     handlerClickOutSide(open, setOpen, '#collection');
@@ -34,11 +57,7 @@ export default function Create() {
     return <li onClick={(e) => setSelected(e.target.innerText)}>{value}</li>;
   };
 
-
-  const mintNFT = () =>{
-    
-  }
-
+  console.log(NFTPropertie);
   return (
     <>
       <Heading
@@ -98,9 +117,9 @@ export default function Create() {
               </button>
               {open && (
                 <ListOptions className="Choice a collection">
-                  <ListItem value="Category #1" />
-                  <ListItem value="Category #2" />
-                  <ListItem value="Category #3" />
+                  {userCollections.map((collection, index) => (
+                    <ListItem key={index} value={collection.name} />
+                  ))}
                 </ListOptions>
               )}
             </SelectForm>
@@ -128,7 +147,10 @@ export default function Create() {
 
           <Button style={{ marginTop: '2rem' }}>Create</Button>
         </Form>
-        <HyperModal isFullscreen={true} isOpen={isModalOpen} requestClose={(e) => handleModal(e, setIsModalOpen, isModalOpen)}>
+        <HyperModal
+          isFullscreen={true}
+          isOpen={isModalOpen}
+          requestClose={(e) => handleModal(e, setIsModalOpen, isModalOpen)}>
           <Section style={{ padding: '1rem', paddingBottom: '2rem' }}>
             <h2 className="title">Add properties</h2>
             <p>
@@ -142,8 +164,6 @@ export default function Create() {
     </>
   );
 }
-
-
 
 const Container = styled.div`
   margin-top: 1.5rem;
@@ -316,8 +336,6 @@ const ContainerProperties = styled.div`
     width: 90% !important;
   }
 `;
-
-
 
 const Form = styled.form`
   margin-top: 1rem;

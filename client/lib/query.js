@@ -10,11 +10,12 @@ metadata,
 description,
 endOfAuction,
 collection->{
-  name
+  name,
+  address
 },
 category -> {
   categories
-} ,
+},
 "senseiRef": sensei._ref,
 "otakuRef": otaku._ref,
 sensei-> {

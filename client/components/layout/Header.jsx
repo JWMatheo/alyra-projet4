@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { connectWallet } from '../../utils/authHandler';
+import { connectWallet } from '../../utils/web3/authHandler';
+
 import { Button } from '../style';
 
 const Header = ({ addressConnected, setAddressConnected }) => {
