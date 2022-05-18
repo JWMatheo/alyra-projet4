@@ -1,17 +1,49 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
+import { useState } from 'react';
 import styled from 'styled-components';
+import { notification } from '../utils/notification';
 import { Button, input } from './style';
 
-
 const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
+  const [index, setIndex] = useState(0);
+  const [options, setOptions] = useState([1]);
+  const [property, setProperty] = useState('');
+  const [value, setValue] = useState('');
+
   function handleDeleteClick(e, indexInput) {
     e.preventDefault();
+
+    const copy = NFTPropertie;
+
+    const remove = copy.filter((value, index) => {
+      console.log(index, indexInput);
+      return index !== indexInput;
+    });
+
     const input = document.querySelector(`#item${indexInput}`);
     input.style.display = 'none';
     input.ariaHidden = true;
+
+    setNFTPropertie(remove);
+    setIndex(index - 1);
   }
 
+  const addInput = (e) => {
+    e.preventDefault();
+    if (property !== '' && value !== '') {
+      NFTPropertie ? setNFTPropertie([...NFTPropertie, [property, value]]) : setNFTPropertie([[property, value]]);
+      setOptions([...options, 1]);
+      setProperty('');
+      setValue('');
+      setIndex(index++);
+    } else {
+      notification('error', "You don't entre a value");
+    }
+
+    const button = document.querySelector('#plus');
+    button.scrollIntoView();
+  };
 
   return (
     <Form style={{ height: '350px' }}>
@@ -23,35 +55,25 @@ const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
         <p style={{ marginBottom: '2rem', color: 'crimson' }}>You don't upload your NFT image</p>
       )}
 
-      {NFTPropertie &&
-        NFTPropertie.map((property, index) => (
-          <PropertieModal id={`item${index}`} key={index}>
+      {options.map((property, index) => (
+        <PropertieModal id={`item${index}`} key={index}>
+          <div>
+            <h4 style={{ marginLeft: '3.7rem' }}>Type</h4>
             <div>
-              <h4 style={{ marginLeft: '3.7rem' }}>Type</h4>
-              <div>
-                <Button>
-                  <a onClick={(e) => handleDeleteClick(e, index)}>
-                    <i className="bx bxs-layer-minus" />
-                  </a>
-                </Button>
-                <input type="text" placeholder="property" />
-              </div>
+              <Button onClick={(e) => handleDeleteClick(e, index)}>
+                <i className="bx bxs-layer-minus" />
+              </Button>
+              <input type="text" onChange={(e) => setProperty(e.target.value)} placeholder="property" />
             </div>
-            <div>
-              <h4>Value</h4>
-              <input type="text" placeholder="value" />
-            </div>
-          </PropertieModal>
-        ))}
+          </div>
+          <div>
+            <h4>Value</h4>
+            <input type="text" onChange={(e) => setValue(e.target.value)} placeholder="value" />
+          </div>
+        </PropertieModal>
+      ))}
 
-      <Button
-        onClick={(e) => {
-          e.preventDefault();
-          NFTPropertie ? setNFTPropertie([...NFTPropertie, `item`]) : setNFTPropertie([`item`]);
-          const button = document.querySelector('#plus');
-          button.scrollIntoView();
-        }}
-        id="plus">
+      <Button onClick={addInput} id="plus">
         <i className="bx bxs-layer-plus" />
       </Button>
 

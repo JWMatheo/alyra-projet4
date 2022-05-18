@@ -1,28 +1,5 @@
-import Web3 from 'web3';
-import { notification } from './notification';
-
-export const init = () => {
-  new Promise(async (resolve, reject) => {
-    if (window.ethereum) {
-      const web3 = new Web3(window.ethereum);
-      try {
-        resolve(web3);
-      } catch (error) {
-        reject(error);
-      }
-    }
-
-    // Legacy dapp browsers...
-    else if (window.web3) {
-      const web3 = window.web3;
-      resolve(web3);
-    } else {
-      const provider = new Web3.providers.HttpProvider('http://127.0.0.1:7545');
-      const web3 = new Web3(provider);
-      resolve(web3);
-    }
-  });
-};
+import { notification } from '../notification';
+import { init } from './init';
 
 // Check Network connected
 export const networkConnected = async () => {
@@ -45,12 +22,12 @@ export const onChangeNetwork = () => {
     }
   });
 };
-
-
 // Check if wallet is already connected
-export const walletConnected = (setAddressConnected) => {
+export const walletConnected = async (setIsConnected) => {
   if (window.ethereum) {
-    window.ethereum.selectedAddress ? setAddressConnected(window.ethereum.selectedAddress) : setAddressConnected(false)
+    const web3 = await init();
+    const address = await web3.eth.getAccounts();
+    address ? setIsConnected(address[0]) : setIsConnected('');
   }
 };
 
@@ -82,6 +59,9 @@ export const connectWallet = async () => {
     const result = await provider.request({ method: 'eth_requestAccounts' });
     if (result) {
       notification('success', 'You are successful connected ! ');
+
+      // Set value to local storage
+      localStorage.setItem('isConnected', true);
       return true;
     } else {
       notification('warn', 'You wwallet is not connected');
