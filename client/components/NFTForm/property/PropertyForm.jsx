@@ -2,8 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from 'react';
 import styled from 'styled-components';
-import { notification } from '../utils/notification';
-import { Button, input } from './style';
+import { notification } from '../../../utils/notification';
+import { Button, input } from '../../style';
 
 const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
   const [index, setIndex] = useState(0);
@@ -85,7 +85,7 @@ const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
 
 export default PropertyForm;
 
-const Form = styled.form`
+const Form = styled.section`
   margin-top: 1rem;
 
   span {

@@ -4,6 +4,7 @@ export const getCollections = async (userCollections, setUserCollections, NFTs) 
   const instance = await instanceContract();
   const web3 = await init();
   const address = await web3.eth.getAccounts();
+
   const getter = await instance.methods.getUserCollections(address[0]).call();
 
   getter.map((addressCollection) => {
@@ -13,4 +14,13 @@ export const getCollections = async (userCollections, setUserCollections, NFTs) 
       }
     });
   });
+};
+
+export const getListOfNFTfromUser = async (setUserNFTs) => {
+  const instance = await instanceContract();
+  const web3 = await init();
+  const address = await web3.eth.getAccounts();
+
+  const getNFTs = await instance.methods.getListOfNFTfromUser(address[0]).call();
+  setUserNFTs(getNFTs);
 };
