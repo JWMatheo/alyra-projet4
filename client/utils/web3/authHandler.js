@@ -1,5 +1,7 @@
+import { client } from '../../lib/sanity';
 import { notification } from '../notification';
 import { init } from './init';
+import { mintNFTCollection } from './mintHandler';
 
 // Check Network connected
 export const networkConnected = async () => {
@@ -22,17 +24,18 @@ export const onChangeNetwork = () => {
     }
   });
 };
+
 // Check if wallet is already connected
-export const walletConnected = async (setIsConnected) => {
+export const walletConnected = async (setAddressConnected) => {
   if (window.ethereum) {
     const web3 = await init();
     const address = await web3.eth.getAccounts();
-    address ? setIsConnected(address[0]) : setIsConnected('');
+    address ? setAddressConnected(address[0]) : setAddressConnected('');
   }
 };
 
 // Connect wallet using buttom from front
-export const connectWallet = async () => {
+export const connectWallet = async (setAddressConnected) => {
   // Check if Metamask extension is downloaded in brownser
   const detectProvider = () => {
     let provider;
@@ -58,10 +61,51 @@ export const connectWallet = async () => {
 
     const result = await provider.request({ method: 'eth_requestAccounts' });
     if (result) {
-      notification('success', 'You are successful connected ! ');
+      const allUsers = await client.fetch(`*[_type == 'users']`);
+      // Already created or not
+      let bool = false;
 
+      const doc = {
+        _type: 'users',
+        address: result[0],
+        username: `Otaku #${allUsers.length + 1}`,
+      };
+
+      allUsers.map(async (user) => {
+        if (user.address === result[0]) {
+          return (bool = true);
+        }
+      });
+
+      // If no yet create a collection
+      if (!bool) {
+        client.create(doc).then(async (doc) => {
+          await mintNFTCollection(
+            'Defaults',
+            'DFT',
+            'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
+            0
+          ).then(async (data) => {
+            console.log(data);
+            const collection = {
+              _type: 'name',
+              owner: {
+                _type: 'reference',
+                _ref: doc._id,
+              },
+              address: data.address,
+              cid: 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
+            };
+            await client.create(collection);
+          });
+        });
+      }
+
+      notification('success', 'You are successful connected ! ');
+      setAddressConnected(result[0]);
       // Set value to local storage
       localStorage.setItem('isConnected', true);
+      //await mintNFTCollection('Default', 'DFT', 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e', 0);
       return true;
     } else {
       notification('warn', 'You wwallet is not connected');
