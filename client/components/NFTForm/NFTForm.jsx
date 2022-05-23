@@ -7,7 +7,7 @@ import { Button, input } from '../style';
 import InputImage from './InputImage';
 import PropertyInput from './property/PropertyInput';
 import SelectInput from './SelectInput';
-import {  mintNFTCollection } from '../../utils/web3/mintHandler';
+import { mintNFTCollection } from '../../utils/web3/mintHandler';
 import { notification } from '../../utils/notification';
 
 const NFTForm = ({ userCollections, addressConnected }) => {
@@ -23,7 +23,11 @@ const NFTForm = ({ userCollections, addressConnected }) => {
 
   const mintNFTHandler = async (e) => {
     e.preventDefault();
-
+    
+    // Check input required
+    if (!NFTImage || selected || name || quantity) {
+      return notification('error', 'You forget to enter a value.');
+    }
     const cid = await storeFiles();
     // Mint a collection: require name, symbol, baseURI, and quantity
     await mintNFTCollection(name, symbol, selected.cid, quantity, setValueMinted);
