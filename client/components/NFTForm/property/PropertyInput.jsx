@@ -5,9 +5,9 @@ import { Button } from '../../style';
 import PropertyDisplay from './PropertyDisplay';
 import PropertyModal from './PropertyModal';
 
-const PropertyInput = ({ NFTImage }) => {
+const PropertyInput = ({ NFTImage, NFTPropertie, setNFTPropertie}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [NFTPropertie, setNFTPropertie] = useState();
+
   return (
     <>
       <ContainerProperties>
@@ -23,7 +23,7 @@ const PropertyInput = ({ NFTImage }) => {
           <i className="bx bxs-add-to-queue"></i>
         </Button>
       </ContainerProperties>
-      <PropertyDisplay NFTPropertie={NFTPropertie} />
+      <PropertyDisplay NFTPropertie={NFTPropertie}   setNFTPropertie={setNFTPropertie}/>
       <PropertyModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

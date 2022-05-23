@@ -11,7 +11,6 @@ const Header = ({ addressConnected, setAddressConnected }) => {
   const [width, setWidth] = useState(0);
   const [sticky, setSticky] = useState(0);
 
-
   useEffect(() => {
     setWidth(window.innerWidth);
 
@@ -70,10 +69,6 @@ const Header = ({ addressConnected, setAddressConnected }) => {
   }
 `;
 
-  const connectHandler = () => {
-    const connected = connectWallet;
-    connected && setAddressConnected(true);
-  };
 
   return (
     <Container sticky={sticky} stickyStyle={stickyStyle}>
@@ -95,11 +90,11 @@ const Header = ({ addressConnected, setAddressConnected }) => {
             <li className="nav__item">
               {addressConnected ? (
                 <Link href={`/sensei/me/${addressConnected}`} passHref>
-                <img src="https://nftavatarmaker.com/assets/main-nft.png" alt={`otaku-${addressConnected}`}/>
+                  <img src="https://nftavatarmaker.com/assets/main-nft.png" alt={`otaku-${addressConnected}`} />
                 </Link>
               ) : (
-                <Button onClick={connectWallet}>
-                  <Wallet onClick={connectHandler}>
+                <Button onClick={() => connectWallet(setAddressConnected)}>
+                  <Wallet>
                     <i className="bx bxs-wallet-alt" />
                     Connect
                   </Wallet>

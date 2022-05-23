@@ -3,24 +3,20 @@ import { Layout } from '../components';
 import '../styles/globals.css';
 import { networkConnected, onChangeNetwork, walletConnected } from '../utils/web3/authHandler';
 
-
-
-
 function MyApp({ Component, pageProps }) {
-  const [addressConnected, setAddressConnected] = useState(false);
+  const [addressConnected, setAddressConnected] = useState();
   const [switchLayout, setSwitchLayout] = useState(false);
-
-
 
   useEffect(() => {
     const init = async () => {
-      networkConnected();
-      onChangeNetwork();
-      walletConnected(setAddressConnected);
+      //await networkConnected();
+      //await onChangeNetwork();
+      await walletConnected(setAddressConnected);
     };
 
     init();
-  }, []);
+  }, [setAddressConnected, addressConnected]);
+
 
   return (
     <Layout addressConnected={addressConnected} setAddressConnected={setAddressConnected}>
@@ -34,6 +30,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-
 export default MyApp;
-

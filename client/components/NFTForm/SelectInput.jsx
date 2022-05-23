@@ -6,25 +6,32 @@ import { input, SelectForm } from '../style';
 const SelectInput = ({ setSelected, userCollections, selected }) => {
   const [open, setOpen] = useState(false);
 
-  const ListItem = ({ value }) => <li onClick={(e) => setSelected(e.target.innerText)}>{value}</li>;
+  const ListItem = ({ value, collectionAddress }) => (
+    <li
+      data-collection={collectionAddress}
+      onClick={(e) => setSelected({ cid: e.target.dataset.collection, value: e.target.innerHTML })}>
+      {value}
+    </li>
+  );
 
   if (open) {
     handlerClickOutSide(open, setOpen, '#collection');
   }
 
-
   return (
     <Container>
-      <h3>Collection</h3>
+      <h3>Collection <span>*</span></h3>
       <SelectForm style={{ marginTop: '0.5rem' }} open={open}>
         <button id="collection" onClick={(e) => openHandler(e, setOpen, open)}>
-          <a>{selected ? selected : 'Choice a collection'} </a>
+          <a>{selected ? selected.value : 'Choice a collection'} </a>
           <i className={`bx bx-chevron-${open ? 'up' : 'down'}`} />
         </button>
+
         {open && (
           <ListOptions className="Choice a collection">
+            <ListItem collectionAddress="bafybeideszhe6x7q36ozqigc5cqhfqs7j5zq3qfnsvy3jhvwmh3wmk6wwy" value="Default" />
             {userCollections.map((collection, index) => (
-              <ListItem key={index} value={collection.name} />
+              <ListItem collectionAddress={collection.address} key={index} value={collection.name} />
             ))}
           </ListOptions>
         )}
@@ -88,7 +95,5 @@ const ListOptions = styled.ul`
     border-radius: 0 0 0.5rem 0.5rem;
   }
 `;
-
-
 
 export default SelectInput;

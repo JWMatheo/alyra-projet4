@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import { Section } from '../../components/style';
 import { handlerClickOutSide } from '../../utils/handlerFactory';
 import { Heading, NFTForm } from '../../components';
-import { getCollections, getListOfNFTfromUser } from '../../utils/web3/getter';
+import { getCollections } from '../../utils/web3/getter';
 import { client } from '../../lib/sanity';
 import { NFTsQuery } from '../../lib/query';
+import { walletConnected } from '../../utils/web3/authHandler';
 
 export async function getServerSideProps() {
   const NFTs = await client.fetch(NFTsQuery);
-
   return {
     props: {
       NFTs,
@@ -18,22 +18,23 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Create({ addressConnected, NFTs }) {
+export default function Create({ NFTs }) {
   const [open, setOpen] = useState(false);
   const [userCollections, setUserCollections] = useState([]);
-  const [userNFTs, setUserNFTs] = useState();
   const [loading, setLoading] = useState(false);
+  const [addressConnected, setAddressConnected] = useState();
 
   useEffect(() => {
     if (!loading) {
-      async () => {
-        getCollections(userCollections, setUserCollections, NFTs);
-        getListOfNFTfromUser(setUserNFTs);
-        //setNFTPropertie();
+      const init = async () => {
+        await getCollections(userCollections, setUserCollections, NFTs);
+        await walletConnected(setAddressConnected);
       };
+
+      init();
       setLoading(true);
     }
-  }, [NFTs, loading, userCollections]);
+  }, [NFTs, addressConnected, loading, userCollections]);
 
   if (open) {
     handlerClickOutSide(open, setOpen, '#collection');

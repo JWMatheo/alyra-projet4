@@ -1,17 +1,28 @@
 import styled from 'styled-components';
 
-const PropertyDisplay = ({ NFTPropertie }) => {
+const PropertyDisplay = ({ NFTPropertie, setNFTPropertie }) => {
+  const removePreperty = (indexInput) => {
+    const copy = NFTPropertie;
+
+    const remove = copy.filter((value, index) => {
+      console.log(index, indexInput);
+      return index !== indexInput;
+    });
+
+    setNFTPropertie(remove);
+  };
+
   return (
     <>
       {NFTPropertie && (
         <GroupProperties>
           {NFTPropertie.map((property, index) => (
             <Property key={index}>
-              <small>Property #{index} </small>
+              <small>Property #{index + 1} </small>
               <p>
                 {property[0]} : {property[1]}
               </p>
-              <i className="bx bxs-x-circle"></i>
+              <i onClick={() => removePreperty(index)} className="bx bxs-x-circle"></i>
             </Property>
           ))}
         </GroupProperties>
@@ -23,6 +34,7 @@ const PropertyDisplay = ({ NFTPropertie }) => {
 const GroupProperties = styled.div`
   margin-top: 2rem;
   display: flex;
+  gap: 2rem;
   flex-wrap: wrap;
 `;
 

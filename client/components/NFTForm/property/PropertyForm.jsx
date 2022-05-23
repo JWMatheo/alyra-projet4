@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { notification } from '../../../utils/notification';
 import { Button, input } from '../../style';
 
-const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
+const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage, setIsModalOpen }) => {
   const [index, setIndex] = useState(0);
   const [options, setOptions] = useState([1]);
   const [property, setProperty] = useState('');
@@ -45,6 +45,12 @@ const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
     button.scrollIntoView();
   };
 
+  const saveProperties = (e) => {
+    e.preventDefault();
+    NFTPropertie ? setNFTPropertie([...NFTPropertie, [property, value]]) : setNFTPropertie([[property, value]]);
+    setIsModalOpen(false);
+  };
+
   return (
     <Form style={{ height: '350px' }}>
       {NFTImage ? (
@@ -77,7 +83,7 @@ const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage }) => {
         <i className="bx bxs-layer-plus" />
       </Button>
 
-      <Button id="save">Save</Button>
+      <Button onClick={saveProperties} id="save">Save</Button>
       <br />
     </Form>
   );
