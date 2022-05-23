@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const PropertyDisplay = ({ NFTPropertie, setNFTPropertie }) => {
+const PropertyDisplay = ({ NFTPropertie, setNFTPropertie, index, setIndex }) => {
   const removePreperty = (indexInput) => {
     const copy = NFTPropertie;
 
@@ -8,8 +8,12 @@ const PropertyDisplay = ({ NFTPropertie, setNFTPropertie }) => {
       console.log(index, indexInput);
       return index !== indexInput;
     });
+    const input = document.querySelector(`#item${indexInput}`);
+    input.style.display = 'none';
+    input.ariaHidden = true;
 
     setNFTPropertie(remove);
+    setIndex(index - 1);
   };
 
   return (
