@@ -8,6 +8,7 @@ import { getCollections } from '../../utils/web3/getter';
 import { client } from '../../lib/sanity';
 import { NFTsQuery } from '../../lib/query';
 import { walletConnected } from '../../utils/web3/authHandler';
+import Link from 'next/link';
 
 export async function getServerSideProps() {
   const NFTs = await client.fetch(NFTsQuery);
@@ -42,13 +43,15 @@ export default function Create({ NFTs }) {
 
   return (
     <>
-      <Heading
-        image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg"
-        title="Create NFT"
-      />
+      <Heading image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg" title="Create NFT" />
 
       <Section id="form">
         <h2 className="title">Create new NFT </h2>
+        <div style={{ marginBottom: '2rem'}}>
+          <Link href={'/collection/create'}>
+            <a style={{ color: 'var(--first-color)', fontSize: 'var(--h3-font-size)' }}>Create a collection 📚</a>
+          </Link>
+        </div>
         <span style={{ fontSize: 'var(--small-font-size)' }}>
           <i style={{ color: 'crimson', marginRight: '0.2rem' }}>*</i>Required fields
         </span>
