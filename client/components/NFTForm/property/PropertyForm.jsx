@@ -5,8 +5,7 @@ import styled from 'styled-components';
 import { notification } from '../../../utils/notification';
 import { Button, input } from '../../style';
 
-const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage, setIsModalOpen }) => {
-  const [index, setIndex] = useState(0);
+const PropertyForm = ({ NFTPropertie, setNFTPropertie, NFTImage, setIsModalOpen, index, setIndex  }) => {
   const [options, setOptions] = useState([1]);
   const [property, setProperty] = useState('');
   const [value, setValue] = useState('');

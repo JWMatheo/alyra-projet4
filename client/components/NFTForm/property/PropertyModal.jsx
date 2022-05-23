@@ -4,7 +4,7 @@ import PropertyForm from './PropertyForm';
 import { Section } from '../../style';
 import { handleModal } from '../../../utils/handlerFactory';
 
-const PropertyModal = ({ setIsModalOpen, isModalOpen, NFTPropertie, setNFTPropertie, NFTImage }) => {
+const PropertyModal = ({ setIsModalOpen, isModalOpen, NFTPropertie, setNFTPropertie, NFTImage, index, setIndex }) => {
   return (
     <HyperModal
       isFullscreen={true}
@@ -16,7 +16,14 @@ const PropertyModal = ({ setIsModalOpen, isModalOpen, NFTPropertie, setNFTProper
           Properties show up underneath your item, are clickable, and can be filtered in your collection's sidebar.
           {NFTPropertie}
         </p>
-        <PropertyForm NFTPropertie={NFTPropertie} setNFTPropertie={setNFTPropertie} NFTImage={NFTImage} setIsModalOpen={setIsModalOpen} />
+        <PropertyForm
+          NFTPropertie={NFTPropertie}
+          setNFTPropertie={setNFTPropertie}
+          NFTImage={NFTImage}
+          setIsModalOpen={setIsModalOpen}
+          index={index}
+          setIndex={setIndex}
+        />
       </Section>
     </HyperModal>
   );

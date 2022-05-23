@@ -44,7 +44,7 @@ export default function Create({ NFTs }) {
     <>
       <Heading
         image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg"
-        title="Create collection"
+        title="Create NFT"
       />
 
       <Section id="form">
