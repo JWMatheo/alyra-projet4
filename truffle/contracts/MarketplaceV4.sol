@@ -59,7 +59,6 @@ contract Market {
         address seller,
         address token,
         uint tokenId,
-        uint price,
         string collection,
         string JSONTokenURI
     );
@@ -71,7 +70,6 @@ contract Market {
         address seller,
         address token,
         uint tokenId,
-        uint price,
         string collection,
         string JSONTokenURI
     );
@@ -81,12 +79,12 @@ contract Market {
     uint private _listingId = 0;
     uint private _defaultPrice = 1000 ether;
     address private _factoryAddress;
-    mapping(uint=>Listing) private _listings;
+    mapping(uint=>Listing) _listings;
     mapping(address =>address[]) CollectionsOfOwner; // stocke les collections créer par une addresse
     mapping(uint=>address[]) SellActivty; // stocke pour 1 NFT donné, la liste des addresses ayant ete en possesion du nft
     mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser; // stocke Uniquement les NFT achetés.
 
-    constructor (address factoryAdress) {
+    function setFactoryAddress(address factoryAdress) public {
         _factoryAddress = factoryAdress;
     }
 
@@ -171,7 +169,17 @@ contract Market {
 
         _listingId++;
         _listings[_listingId] = listing;
-        emit Showed(listing.status ,_listingId, msg.sender, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI);
+        emit Showed(listing.status ,_listingId, msg.sender, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI); 
+    //        event  Showed(
+    //     ListingStatus status,
+    //     uint listingId,
+    //     address Creator,
+    //     address seller,
+    //     address token,
+    //     uint tokenId,
+    //     string collection,
+    //     string JSONTokenURI
+    // );
     }
 
     /**
@@ -190,7 +198,7 @@ contract Market {
         Listing storage listing = _listings[listingId];
         address testadress = address(this);
         require(ERC721(listing.tokenContract).ownerOf((listing.tokenId)) == msg.sender, "You are not the owner");
-        require(listing.status == ListingStatus.Showable, "The NFT is already to sell.");
+        require(listing.status == ListingStatus.Showable, "The NFT is already to sale");
 
         listing.price = _price;
         listing.status = ListingStatus.Active;
@@ -250,7 +258,7 @@ contract Market {
             lengthOfListOfNFTfromUser
         ));
 
-        emit Buyed(listing.status, listingId, listing.Creator, listing.seller, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
+        emit Buyed(listing.status, listingId, listing.Creator, listing.seller, listing.tokenContract, listing.tokenId, listing.collection, listing.JSONTokenURI);
     }
 
     /**
@@ -274,7 +282,7 @@ contract Market {
 
         IERC721(listing.tokenContract).transferFrom(address(this), msg.sender, listing.tokenId);
 
-        emit Cancelled(listing.status ,listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.price, listing.collection, listing.JSONTokenURI);
+        emit Cancelled(listing.status ,listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.collection, listing.JSONTokenURI);
     }
 
     /**
@@ -302,7 +310,7 @@ contract Market {
 
     /**
     * @notice Add a NFT to an existing collection.
-    * @dev  Triggers 'mint' function in the collection address '_thisCollection'.
+    * @dev  Triggers 'mint' function in the collection address '_thisCollection'. Can be improved with 'for' to set a number of item to add.
     * @param _thisCollection The collection address in wich the nft is added.
     */
     // _thisCollection provient du frontend en faisant un getUserCollections(msg.sender).call() puis pour chaque collection retourner : MonNft(_addresseSelectionne).name() pour afficher le nom des collection sur l'interface et recuper l'addresse selctionné par l'user 
