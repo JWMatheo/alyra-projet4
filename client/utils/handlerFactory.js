@@ -32,22 +32,37 @@ export const countdownMidnight = () => {
 export const clickHandler = (hiddenFileInput) => hiddenFileInput.current.click();
 // Display image uploaded
 export const uploadHandler = (e, setNFTImage) => e.target.files[0] && setNFTImage(e.target.files);
+
+export const uploadCollectionHandler = (e, setNFTImage, setNFTPropertie) => {
+  const files = e.target.files;
+  setNFTImage(e.target.files);
+
+  const items = [];
+  if (files) {
+    for (let i = 0; i < files.length; i++) {
+      items.push({ name: `nft#${i}` });
+    }
+
+    setNFTPropertie(items);
+  }
+};
+
 // Reset image's input
 export const resetUpload = (setNFTImage) => setNFTImage(null);
 // Handler modal
-export const handleModal = (e,setIsModalOpen, isModalOpen) => {
+export const handleModal = (e, setIsModalOpen, isModalOpen) => {
   !isModalOpen && e.preventDefault();
   setIsModalOpen(!isModalOpen);
 };
 
 // Handler open and close select form
 export const openHandler = (e, setOpen, open) => {
-  e.preventDefault()
+  e.preventDefault();
   e.stopPropagation();
   setOpen(!open);
 };
 
-// 
+//
 export const handlerClickOutSide = (open, setOpen, target) => {
   if (open) {
     window.addEventListener('click', (e) => {
@@ -59,4 +74,4 @@ export const handlerClickOutSide = (open, setOpen, target) => {
       window.removeEventListener('click', setOpen(false));
     };
   }
-}
+};

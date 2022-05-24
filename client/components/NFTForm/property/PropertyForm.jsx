@@ -115,6 +115,7 @@ const Form = styled.section`
 const PropertieModal = styled.div`
   display: flex;
   gap: 1rem;
+  margin-top: 2rem;
   margin-bottom: 2.5rem;
   ${input}
 
@@ -146,7 +147,7 @@ const ContainerImage = styled.div`
     height: 100%;
     width: 100%;
     object-fit: cover;
-    border: 2px solid var(--dark-color);
+    border: 2px solid var(--first-color);
     border-radius: 0.5rem;
   }
 `;

@@ -12,9 +12,12 @@ export const mintNFTCollection = async (name, symbol = 'DF', baseURI, NumberOfNf
     .send({ from: owner[0] });
 
   if (mint.status) {
-    const result = mint.events.Showed.returnValues;
-
-    return setValueMinted({ token: result.token, tokenId: result.tokenId, listingId: result.listingId });
+    if (mint.events.Showed.length > 1) {
+      return mint.events.Showed
+    } else {
+      const result = mint.events.Showed.returnValues;
+      return setValueMinted({ token: result.token, tokenId: result.tokenId, listingId: result.listingId });
+    }
   } else {
     return notification('error', 'There are an error');
   }
