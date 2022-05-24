@@ -16,14 +16,7 @@ const PropertyModal = ({ setIsModalOpen, isModalOpen, NFTPropertie, setNFTProper
           Properties show up underneath your item, are clickable, and can be filtered in your collection's sidebar.
           {NFTPropertie}
         </p>
-        <PropertyForm
-          NFTPropertie={NFTPropertie}
-          setNFTPropertie={setNFTPropertie}
-          NFTImage={NFTImage}
-          setIsModalOpen={setIsModalOpen}
-          index={index}
-          setIndex={setIndex}
-        />
+        <PropertyForm setIsModalOpen={setIsModalOpen} NFTPropertie={NFTPropertie} setNFTPropertie={setNFTPropertie} NFTImage={NFTImage} setIndex={setIndex} index={index} />
       </Section>
     </HyperModal>
   );
