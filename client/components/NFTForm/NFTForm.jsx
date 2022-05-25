@@ -7,7 +7,7 @@ import { Button, input } from '../style';
 import InputImage from './InputImage';
 import PropertyInput from './property/PropertyInput';
 import SelectInput from './SelectInput';
-import { mintNFTCollection } from '../../utils/web3/mintHandler';
+import { addItemToCollection, mintNFTCollection } from '../../utils/web3/mintHandler';
 import { notification } from '../../utils/notification';
 import InputCollectionImage from './InputCollectionImage';
 import { client } from '../../lib/sanity';
@@ -20,75 +20,21 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
   const [description, setDescription] = useState('');
   const [selected, setSelected] = useState('');
   const [NFTPropertie, setNFTPropertie] = useState([]);
-  const [valueMinted, setValueMinted] = useState();
   const hiddenFileInput = useRef(null);
 
+  // Add nft to collection
   const mintNFTHandler = async (e) => {
     e.preventDefault();
-    // Check input required
-    if (!NFTImage || !selected || !name || !quantity) {
-      return notification('error', 'You forget to enter a value.');
-    }
+    // If all required fields isn't entrered
+    if (!name || !selected || !NFTImage)
+      return notification('error', 'I had to fill in all the following fields: image, name and collection');
+
     const cid = await storeFiles();
-    // Mint a collection: require name, symbol, baseURI, and quantity
-    await mintNFTCollection(name, symbol, selected.cid, quantity, setValueMinted);
-    if (valueMinted) {
-      const owner = await client.fetch(`*[_type == 'users' && address match '${addressConnected}'][0]{
-      _id
-    }`);
-      const collection = await client.fetch(`*[_type == 'collection' && cid match '${selected.cid}'][0]{
-      _id
-    }`);
-      const NFTUrl = `https://${cid}.ipfs.dweb.link/${NFTImage[0].name}`;
-      const doc = {
-        _type: 'nft',
-        name,
-        description,
-        token: valueMinted.token,
-        tokenId: valueMinted.tokenId,
-        //address: data.address,
-        owner: {
-          _type: 'reference',
-          _ref: owner._id,
-        },
-        creator: {
-          _type: 'reference',
-          _ref: owner._id,
-        },
-        NFTUrl,
-        collection: {
-          _type: 'reference',
-          _ref: collection._id,
-        },
-      };
-
-      if (NFTPropertie) {
-        client.create(doc).then((doc) => {
-          if (doc._id) {
-            NFTPropertie.map((item) => {
-              client
-                .patch(doc._id)
-                .setIfMissing({ metadata: [] })
-                .insert('after', 'metadata[-1]', [{ property: item[0], value: item[1] }])
-                .commit({
-                  autoGenerateArrayKeys: true,
-                });
-            });
-
-            notification('success', 'Collection created successful !');
-          }
-        });
-      } else {
-        client.create(doc).then((doc) => {
-          if (doc._id) {
-            notification('success', 'Collection created successful !');
-          }
-        });
-      }
-    }
+    //Selected is Address collection choiced
+    await addItemToCollection(JSON.parse(selected.collection).address, NFTImage, NFTPropertie, description, cid, selected, name);
   };
-  // address collection "0x94fAA5cEe0462eeF8DDe2a60BA4353c0C3BF3346"
-  // Collection
+
+  // Create a Collection
   const mintCollectionHandler = async (e) => {
     e.preventDefault();
     setQuantity(NFTImage);
@@ -98,81 +44,10 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
     }
     const cid = await storeFiles();
     // Mint a collection: require name, symbol, baseURI, and quantity
-    const mint = await mintNFTCollection(name, symbol, cid, NFTImage.length, setValueMinted);
-
-    if (mint) {
-      const owner = await client.fetch(`*[_type == 'users' && address match '${addressConnected}'][0]{
-    _id }`);
-
-      const collection = {
-        _type: 'collection',
-        name,
-        symbol,
-        cid,
-        address: mint[0].address,
-        creator: {
-          _type: 'reference',
-          _ref: owner._id,
-        },
-      };
-
-      client.create(collection).then((doc) => {
-        mint.map((minted, index) => {
-          // Rename file
-          const NFTName = `${name}#${index < 10 ? `0${index}` : index}`;
-          const NFTUrl = `https://${cid}.ipfs.dweb.link/${NFTImage[index].name}`;
-          const nft = {
-            _type: 'nft',
-            name: NFTName,
-            description,
-            token: minted.returnValues.token,
-            tokenId: minted.returnValues.tokenId,
-            listingId: minted.returnValues.listingId,
-            //address: data.address,
-            owner: {
-              _type: 'reference',
-              _ref: owner._id,
-            },
-            creator: {
-              _type: 'reference',
-              _ref: owner._id,
-            },
-            NFTUrl,
-            collection: {
-              _type: 'reference',
-              _ref: doc._id,
-            },
-          };
-          if (NFTPropertie) {
-            console.log(NFTPropertie);
-            client.create(nft).then((doc) => {
-              console.log(doc);
-              if (doc._id) {
-                NFTPropertie.map((item) => {
-                  client
-                    .patch(doc._id)
-                    .setIfMissing({ metadata: [] })
-                    .insert('after', 'metadata[-1]', [{ property: item[0], value: item[1] }])
-                    .commit({
-                      autoGenerateArrayKeys: true,
-                    });
-                });
-
-                notification('success', 'Collection created successful !');
-              }
-            });
-          } else {
-            client.create(doc).then((nft) => {
-              if (nft._id) {
-                notification('success', 'Collection created successful !');
-              }
-            });
-          }
-        });
-      });
-    }
+    await mintNFTCollection(name, symbol, cid, NFTImage.length, NFTPropertie, NFTImage, description);
   };
 
+  // Upload image to web3 storage
   const storeFiles = async () => {
     const makeStorageClient = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3STOTAGE_KEY });
     // Upload NFT image to web3 storage
@@ -193,17 +68,16 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
         <ContainerInput>
           <div>
             <h3>
-              Collection Symbol <span>*</span>
-            </h3>
-            <input required type="text" name="Item name" onChange={(e) => setSymbol(e.target.value)} />
-          </div>
-
-          <div>
-            <h3>
               Collection Name <span>*</span>
             </h3>
             <small>The default NFT name will inherit example: collection name collectionName #1 </small>
             <input required type="text" name="Item name" onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div>
+            <h3>
+              Collection Symbol <span>*</span>
+            </h3>
+            <input required type="text" name="Item name" onChange={(e) => setSymbol(e.target.value)} />
           </div>
         </ContainerInput>
       ) : (
@@ -215,15 +89,9 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
             <input required type="text" name="Item name" onChange={(e) => setName(e.target.value)} />
           </div>
 
-          <div>
-            <h3>
-              Quantity <i>(nummber)</i> <span>*</span>
-            </h3>
-            <input required type="number" name="Item name" onChange={(e) => setQuantity(e.target.value)} />
-          </div>
+          <SelectInput userCollections={userCollections} selected={selected} setSelected={setSelected} />
         </ContainerInput>
       )}
-      {!collection && <SelectInput userCollections={userCollections} selected={selected} setSelected={setSelected} />}
 
       <Container>
         <h3>Description</h3>
@@ -240,7 +108,7 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
       />
 
       <Button onClick={collection ? mintCollectionHandler : mintNFTHandler} style={{ marginTop: '2rem' }}>
-        Create
+        {collection ? 'Create collection' : 'Add to collection'}
       </Button>
     </Form>
   );
