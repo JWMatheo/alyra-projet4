@@ -16,14 +16,14 @@ collection->{
 category -> {
   categories
 },
-"senseiRef": sensei._ref,
-"otakuRef": otaku._ref,
-sensei-> {
+"senseiRef": creator._ref,
+"otakuRef": owner._ref,
+creator-> {
   address,
   username,
   _id
 },
-otaku->{
+owner->{
   address,
   username,
   _id

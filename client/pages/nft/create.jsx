@@ -28,7 +28,8 @@ export default function Create({ NFTs }) {
   useEffect(() => {
     if (!loading) {
       const init = async () => {
-        await getCollections(userCollections, setUserCollections, NFTs);
+       const getUserCollections = await getCollections();
+       setUserCollections(getUserCollections)
         await walletConnected(setAddressConnected);
       };
 
@@ -40,7 +41,7 @@ export default function Create({ NFTs }) {
   if (open) {
     handlerClickOutSide(open, setOpen, '#collection');
   }
-
+console.log(userCollections);
   return (
     <>
       <Heading image="https://aws1.vdkimg.com/film/1/3/6/6/1366865_backdrop_scale_1280xauto.jpg" title="Create NFT" />

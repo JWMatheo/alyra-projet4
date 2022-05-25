@@ -23,8 +23,8 @@ export async function getServerSideProps(pageContext) {
       collection: NftData.collection.name,
       endOfAuction: NftData.endOfAuction,
       ipfs: NftData.ipfs,
-      owner: NftData.otaku,
-      sensei: NftData.sensei,
+      owner: NftData.owner,
+      sensei: NftData.creator,
       metadata: NftData.metadata,
       price: NftData.price,
       sellable: NftData.sellable,
@@ -180,7 +180,8 @@ const NFT = styled.div`
   display: grid;
   gap: 1rem;
   padding: 1rem;
-  background-color: var(--body-color);
+  color: var(--body-color);
+  background-color: var(--dark-color);
   box-shadow: var(--shadow);
   border-radius: 0.5rem;
 `;

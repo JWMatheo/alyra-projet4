@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { handlerClickOutSide, openHandler } from '../../utils/handlerFactory';
-import { input, SelectForm } from '../style';
+import { mintDefaultCollection } from '../../utils/web3/mintHandler';
+import { Button, input, SelectForm } from '../style';
 
 const SelectInput = ({ setSelected, userCollections, selected }) => {
   const [open, setOpen] = useState(false);
@@ -9,7 +10,7 @@ const SelectInput = ({ setSelected, userCollections, selected }) => {
   const ListItem = ({ value, collectionAddress }) => (
     <li
       data-collection={collectionAddress}
-      onClick={(e) => setSelected({ cid: e.target.dataset.collection, value: e.target.innerHTML })}>
+      onClick={(e) => setSelected({ collection: e.target.dataset.collection, value: e.target.innerHTML })}>
       {value}
     </li>
   );
@@ -18,9 +19,13 @@ const SelectInput = ({ setSelected, userCollections, selected }) => {
     handlerClickOutSide(open, setOpen, '#collection');
   }
 
+  let addDefaultCollection = true;
+
   return (
     <Container>
-      <h3>Collection <span>*</span></h3>
+      <h3>
+        Collection <span>*</span>
+      </h3>
       <SelectForm style={{ marginTop: '0.5rem' }} open={open}>
         <button id="collection" onClick={(e) => openHandler(e, setOpen, open)}>
           <a>{selected ? selected.value : 'Choice a collection'} </a>
@@ -29,10 +34,11 @@ const SelectInput = ({ setSelected, userCollections, selected }) => {
 
         {open && (
           <ListOptions className="Choice a collection">
-            <ListItem collectionAddress="bafybeideszhe6x7q36ozqigc5cqhfqs7j5zq3qfnsvy3jhvwmh3wmk6wwy" value="Default" />
-            {userCollections.map((collection, index) => (
-              <ListItem collectionAddress={collection.address} key={index} value={collection.name} />
-            ))}
+            {userCollections.map((collection, index) => {
+              if (collection.name === 'Default') addDefaultCollection = false;
+              return <ListItem collectionAddress={JSON.stringify(collection)} key={index} value={collection.name} />;
+            })}
+            {addDefaultCollection && <li onClick={mintDefaultCollection} id="create-default">Create a default collection</li>}
           </ListOptions>
         )}
       </SelectForm>
@@ -41,20 +47,28 @@ const SelectInput = ({ setSelected, userCollections, selected }) => {
 };
 
 const Container = styled.div`
-  margin-top: 1.5rem;
-  margin-bottom: 2.5rem;
   ${input}
+  display: grid;
+  justify-content: end;
 
   textarea {
     height: 8rem;
     resize: vertical;
   }
+
+  button {
+    padding: 20px 30px;
+
+    i {
+      color: var(--dark-color);
+    }
+  }
 `;
 
 const ListOptions = styled.ul`
-  width: 11rem;
+  width: 14rem;
   position: absolute;
-  top: 3rem;
+  top: 4.8rem;
   height: max-content;
   bottom: -30.5rem;
   //width: 100%;
@@ -65,8 +79,9 @@ const ListOptions = styled.ul`
   li {
     width: 100%;
     position: relative;
-    padding: 1.3rem 1rem 1.3rem 0.5rem;
+    padding: 1.3rem 1rem 1.8rem 0.5rem;
     font-weight: var(--font-bold);
+    text-align: center;
     overflow: hidden;
     cursor: pointer;
 
@@ -93,6 +108,15 @@ const ListOptions = styled.ul`
 
   li:last-child {
     border-radius: 0 0 0.5rem 0.5rem;
+  }
+
+  #create-default {
+    background-color: var(--first-color);
+    color: var(--body-color);
+
+    &:hover {
+      background-color: var(--first-color-alt);
+    }
   }
 `;
 

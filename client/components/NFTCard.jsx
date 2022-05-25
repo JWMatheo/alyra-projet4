@@ -123,7 +123,7 @@ const ContainerData = styled.div`
   display: grid;
   gap: 1rem;
   margin-top: 1rem;
-  grid-template-rows: 200px 1fr;
+  grid-template-rows: 150px 1fr;
 
   P {
     height: 100%;

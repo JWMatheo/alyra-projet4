@@ -84,7 +84,7 @@ const BestCollection = ({ bestNFTs }) => {
                 ? getDayLeft(bestNFTs[0].endOfAuction)
                 : countdownMidnight(getDayLeft(bestNFTs[0].endOfAuction))
             } left`}
-            sensei={bestNFTs[0].sensei.username}
+            sensei={bestNFTs[0].creator.username}
           />
           <SecondCard id="second">
             <NFTCard
@@ -100,7 +100,7 @@ const BestCollection = ({ bestNFTs }) => {
                   ? getDayLeft(bestNFTs[2].endOfAuction)
                   : countdownMidnight(getDayLeft(bestNFTs[2].endOfAuction))
               } left`}
-              sensei={bestNFTs[2].sensei.username}
+              sensei={bestNFTs[2].creator.username}
             />
           </SecondCard>
 
@@ -118,7 +118,7 @@ const BestCollection = ({ bestNFTs }) => {
                   ? getDayLeft(bestNFTs[1].endOfAuction)
                   : countdownMidnight(getDayLeft(bestNFTs[1].endOfAuction))
               } left`}
-              sensei={bestNFTs[1].sensei.username}
+              sensei={bestNFTs[1].creator.username}
             />
           </LastCard>
         </ContainerCard>

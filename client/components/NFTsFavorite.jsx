@@ -22,7 +22,7 @@ const NFTsFavorite = ({ featuresNFT }) => {
             description={feature.description}
             price={feature.price}
             date={`${getDayLeft(feature.endOfAuction) ? getDayLeft(feature.endOfAuction) : countdownMidnight()} left`}
-            sensei={feature.sensei.username}
+            sensei={feature.creator.username}
           />
         ))}
       </NFTContainer>

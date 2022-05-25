@@ -68,7 +68,7 @@ export const connectWallet = async (setAddressConnected) => {
       const doc = {
         _type: 'users',
         address: result[0],
-        username: `Otaku #${allUsers.length + 1}`,
+        username: `Otaku #${allUsers.length < 10 ? `0${allUsers.length + 1}` : allUsers.length + 1}`,
       };
 
       allUsers.map(async (user) => {
@@ -80,24 +80,25 @@ export const connectWallet = async (setAddressConnected) => {
       // If no yet create a collection
       if (!bool) {
         client.create(doc).then(async (doc) => {
-          await mintNFTCollection(
-            'Defaults',
+          const mint = await mintNFTCollection(
+            'Default',
             'DFT',
             'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
-            0
-          ).then(async (data) => {
-            console.log(data);
-            const collection = {
-              _type: 'name',
-              owner: {
-                _type: 'reference',
-                _ref: doc._id,
-              },
-              address: data.address,
-              cid: 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
-            };
-            await client.create(collection);
-          });
+            1
+          );
+
+          const collection = {
+            _type: 'collection',
+            name: 'Default',
+            cymbol: 'DFT',
+            creator: {
+              _type: 'reference',
+              _ref: doc._id,
+            },
+            address: mint.token,
+            cid: 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
+          };
+          client.create(collection);
         });
       }
 
