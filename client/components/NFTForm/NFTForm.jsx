@@ -31,7 +31,15 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
 
     const cid = await storeFiles();
     //Selected is Address collection choiced
-    await addItemToCollection(JSON.parse(selected.collection).address, NFTImage, NFTPropertie, description, cid, selected, name);
+   const mint = await addItemToCollection(JSON.parse(selected.collection).address, NFTImage, NFTPropertie, description, cid, selected, name);
+   if(mint){
+    setName('');
+    setDescription('');
+    setNFTPropertie([]);
+    setNFTImage();
+    setSelected()
+  }
+  
   };
 
   // Create a Collection
@@ -44,7 +52,14 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
     }
     const cid = await storeFiles();
     // Mint a collection: require name, symbol, baseURI, and quantity
-    await mintNFTCollection(name, symbol, cid, NFTImage.length, NFTPropertie, NFTImage, description);
+   const mint = await mintNFTCollection(name, symbol, cid, NFTImage.length, NFTPropertie, NFTImage, description);
+   if(mint){
+     setName('');
+     setSymbol('');
+     setDescription('');
+     setNFTPropertie([]);
+     setNFTImage()
+   }
   };
 
   // Upload image to web3 storage

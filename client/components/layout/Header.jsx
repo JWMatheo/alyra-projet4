@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { client } from '../../lib/sanity';
 import { connectWallet } from '../../utils/web3/authHandler';
 
 import { Button } from '../style';
@@ -10,9 +11,34 @@ const Header = ({ addressConnected, setAddressConnected }) => {
   const [toggle, setToggle] = useState(false);
   const [width, setWidth] = useState(0);
   const [sticky, setSticky] = useState(0);
+  const [avatarUrl, setAvatarUrl] = useState();
 
   useEffect(() => {
     setWidth(window.innerWidth);
+    const init = async () => {
+      if (addressConnected) {
+        const otaku = await client.fetch(`*[_type == "users" && address match "${addressConnected.toLowerCase()}"][0]{
+          avatarUrl
+        }`);
+
+        setAvatarUrl(otaku);
+      }
+      document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('save-profil')) {
+          if (addressConnected) {
+
+
+            const otaku =
+              await client.fetch(`*[_type == "users" && address match "${addressConnected.toLowerCase()}"][0]{
+              avatarUrl
+            }`);
+
+            setAvatarUrl(otaku);
+          }
+        }
+      });
+    };
+    init();
 
     const headerObserver = new IntersectionObserver(handleSticky, {
       root: null,
@@ -36,7 +62,7 @@ const Header = ({ addressConnected, setAddressConnected }) => {
       window.removeEventListener('click', setToggle(false));
       window.removeEventListener('resize', handleWidth);
     };
-  }, [sticky, toggle]);
+  }, [addressConnected, sticky, toggle, setAvatarUrl]);
 
   // Handle Function Toggle
   const handleWidth = () => setWidth(window.innerWidth);
@@ -69,7 +95,6 @@ const Header = ({ addressConnected, setAddressConnected }) => {
   }
 `;
 
-
   return (
     <Container sticky={sticky} stickyStyle={stickyStyle}>
       <Nav>
@@ -90,7 +115,10 @@ const Header = ({ addressConnected, setAddressConnected }) => {
             <li className="nav__item">
               {addressConnected ? (
                 <Link href={`/sensei/me/${addressConnected}`} passHref>
-                  <img src="https://nftavatarmaker.com/assets/main-nft.png" alt={`otaku-${addressConnected}`} />
+                  <img
+                    src={avatarUrl ? avatarUrl.avatarUrl : 'https://nftavatarmaker.com/assets/main-nft.png'}
+                    alt={`otaku-${addressConnected}`}
+                  />
                 </Link>
               ) : (
                 <Button onClick={() => connectWallet(setAddressConnected)}>
@@ -179,10 +207,12 @@ const Menu = styled.div`
       position: absolute;
       top: 4rem;
       right: 5rem;
-      width: 60px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: 3px solid var(--body-color);
       cursor: pointer;
+      object-fit: cover;
 
       &:hover {
         transform: scale(1.05);

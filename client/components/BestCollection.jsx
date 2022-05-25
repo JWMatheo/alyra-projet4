@@ -55,7 +55,9 @@ const BestCollection = ({ bestNFTs }) => {
 
     return `${hours}:${customTime(min)}:${customTime(sec)}`;
   };
-
+console.log('====================================');
+console.log(bestNFTs[2].creator);
+console.log('====================================');
   return (
     <Section>
       <h2 className="title">Best week's collection </h2>
@@ -73,7 +75,7 @@ const BestCollection = ({ bestNFTs }) => {
         <ContainerCard animated={animated}>
           <NFTCard
             maxWidth={true}
-            NFTimage={bestNFTs[0].image}
+            NFTimage={bestNFTs[0].NFTUrl}
             NFTname={bestNFTs[0].name}
             alt={bestNFTs[0].name}
             description={bestNFTs[0].description}
@@ -89,7 +91,7 @@ const BestCollection = ({ bestNFTs }) => {
           <SecondCard id="second">
             <NFTCard
               maxWidth={true}
-              NFTimage={bestNFTs[2].image}
+              NFTimage={bestNFTs[2].NFTUrl}
               NFTname={bestNFTs[2].name}
               alt={bestNFTs[2].name}
               description={bestNFTs[2].description}
@@ -107,7 +109,7 @@ const BestCollection = ({ bestNFTs }) => {
           <LastCard id="last">
             <NFTCard
               maxWidth={true}
-              NFTimage={bestNFTs[1].image}
+              NFTimage={bestNFTs[1].NFTUrl}
               NFTname={bestNFTs[1].name}
               alt={bestNFTs[1].name}
               description={bestNFTs[1].description}

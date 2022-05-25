@@ -35,12 +35,14 @@ export const mintNFTCollection = async (
       // 3) Get _id user connected
       const userConnected = await client.fetch(`*[_type == 'users' && address match '${owner[0]}'][0]{
     _id }`);
-
+      const collectionUrl = `https://${baseURI}.ipfs.dweb.link/${NFTImage[0].name}`;
       // 4) Prepare collection creating
       const collection = {
         _type: 'collection',
         name,
         symbol,
+        collectionUrl,
+        items: NFTImage.length,
         cid: baseURI,
         address: mint.events.Showed.length > 1 ? event[0].returnValues.token : event[0].token,
         creator: {
@@ -50,7 +52,16 @@ export const mintNFTCollection = async (
       };
       // 5) Create collection on Sanity
       client.create(collection).then((doc) => {
-        // 6) Map to event data for prepare creating NFT
+        // 6) Add owner array
+        client
+          .patch(doc._id)
+          .setIfMissing({ owners: [] })
+          .insert('after', 'owners[-1]', [{ _type: 'reference', _ref: userConnected._id }])
+          .commit({
+            autoGenerateArrayKeys: true,
+          });
+
+        // 7) Map to event data for prepare creating NFT
         event.map((minted, index) => {
           // Rename file
           const NFTName = `${name}#${index < 10 ? `0${index}` : index}`;
@@ -78,7 +89,7 @@ export const mintNFTCollection = async (
             },
           };
           if (NFTPropertie) {
-            // 7) If propreties add it to the document
+            // 8) If propreties add it to the document
             client.create(nft).then((doc) => {
               console.log(doc);
               if (doc._id) {
@@ -93,12 +104,14 @@ export const mintNFTCollection = async (
                 });
 
                 notification('success', 'Collection created successful !');
+                return true;
               }
             });
           } else {
             client.create(doc).then((nft) => {
               if (nft._id) {
                 notification('success', 'Collection created successful !');
+                return true;
               }
             });
           }
@@ -157,6 +170,10 @@ export const addItemToCollection = async (
     };
 
     if (NFTPropertie) {
+      client
+        .patch(`${JSON.parse(selected.collection)._id}`)
+        .inc({ items: 1 })
+        .commit();
       client.create(nft).then((doc) => {
         if (doc._id) {
           NFTPropertie.map((item) => {
@@ -170,12 +187,14 @@ export const addItemToCollection = async (
           });
 
           notification(`success', 'NFT added to ${selected.name} successful !`);
+          return true;
         }
       });
     } else {
       client.create(doc).then((doc) => {
         if (doc._id) {
           notification(`success', 'NFT added to ${selected.name} successful !`);
+          return true;
         }
       });
     }
