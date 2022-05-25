@@ -1,11 +1,12 @@
-const NFTsDetails = `
+export const NFTsDetails = `
 sellable,
 name,
+NFTUrl,
 "image": image.asset->url,
 price,
 ipfs,
 tokeId,
-slug,
+"slug": slug.current,
 metadata,
 description,
 endOfAuction,

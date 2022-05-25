@@ -16,7 +16,7 @@ const NFTsFavorite = ({ featuresNFT }) => {
             key={index}
             maxWidth={true}
             slug={feature.slug.current}
-            NFTimage={feature.image}
+            NFTimage={feature.NFTUrl}
             NFTname={feature.name}
             alt={feature.name}
             description={feature.description}

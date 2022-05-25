@@ -75,3 +75,12 @@ export const handlerClickOutSide = (open, setOpen, target) => {
     };
   }
 };
+
+
+export const convertDate = (date) => {
+  const initialDate = new Date(date);
+  const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(initialDate);
+  const year = initialDate.getFullYear();
+
+  return {month, year}
+}

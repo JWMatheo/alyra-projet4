@@ -1,25 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
-import React from 'react';
 import styled from 'styled-components';
+import { convertDate } from '../utils/handlerFactory';
 import { containerCard } from './style';
 
-const NFTCollection = ({ image, link }) => {
-  return (
-    <Link href={`/collection/${link}`} passHref>
-      <Container >
-        <div>
-          <img style={{ borderRadius: '0.5rem 0.5rem 0 0' }}  src={image} alt="" />
-        </div>
+const NFTCollection = ({ userCollections }) => {
 
-        <ContainerInfo>
-          <li>Items: 59</li>
-          <li>Owner: 5</li>
-          <li>Create at : 2nd Fevebary 2019</li>
-          <li>View</li>
-        </ContainerInfo>
-      </Container>
-    </Link>
+  return (
+    <>
+      {userCollections.map((collection, index) => (
+        <Link key={index} href={`/collection/${collection._id}`} passHref>
+          <Container>
+            <div>
+              <img style={{ borderRadius: '0.5rem 0.5rem 0 0' }} src={collection.collectionUrl} alt="" />
+            </div>
+
+            <ContainerInfo>
+              <li>Items: {collection.items}</li>
+              <li>Owner: {collection.owners.length} </li>
+              <li>
+                Create at : {`${convertDate(collection._createdAt).month} ${convertDate(collection._createdAt).year} `}{' '}
+              </li>
+              <li>View</li>
+            </ContainerInfo>
+          </Container>
+        </Link>
+      ))}
+    </>
   );
 };
 

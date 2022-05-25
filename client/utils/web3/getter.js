@@ -15,7 +15,7 @@ export const getCollections = async () => {
   getter.map((addressCollection) => {
     getCollectionFromSanity.map((item) => {
       if (item && item.address === addressCollection) {
-        array.push({ address: item.address, name: item.name, _id: item._id });
+        array.push({ address: item.address, name: item.name, _id: item._id, _createdAt: item._createdAt, owners: item.owners, collectionUrl: item.collectionUrl, items: item.items });
       }
     });
   });
@@ -29,5 +29,7 @@ export const getListOfNFTfromUser = async (setUserNFTs) => {
   const address = await web3.eth.getAccounts();
 
   const getNFTs = await instance.methods.getListOfNFTfromUser(address[0]).call();
+
+  return getNFTs
   setUserNFTs(getNFTs);
 };

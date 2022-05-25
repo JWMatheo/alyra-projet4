@@ -3,13 +3,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { convertDate } from '../utils/handlerFactory';
 
 import { Button, containerCard } from './style';
 
-const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sensei, maxWidth }) => {
+const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sensei, senseiRef, maxWidth }) => {
+console.log('====================================');
+console.log(sensei);
+console.log('====================================');
   return (
     <Container maxWidth={maxWidth}>
-      <Link href={`/nft/${slug}`}>
+      <Link href={`/nft/${slug}`} >
+        <div>
+
         <Card maxWidth={maxWidth}>
           <ContainerImage id="image">
             <img src={NFTimage} alt={alt} />
@@ -22,7 +28,7 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sense
             </div>
             <ContainerInfo id='info'>
               <Price>
-                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt={slug} />
+                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" loading='lazy' alt={slug} />
                 <span>{price}</span>
               </Price>
 
@@ -34,11 +40,13 @@ const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sense
 
             <ContainerAction>
             <hr />
-              <Link href={`/sensei/${sensei}`}>{sensei}</Link>
+              <a href={`/sensei/${senseiRef}`}> {sensei}</a>
+             {/*  <Link href={`/sensei/${senseiRef}`}> <a> {sensei}</a></Link> */}
               <Button>Place a bid</Button>
             </ContainerAction>
           </ContainerData>
         </Card>
+        </div>
       </Link>
     </Container>
   );
@@ -106,6 +114,12 @@ const Card = styled.div`
   box-shadow: var(--shadow);
   transition: 0.5s all;
   cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const ContainerImage = styled.div`
@@ -128,7 +142,7 @@ const ContainerData = styled.div`
   P {
     height: 100%;
     display: inline-block;
-   // overflow: hidden
+    overflow: hidden
   }
 
   h2 {
@@ -140,6 +154,10 @@ const ContainerData = styled.div`
     border: none;
     border-bottom: 1px solid var(--text-color);
     margin-top: 0;
+  }
+
+  a{
+    color: var(--first-color);
   }
 `;
 
