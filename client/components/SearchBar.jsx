@@ -2,22 +2,24 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { input } from './style';
 
-const SearchBar = () => {
+const SearchBar = ({ setAllNFTs, allNFTs, copy }) => {
   const [addressEntered, setaddressEntered] = useState('');
 
   // On change address input
   const onChangeHandler = (e) => setaddressEntered(e.target.value);
   const resetInput = () => setaddressEntered('');
 
+  const filterByName = (string) => {
+    const filter = allNFTs.filter((word) => word.name && word.name.includes(string.toLowerCase()));
+
+    if (filter.length === 0 || string === '') {
+      setAllNFTs(copy);
+    } else setAllNFTs(filter);
+  };
+
   return (
-    <Form>
-      <input
-        id="text"
-        onChange={onChangeHandler}
-        type="text"
-        placeholder="Search items, collections and accounts"
-        value={addressEntered}
-      />
+    <Form onSubmit={(e) => e.preventDefault()}>
+      <input id="text" onChange={(e) => filterByName(e.target.value)} type="text" placeholder="Search items" />
       <BoxIcons>
         <i onClick={resetInput} className="bx bx-reset" />
         <i className="bx bx-search-alt" />
