@@ -1,28 +1,67 @@
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
-import { SelectForm } from './style';
+import { Button, SelectForm } from './style';
 import { handlerClickOutSide, openHandler } from '../utils/handlerFactory';
+import { client } from '../lib/sanity';
+import { NFTListed, NFTsQuery, oldestCreated, recentlyCreated } from '../lib/query';
+import { css } from 'styled-components';
 
-const Filter = ({ setSwitchLayout, switchLayout }) => {
+const Filter = ({ setSwitchLayout, switchLayout, setAllNFTs, allNFTs }) => {
   const [selected, setSelected] = useState(null);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-   handlerClickOutSide(open, setOpen, '.button-sort')
+    handlerClickOutSide(open, setOpen, '.button-sort');
   }, [open]);
 
-
-
-  const ListItem = ({ value }) => {
+  const ListItem = ({ value, sortFunction }) => {
     return (
       <li
         onClick={(e) => {
           setSelected(e.target.innerText);
+          sortFunction();
         }}>
         {value}
       </li>
     );
   };
+
+  const sortRecentlyCreated = async () => {
+    const sorting = await client.fetch(recentlyCreated);
+    setAllNFTs(sorting);
+  };
+
+  const sortNFTListed = async () => {
+    const sorting = await client.fetch(NFTListed);
+    console.log(sorting);
+
+    setAllNFTs(sorting);
+  };
+
+  const sortOldestCreated = async (e) => {
+    e.preventDefault();
+    const sorting = await client.fetch(oldestCreated);
+
+    setAllNFTs(sorting);
+  };
+
+
+const reset = async() => {
+  const NFTs = await client.fetch(NFTsQuery);
+  setSelected()
+  setAllNFTs(NFTs);
+}
+
+const sortLowToHigh = () => {
+  const eitherSort = (arr = []) => {
+    const sorter = (a, b) => {
+       return +a.price - +b.price;
+    };
+    arr.sort(sorter);
+ };
+
+ eitherSort(allNFTs);
+}
 
   return (
     <Container>
@@ -32,15 +71,16 @@ const Filter = ({ setSwitchLayout, switchLayout }) => {
           <i className={`bx bx-chevron-${open ? 'up' : 'down'}`} />
         </button>
         {open && (
-          <ListOptions className="sort">
-            <ListItem value="Recently listed" />
-            <ListItem value="Recently created" />
-            <ListItem value="Recently sold" />
+          <ListOptions selected={selected} className="sort">
+            {selected && <ListItem value="Reset"sortFunction={reset} />}
+            <ListItem value="NFT listed" onClick={(e) => sortNFTListed(e)} sortFunction={sortNFTListed} />
+            <ListItem value="Recently created" sortFunction={sortRecentlyCreated} />
+        {/*     <ListItem value="Recently sold" />
             <ListItem value="Recently received" />
-            <ListItem value="Ending soon" />
-            <ListItem value="Price: Low to High" />
-            <ListItem value="Highest last sale" />
-            <ListItem value="Oldest" />
+            <ListItem value="Ending soon" /> */}
+            <ListItem value="Price: Low to High" sortFunction={sortLowToHigh} />
+            {/* <ListItem value="Highest last sale" /> */}
+            <ListItem value="Oldest" sortFunction={sortOldestCreated} />
           </ListOptions>
         )}
       </SelectForm>
@@ -61,16 +101,19 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-
 const ListOptions = styled.ul`
   width: 11rem;
   position: absolute;
-  bottom: -30.5rem;
+  bottom: -15.8rem;
   //width: 100%;
   background: white;
   border-radius: 0.5rem;
   z-index: var(--z-fixed);
-
+  ${({ selected }) =>
+    selected &&
+    css`
+      bottom: -19.5rem;
+    `}
   li {
     width: 100%;
     position: relative;
@@ -130,7 +173,7 @@ const ContainerGrid = styled.div`
     color: var(--first-color);
     transition: all 0.5s;
 
-    &:hover{
+    &:hover {
       color: var(--first-color-alt);
     }
   }

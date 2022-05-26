@@ -16,6 +16,8 @@ export default function Explore({ setSwitchLayout, switchLayout, NFTs }) {
   const [listingMyNFT, setListingMyNFT] = useState();
   const [NFTId, setNFTId] = useState();
   const [sellableNFT, setSellableNFT] = useState();
+  const [allNFTs, setAllNFTs] = useState(NFTs);
+  const [copy, setCopy] = useState(NFTs)
   const [id, setId] = useState();
   const handleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -50,7 +52,7 @@ export default function Explore({ setSwitchLayout, switchLayout, NFTs }) {
       isModalOpen
     );
 
-    setSellableNFT(true)
+    setSellableNFT(true);
   };
 
   const largeLayout = css`
@@ -73,11 +75,11 @@ export default function Explore({ setSwitchLayout, switchLayout, NFTs }) {
       />
       <Section>
         <ContainerFilter>
-          <SearchBar />
-          <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
+          <SearchBar allNFTs={allNFTs} setAllNFTs={setAllNFTs} copy={copy} />
+          <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} setAllNFTs={setAllNFTs} allNFTs={allNFTs} />
         </ContainerFilter>
-        <ContainerCard switchLayout={switchLayout} largeLayout={largeLayout} smallLayout={smallLayout}>
-          {NFTs.map(
+        <ContainerCard allNFTs={allNFTs.length} switchLayout={switchLayout} largeLayout={largeLayout} smallLayout={smallLayout}>
+          {allNFTs ? allNFTs.map(
             (NFT, index) =>
               NFT.name &&
               NFT.owner && (
@@ -106,7 +108,7 @@ export default function Explore({ setSwitchLayout, switchLayout, NFTs }) {
                   setId={setId}
                 />
               )
-          )}
+          ) : <p>No Item</p> }
         </ContainerCard>
 
         <ListingModal
@@ -141,6 +143,10 @@ const ContainerCard = styled.section`
       grid-template-rows: 1fr;
     }
   }
+
+  ${({allNFTs}) => allNFTs === 1 && css`
+  width: 300px;
+  `}
 `;
 
 export async function getServerSideProps() {

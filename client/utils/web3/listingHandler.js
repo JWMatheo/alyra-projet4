@@ -27,7 +27,7 @@ export const listingNFT = async (
     const result = listing.events.Listed;
     client
       .patch(`${NFTId}`)
-      .set({ listingId: result.listingId, price: Number(price), sellable: true })
+      .set({ listingId: result.listingId, price: price, sellable: true })
       .commit();
     setSellableNFT(true);
     setListingMyNFT(result.listingId);

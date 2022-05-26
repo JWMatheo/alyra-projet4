@@ -55,3 +55,9 @@ export const NFTQuery = (pageSlug) => {
     ${NFTsDetails}
   }`;
 };
+
+export const recentlyCreated = `*[_type == "nft"] | order(_createdAt desc)`
+
+export const oldestCreated = `*[_type == "nft"] | order(_createdAt desc)`
+
+export const NFTListed = `*[_type == "nft"] &&  sellable == true`
