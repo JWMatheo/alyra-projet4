@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
 import { networkConnected, onChangeNetwork, walletConnected } from '../utils/web3/authHandler';
+import { getListing } from '../utils/web3/getter';
 import {mintNFTCollection} from '../utils/web3/mintHandler'
 
 
@@ -14,6 +15,8 @@ function MyApp({ Component, pageProps }) {
       //await networkConnected();
       //await onChangeNetwork();
       await walletConnected(setAddressConnected);
+    const n =  await getListing(4)
+    console.log(n);
     //  await mintNFTCollection('Default', 'DFT', 'bafybeideszhe6x7q36ozqigc5cqhfqs7j5zq3qfnsvy3jhvwmh3wmk6wwy', 1)
     };
 

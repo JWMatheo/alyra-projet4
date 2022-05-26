@@ -1,21 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import HyperModal from 'react-hyper-modal';
 import { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
+import { Web3Storage } from 'web3.storage';
 
 import NFTCollection from './NFTCollection';
 import { Button, input, largeLayout, Section, smallLayout } from './style';
 import NFTCard from './NFTCard';
 import Filter from './Filter';
-import Link from 'next/link';
-import { getCollections, getListOfNFTfromUser } from '../utils/web3/getter';
+import { getCollections } from '../utils/web3/getter';
 import { clickHandler, convertDate, resetUpload, uploadHandler } from '../utils/handlerFactory';
-import { css } from 'styled-components';
 import { client } from '../lib/sanity';
-
 import { NFTsDetails } from '../lib/query';
 import { notification } from '../utils/notification';
-import { Web3Storage } from 'web3.storage';
+import { cancelListingNFT, listingNFT } from '../utils/web3/listingHandler';
+import ListingModal from './ListingModal';
 
 const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,8 +27,17 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
   const [userAvatar, setUserAvatar] = useState();
   const hiddenFileInput = useRef(null);
 
-  const handleModal = () => setIsModalOpen(!isModalOpen);
+  const [isModalOpenListing, setIsModalOpenListing] = useState(false);
+  const [priceListing, setPriceListing] = useState();
+  const [listingMyNFT, setListingMyNFT] = useState();
+  const [NFTId, setNFTId] = useState();
+  const [sellableNFT, setSellableNFT] = useState();
+  const [id, setId] = useState();
 
+  const handleModal = () => setIsModalOpen(!isModalOpen);
+  const handleModalListing = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   useEffect(() => {
     const init = async () => {
       // 1) Get all collections
@@ -50,7 +59,8 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     init();
   }, [senseiConnected, setUserAvatar]);
 
-  const date = convertDate(otaku._createdAt);
+  let date;
+  if (otaku) date = convertDate(otaku._createdAt);
 
   // Update profil
   const updateProfil = async (e) => {
@@ -79,6 +89,50 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     const cid = await client.put(userAvatar);
     return cid;
   };
+
+  const listingNFTHandler = async (e, sellable) => {
+    e.preventDefault();
+
+    await listingNFT(
+      Number(listingMyNFT),
+      priceListing,
+      NFTId,
+      setSellableNFT,
+      setPriceListing,
+      setListingMyNFT,
+      setIsModalOpenListing,
+      isModalOpenListing
+    );
+ 
+  };
+
+  const cancelListingHandler = async (e) => {
+    e.preventDefault();
+
+    const asking = confirm('are you sure you want to cancel the listing of this NFT ? ');
+
+    if (asking) {
+      await cancelListingNFT(Number(e.target.dataset.listingid));
+
+      client.patch(`${e.target.dataset.nftid}`).set({ sellable: false }).commit();
+      setSellableNFT(false);
+
+      return notification('success', 'Your NFT are successfully listing 🎉');
+    }
+  };
+
+
+
+  const openModal = (e) => {
+    e.preventDefault();
+    const listingId = e.target.dataset.listingid;
+
+    setListingMyNFT(listingId);
+    setIsModalOpenListing(!isModalOpenListing);
+  };
+
+
+
   return (
     <>
       <Section id="form" style={{ display: 'grid', gap: '4rem' }}>
@@ -128,7 +182,8 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
             switchLayout={switchLayout}
             largeLayout={largeLayout}
             smallLayout={smallLayout}
-            userCollections={userCollections}>
+            userCollections={userCollections}
+            collection={true}>
             <NFTCollection userCollections={userCollections} />
           </Container>
         </section>
@@ -158,6 +213,18 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
                 date={nft.endOfAuction}
                 sensei={nft.creator.username}
                 senseiRef={nft.senseiRef}
+                setListingMyNFT={setListingMyNFT}
+                setIsModalOpen={setIsModalOpenListing}
+                nftId={nft._id}
+                listingId={nft.listingId}
+                setNFTId={setNFTId}
+                setSellableNFT={setSellableNFT}
+                sellableNFT={sellableNFT}
+                sellable={nft.sellable}
+                cancelListingHandler={cancelListingHandler}
+                setId={setId}
+                openModal={openModal}
+                owner={nft.owner.address}
               />
             ))}
           </Container>
@@ -235,6 +302,15 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
             </Form>
           </Section>
         </HyperModal>
+
+        <ListingModal
+          isModalOpen={isModalOpenListing}
+          handleModal={handleModalListing}
+          priceListing={priceListing}
+          setPriceListing={setPriceListing}
+          listingMyNFT={listingMyNFT}
+          listingNFTHandler={listingNFTHandler}
+        />
       </Section>
     </>
   );
@@ -264,6 +340,8 @@ const Container = styled.div`
         grid-template-columns: 1fr;
       }
     `}
+
+  ${({ collection }) => collection && css``}
 `;
 
 const ContainerTitle = styled.div`

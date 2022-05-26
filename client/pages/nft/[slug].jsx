@@ -4,11 +4,13 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Heading } from '../../components';
+import ListingModal from '../../components/ListingModal';
 import { Button, Section } from '../../components/style';
 import { NFTQuery } from '../../lib/query';
 import { client } from '../../lib/sanity';
-
-
+import { notification } from '../../utils/notification';
+import { walletConnected } from '../../utils/web3/authHandler';
+import { buyNFT, cancelListingNFT, listingNFT } from '../../utils/web3/listingHandler';
 // This gets called on every request
 export async function getServerSideProps(pageContext) {
   const NftData = await client.fetch(NFTQuery(pageContext.query.slug));
@@ -22,14 +24,17 @@ export async function getServerSideProps(pageContext) {
       category: NftData.category,
       collection: NftData.collection.name,
       endOfAuction: NftData.endOfAuction,
-      ipfs: NftData.ipfs,
+      NFTUrl: NftData.NFTUrl,
       owner: NftData.owner,
       sensei: NftData.creator,
+      ownerAdress: NftData.owner.address,
       metadata: NftData.metadata,
       price: NftData.price,
       sellable: NftData.sellable,
       ownerRef: NftData.otakuRef,
       senseiRef: NftData.senseiRef,
+      listingId: NftData.listingId,
+      NFTId: NftData._id,
     },
   };
 }
@@ -41,7 +46,7 @@ export default function Nft({
   description,
   category,
   endOfAuction,
-  ipfs,
+  NFTUrl,
   owner,
   sensei,
   metadata,
@@ -49,107 +54,224 @@ export default function Nft({
   sellable,
   senseiRef,
   ownerRef,
+  ownerAdress,
+  listingId,
+  NFTId,
+  NftData,
 }) {
   const [priceUSDT, setpriceUSDT] = useState('');
+  const [addressConnected, setAddressConnected] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [priceListing, setPriceListing] = useState();
+  const [listingMyNFT, setListingMyNFT] = useState();
+  const [sellableNFT, setSellableNFT] = useState();
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   useEffect(() => {
     const convert = async () => {
       const ethValue = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=ethereum')
         .then((data) => data.json())
         .then((result) => result[0].current_price);
-
+      await walletConnected(setAddressConnected);
       setpriceUSDT(parseFloat(ethValue * price).toFixed(4));
     };
-
+    setSellableNFT(sellable);
     setTimeout(() => {
       convert();
     }, 1000);
-  }, [price]);
+  }, [price, sellable]);
 
+  const listingNFTHandler = async (e, sellable) => {
+    e.preventDefault();
 
+    await listingNFT(
+      listingId,
+      priceListing,
+      NFTId,
+      setSellableNFT,
+      setPriceListing,
+      setListingMyNFT,
+      setIsModalOpen,
+      isModalOpen
+    );
+  };
+
+  const cancelListingHandler = async (e) => {
+    e.preventDefault();
+
+    const asking = confirm('are you sure you want to cancel the listing of this NFT ? ');
+
+    if (asking && listingId) {
+      await cancelListingNFT(Number(listingId));
+
+      client.patch(`${NFTId}`).set({ sellable: false }).commit();
+
+      setSellableNFT(false);
+
+      return notification('success', 'Your NFT are successfully listing 🎉');
+    }
+  };
+
+  const buyNFTHandler = async (e) => {
+    e.preventDefault();
+
+    await buyNFT(Number(e.target.dataset.listingid), price, NFTId, name, ownerAdress);
+    setTimeout(() => {
+      window.location.reload();
+      
+    }, 7000);
+  };
   return (
     <>
-      <Heading title={name} image={image} />
-      <Section>
-        <Container>
-          <RightSide>
-            <NFT>
-              <TopNFT>
-                <Link href={`collection/${collection}`}>
-                  <i>{collection}</i>
-                </Link>
-                <ContainerLike>
-                  <i className="bx bx-heart" />
-                  <em>14</em>
+      <Heading title={name} image={NFTUrl} />
+      <section style={{ paddingBottom: '3rem' }}>
+        <Section>
+          <Container>
+            <RightSide>
+              <NFT>
+                <TopNFT>
+                  <Link href={`collection/${collection}`}>
+                    <i>{collection}</i>
+                  </Link>
+                  <ContainerLike>
+                    <i className="bx bx-heart" />
+                    <em>14</em>
 
-                  <em>123 👀</em>
-                </ContainerLike>
-              </TopNFT>
-              <ContainerImage>
-                <img src={image} alt={`nft-${collection}-${name}`} />
-              </ContainerImage>
-              <BottomNFT>
-                <p>
-                  Owned by <Link href={`/sensei/${ownerRef}`} passHref><a >{owner.username} </a></Link> 
-                </p>
-                <p>
-                  Sensei by <Link href={`/sensei/${senseiRef}`} passHref><a >{sensei.username} </a></Link> 
-                </p>
-              </BottomNFT>
-            </NFT>
+                    <em>123 👀</em>
+                  </ContainerLike>
+                </TopNFT>
+                <ContainerImage>
+                  <img src={NFTUrl} alt={`nft-${collection}-${name}`} />
+                </ContainerImage>
+                <BottomNFT>
+                  <p>
+                    Owned by{' '}
+                    <Link href={`/sensei/${owner.address}`} passHref>
+                      <a>{owner.username} </a>
+                    </Link>
+                  </p>
+                  <p>
+                    Sensei by{' '}
+                    <Link href={`/sensei/${sensei.address}`} passHref>
+                      <a>{sensei.username} </a>
+                    </Link>
+                  </p>
+                </BottomNFT>
+              </NFT>
 
-            <ContainerAction>
-              <Price>
-                <i>Current price</i>
+              {/*             {addressConnected && addressConnected.toLowerCase() === owner ? (
+              sellable ? (
                 <div>
-                  <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
-                  <p>{price}</p>
-                  <span>
-                    (<b>{priceUSDT}</b> USDT)
-                  </span>
+                  <Button
+                    data-listingid={listingId}
+                    data-nftid={nftId}
+                    id={`${index}`}
+                    onClick={(e) => cancelListingHandler(e)}>
+                    Cancel listing
+                  </Button>
                 </div>
-              </Price>
+              ) : (
+                <div>
+                  <Button data-listingid={listingId} data-nftid={nftId} id={`${index}`} onClick={(e) => openModal(e)}>
+                    List it
+                  </Button>
+                </div>
+              )
+            ) : (
               <div>
-                <Button>Place a bid </Button>
-                <Button outline={true}>Buy now</Button>
+                <Button>Place a bid</Button>
               </div>
-            </ContainerAction>
-          </RightSide>
+            )} */}
 
-          <div>
-            <h2>Detail</h2>
+              {addressConnected && addressConnected.toLowerCase() === ownerAdress ? (
+                sellableNFT ? (
+                  <div>
+                    <Button onClick={(e) => cancelListingHandler(e)}>Cancel listing</Button>
+                  </div>
+                ) : (
+                  <div>
+                    <Button onClick={(e) => handleModal(e)}>List it</Button>
+                  </div>
+                )
+              ) : sellableNFT ? (
+                <ContainerAction>
+                  <Price>
+                    <i>Current price</i>
+                    <div>
+                      <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" alt="etheruem" />
+                      <p>{price}</p>
+                      <span>
+                        (<b>{priceUSDT}</b> USDT)
+                      </span>
+                    </div>
+                  </Price>
+                  <div>
+                    <Button onClick={(e) => buyNFTHandler(e)} data-listingid={listingId}>
+                      Buy Now{' '}
+                    </Button>
+                    {/* <Button outline={true}>Buy now</Button> */}
+                  </div>
+                </ContainerAction>
+              ) : (
+                <>
+                  <NotSellable>
+                    <p> No listing</p>
+                  </NotSellable>
+                  {/*  <div>
+                    <Button>Place a bid </Button>
+                    <Button outline={true}>Buy now</Button>
+                  </div> */}
+                </>
+              )}
+            </RightSide>
 
-            <LeftSide>
-              <details>
-                <summary>Description</summary>
-                <br /> <hr /> <br />
-                <small>created by {sensei.username}</small>
-                <p>{description}</p>
-              </details>
+            <div>
+              <h2>Detail</h2>
 
-              <details>
-                <summary>Propreties</summary>
-                <br /> <hr /> <br />
-                <ul>
-                  {metadata.map((property) => (
-                    <li key={property._key}>
-                      {property.property}: {property.value}
-                    </li>
-                  ))}
-                </ul>
-              </details>
+              <LeftSide>
+                <details>
+                  <summary>Description</summary>
+                  <br /> <hr /> <br />
+                  <small>created by {sensei.username}</small>
+                  <p>{description}</p>
+                </details>
 
-              <details>
-                <summary>Item activity</summary>
-                <br /> <hr /> <br />
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut cupiditate harum consequuntur inventore
-                sint! Et alias fugit maiores est doloribus odio! Delectus iure facilis maxime tenetur. Iusto, mollitia!
-                Voluptatem, officia.
-              </details>
-            </LeftSide>
-          </div>
-        </Container>
-      </Section>
+                <details>
+                  <summary>Propreties</summary>
+                  <br /> <hr /> <br />
+                  <ul>
+                    {metadata &&
+                      metadata.map((property) => (
+                        <li key={property._key}>
+                          {property.property}: {property.value}
+                        </li>
+                      ))}
+                  </ul>
+                </details>
+
+                <details>
+                  <summary>Item activity</summary>
+                  <br /> <hr /> <br />
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut cupiditate harum consequuntur inventore
+                  sint! Et alias fugit maiores est doloribus odio! Delectus iure facilis maxime tenetur. Iusto,
+                  mollitia! Voluptatem, officia.
+                </details>
+              </LeftSide>
+            </div>
+          </Container>
+
+          <ListingModal
+            isModalOpen={isModalOpen}
+            handleModal={handleModal}
+            priceListing={priceListing}
+            setPriceListing={setPriceListing}
+            listingMyNFT={listingId}
+            listingNFTHandler={listingNFTHandler}
+          />
+        </Section>
+      </section>
     </>
   );
 }
@@ -294,8 +416,14 @@ const LeftSide = styled.div`
       color: var(--text-color);
     }
 
-    small{
+    small {
       color: var(--first-color);
     }
   }
+`;
+
+const NotSellable = styled.div`
+  font-size: var(--h3-font-size);
+  font-weight: var(--font-bold);
+  color: crimson;
 `;

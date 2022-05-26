@@ -33,3 +33,13 @@ export const getListOfNFTfromUser = async (setUserNFTs) => {
   return getNFTs
   setUserNFTs(getNFTs);
 };
+
+
+export const getListing = async(listingId) => {
+  const instance = await instanceContract();
+  const web3 = await init();
+  const address = await web3.eth.getAccounts();
+
+  const getListing = await instance.methods.getListing(listingId).call();
+return getListing
+}

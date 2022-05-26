@@ -116,7 +116,7 @@ const Header = ({ addressConnected, setAddressConnected }) => {
               {addressConnected ? (
                 <Link href={`/sensei/me/${addressConnected}`} passHref>
                   <img
-                    src={avatarUrl ? avatarUrl.avatarUrl : 'https://nftavatarmaker.com/assets/main-nft.png'}
+                    src={avatarUrl && avatarUrl.avatarUrl && avatarUrl.avatarUrl.startsWith('https')  ? avatarUrl.avatarUrl : 'https://nftavatarmaker.com/assets/main-nft.png'}
                     alt={`otaku-${addressConnected}`}
                   />
                 </Link>
