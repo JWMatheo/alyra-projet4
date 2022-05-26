@@ -5,11 +5,12 @@ import { convertDate } from '../utils/handlerFactory';
 import { containerCard } from './style';
 
 const NFTCollection = ({ userCollections }) => {
-
   return (
     <>
       {userCollections.map((collection, index) => (
-        <Link key={index} href={`/collection/${collection._id}`} passHref>
+        <>
+{/*  <Link key={index} href={`/collection/${collection._id}`} passHref>
+        </Link> */}
           <Container>
             <div>
               <img style={{ borderRadius: '0.5rem 0.5rem 0 0' }} src={collection.collectionUrl} alt="" />
@@ -24,7 +25,7 @@ const NFTCollection = ({ userCollections }) => {
               <li>View</li>
             </ContainerInfo>
           </Container>
-        </Link>
+        </>
       ))}
     </>
   );
@@ -32,6 +33,15 @@ const NFTCollection = ({ userCollections }) => {
 
 const Container = styled.div`
   ${containerCard}
+
+  &>div {
+    height: 300px;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
 `;
 
 const ContainerInfo = styled.ul`

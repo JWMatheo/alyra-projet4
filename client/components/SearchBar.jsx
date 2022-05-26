@@ -34,6 +34,9 @@ const Form = styled.form`
   height: max-content;
 
   ${input}
+  input {
+    margin-top: 0;
+  }
 `;
 
 const BoxIcons = styled.div`

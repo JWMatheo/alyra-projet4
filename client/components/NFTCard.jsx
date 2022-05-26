@@ -1,59 +1,164 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import HyperModal from 'react-hyper-modal';
 import styled, { css } from 'styled-components';
 import { convertDate } from '../utils/handlerFactory';
+import { walletConnected } from '../utils/web3/authHandler';
+import { getListing } from '../utils/web3/getter';
+import { buyNFT, listingNFT } from '../utils/web3/listingHandler';
+import { Button, containerCard, input } from './style';
 
-import { Button, containerCard } from './style';
+const NFTCard = ({
+  NFTimage,
+  alt,
+  NFTname,
+  description,
+  price,
+  date,
+  slug,
+  sensei,
+  senseiRef,
+  maxWidth,
+  owner,
+  sellable,
+  listingId,
+  best,
+  handleModal,
+  setListingMyNFT,
+  setIsModalOpen,
+  isModalOpen,
+  nftId,
+  setNFTId,
+  cancelListingHandler,
+  priceListing,
+  index,
+  setId,
+}) => {
+  const [addressConnected, setAddressConnected] = useState();
+  const [sellableNFT, setSellableNFT] = useState();
 
-const NFTCard = ({ NFTimage, alt, NFTname, description, price, date, slug, sensei, senseiRef, maxWidth }) => {
-console.log('====================================');
-console.log(sensei);
-console.log('====================================');
+  useEffect(() => {
+    const init = async () => {
+      await walletConnected(setAddressConnected);
+
+      if (!isNaN(listingId)) {
+        const checkIsListing = await getListing(Number(listingId));
+        checkIsListing.status === '1' ? setSellableNFT(true) : setSellableNFT(false);
+      }
+    };
+
+    init();
+  }, [setAddressConnected, addressConnected, setSellableNFT, sellable, listingId]);
+
+  const openModal = (e) => {
+    e.preventDefault();
+
+    const listingIdNFT = e.target.dataset.listingid;
+    setListingMyNFT(listingIdNFT);
+    setNFTId(e.target.dataset.nftid);
+    setIsModalOpen(!isModalOpen);
+    setId(e.target.id);
+  };
+
+  const buyNFTHandler = async (e) => {
+    e.preventDefault();
+
+    await buyNFT(Number(e.target.dataset.listingid), price, nftId, NFTname, owner);
+    setTimeout(() => {
+      window.location.reload();
+    }, 7000);
+  };
+
   return (
-    <Container maxWidth={maxWidth}>
-      <Link href={`/nft/${slug}`} >
-        <div>
+    <section>
+      <Container maxWidth={maxWidth}>
+        <Link href={`/nft/${slug}`}>
+          <div>
+            <Card maxWidth={maxWidth}>
+              <ContainerImage id="image">
+                <img src={NFTimage} alt={alt} />
+              </ContainerImage>
 
-        <Card maxWidth={maxWidth}>
-          <ContainerImage id="image">
-            <img src={NFTimage} alt={alt} />
-          </ContainerImage>
+              <ContainerData>
+                <div>
+                  <h2>{NFTname} </h2>
+                  <p>{description} </p>
+                </div>
 
-          <ContainerData>
-            <div>
-              <h2>{NFTname} </h2>
-              <p>{description} </p>
-            </div>
-            <ContainerInfo id='info'>
-              <Price>
-                <img src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png" loading='lazy' alt={slug} />
-                <span>{price}</span>
-              </Price>
+                <ContainerInfo id="info">
+                  {sellableNFT ? (
+                    <>
+                      <Price>
+                        <img
+                          src="https://cdn.iconscout.com/icon/free/png-256/ethereum-16-646072.png"
+                          loading="lazy"
+                          alt={slug}
+                        />
+                        <span>{price ? price : priceListing}</span>
+                      </Price>
 
-              <Time>
-                <i className="bx bxs-time" />
-                <span>{date}</span>
-              </Time>
-            </ContainerInfo>
+                      <Time>
+                        <i className="bx bxs-time" />
+                        <span>{date}</span>
+                      </Time>
+                    </>
+                  ) : (
+                    <NotSellable>
+                      <p> No listing</p>
+                    </NotSellable>
+                  )}
+                </ContainerInfo>
 
-            <ContainerAction>
-            <hr />
-              <a href={`/sensei/${senseiRef}`}> {sensei}</a>
-             {/*  <Link href={`/sensei/${senseiRef}`}> <a> {sensei}</a></Link> */}
-              <Button>Place a bid</Button>
-            </ContainerAction>
-          </ContainerData>
-        </Card>
-        </div>
-      </Link>
-    </Container>
+                <ContainerAction>
+                  <hr />
+                  <a href={`/sensei/${senseiRef}`}> {sensei}</a>
+                  {/*  <Link href={`/sensei/${senseiRef}`}> <a> {sensei}</a></Link> */}
+                </ContainerAction>
+              </ContainerData>
+            </Card>
+          </div>
+        </Link>
+        {!best && (
+          <>
+            {addressConnected && addressConnected.toLowerCase() === owner ? (
+              sellableNFT ? (
+                <div style={{ zIndex: '100', position: 'absolute', right: '1rem', bottom: '0.7rem' }}>
+                  <Button
+                    data-listingid={listingId}
+                    data-nftid={nftId}
+                    className="cancel-button"
+                    id={`${index}`}
+                    onClick={(e) => cancelListingHandler(e)}>
+                    Cancel listing
+                  </Button>
+                </div>
+              ) : (
+                <div style={{ zIndex: '100', position: 'absolute', right: '1rem', bottom: '0.7rem' }}>
+                  <Button data-listingid={listingId} data-nftid={nftId} id={`${index}`} onClick={(e) => openModal(e)}>
+                    List it
+                  </Button>
+                </div>
+              )
+            ) : (
+              sellableNFT && (
+                <div style={{ zIndex: '100', position: 'absolute', right: '1rem', bottom: '0.7rem' }}>
+                  <Button onClick={(e) => buyNFTHandler(e)} data-listingid={listingId}>
+                    Buy Now
+                  </Button>
+                </div>
+              )
+            )}
+          </>
+        )}
+      </Container>
+    </section>
   );
 };
 
 const Container = styled.div`
-user-select: none;
+  user-select: none;
   width: 100%;
   ${({ maxWidth }) =>
     maxWidth &&
@@ -110,6 +215,7 @@ const Card = styled.div`
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
   padding: 1rem;
+  padding-bottom: 1.5rem;
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: 0.5s all;
@@ -142,11 +248,12 @@ const ContainerData = styled.div`
   P {
     height: 100%;
     display: inline-block;
-    overflow: hidden
+    overflow: hidden;
   }
 
   h2 {
     color: var(--body-color);
+    margin-bottom: 1rem;
   }
 
   hr {
@@ -156,7 +263,7 @@ const ContainerData = styled.div`
     margin-top: 0;
   }
 
-  a{
+  a {
     color: var(--first-color);
   }
 `;
@@ -193,12 +300,23 @@ const Time = styled.div`
   align-items: center;
 `;
 
+const NotSellable = styled.div`
+  font-size: var(--h3-font-size);
+  font-weight: var(--font-bold);
+  color: crimson;
+`;
+
 const ContainerAction = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+
+  button {
+    z-index: 100;
+    background-color: black;
+  }
 `;
 
 export default NFTCard;

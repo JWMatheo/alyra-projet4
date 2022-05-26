@@ -2,12 +2,16 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import NFTCard from './NFTCard';
-import { Button, Section } from './style';
+import { Button, input, Section } from './style';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import HyperModal from 'react-hyper-modal';
 
 const BestCollection = ({ bestNFTs }) => {
   const [animated, setAnimated] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [priceListing, setPriceListing] = useState();
+  const [listingNFT, setListingNFT] = useState();
 
   useEffect(() => {
     const headerObserver = new IntersectionObserver(handleSticky, {
@@ -25,6 +29,13 @@ const BestCollection = ({ bestNFTs }) => {
       else setAnimated(false);
     }
   }, [animated]);
+
+  const handleModal = (e) => {
+    e.preventDefault();
+    const listingId = e.target.dataset.listingid;
+    setListingNFT(listingId);
+    setIsModalOpen(!isModalOpen);
+  };
 
   // Day Left
   const getDayLeft = (endDate) => {
@@ -55,9 +66,9 @@ const BestCollection = ({ bestNFTs }) => {
 
     return `${hours}:${customTime(min)}:${customTime(sec)}`;
   };
-console.log('====================================');
-console.log(bestNFTs[2].creator);
-console.log('====================================');
+
+  
+  
   return (
     <Section>
       <h2 className="title">Best week's collection </h2>
@@ -87,6 +98,9 @@ console.log('====================================');
                 : countdownMidnight(getDayLeft(bestNFTs[0].endOfAuction))
             } left`}
             sensei={bestNFTs[0].creator.username}
+            owner={bestNFTs[0].owner.address}
+            sellable={bestNFTs[0].sellable}
+            best={true}
           />
           <SecondCard id="second">
             <NFTCard
@@ -103,6 +117,9 @@ console.log('====================================');
                   : countdownMidnight(getDayLeft(bestNFTs[2].endOfAuction))
               } left`}
               sensei={bestNFTs[2].creator.username}
+              owner={bestNFTs[2].owner.address}
+              sellable={bestNFTs[2].sellable}
+              best={true}
             />
           </SecondCard>
 
@@ -121,9 +138,35 @@ console.log('====================================');
                   : countdownMidnight(getDayLeft(bestNFTs[1].endOfAuction))
               } left`}
               sensei={bestNFTs[1].creator.username}
+              owner={bestNFTs[1].owner.address}
+              sellable={bestNFTs[1].sellable}
+              best={true}
             />
           </LastCard>
         </ContainerCard>
+        <HyperModal isOpen={isModalOpen} requestClose={handleModal}>
+          <ContainerModal>
+            <p>Entre a price and date end of auction</p>
+
+            <ContainerInput>
+              <div>
+                <h3>
+                  price <span>*</span>
+                </h3>
+                <input required type="number" onChange={(e) => setPriceListing(e.target.value)} />
+              </div>
+              <div>
+                <h3>
+                  Listing ID <span>*</span>
+                </h3>
+                <input style={{ color: 'black' }} required value={listingNFT} type="text" disabled="disabled" />
+              </div>
+            </ContainerInput>
+            <Button className="save-profil" onClick={''}>
+              Listing my NFT
+            </Button>
+          </ContainerModal>
+        </HyperModal>
       </Content>
     </Section>
   );
@@ -144,16 +187,15 @@ const ContainerCard = styled.div`
     & > div {
       width: 200px;
 
-      p{
+      p {
         height: 100px;
       }
 
-      #image{
+      #image {
         height: 180px;
       }
     }
   }
-
 
   ${({ animated }) =>
     animated
@@ -217,6 +259,7 @@ const LastCard = styled.div`
   transform: rotate(5deg);
   transition: 0.5s;
   &:hover {
+    width: 100%;
     z-index: 0;
     transform: rotate(0);
     transition: 054s;
@@ -237,6 +280,48 @@ const DetailCollection = styled.div`
     &:hover {
       color: var(--dark-color-alt);
     }
+  }
+`;
+
+const ContainerModal = styled.section`
+  padding: 2rem;
+`;
+
+const Price = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  img {
+    width: 1.2rem;
+  }
+
+  span {
+    color: var(--text-color);
+    font-weight: var(--font-bold);
+  }
+`;
+
+const ContainerInput = styled.div`
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  ${input}
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+
+  & > div {
+    align-self: end;
+  }
+
+  small {
+    font-size: var(--smaller-font-size);
+    color: crimson;
+  }
+
+  i {
+    font-size: var(--smaller-font-size);
+    color: crimson;
   }
 `;
 export default BestCollection;

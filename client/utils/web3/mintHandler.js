@@ -1,6 +1,7 @@
 import { client } from '../../lib/sanity';
 import { notification } from '../notification';
 import { init, instanceContract } from './init';
+import urlSlug from 'url-slug'
 
 // Mint a collection: require name, symbol, baseURI, and quantity
 export const mintNFTCollection = async (
@@ -64,7 +65,7 @@ export const mintNFTCollection = async (
         // 7) Map to event data for prepare creating NFT
         event.map((minted, index) => {
           // Rename file
-          const NFTName = `${name}#${index < 10 ? `0${index}` : index}`;
+          const NFTName = `${name} #${index < 10 ? `0${index}` : index}`;
           const NFTUrl = `https://${baseURI}.ipfs.dweb.link/${NFTImage[index].name}`;
           const nft = {
             _type: 'nft',
@@ -73,6 +74,10 @@ export const mintNFTCollection = async (
             token: minted.returnValues.token,
             tokenId: minted.returnValues.tokenId,
             listingId: minted.returnValues.listingId,
+            slug: {
+              _type: 'slug',
+              current: urlSlug(NFTName)
+            },
             //address: data.address,
             owner: {
               _type: 'reference',
