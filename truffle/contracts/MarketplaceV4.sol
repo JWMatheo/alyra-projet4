@@ -61,8 +61,12 @@ contract Marketplace {
         address Creator,
         address seller,
         address token,
+<<<<<<< HEAD
         uint256 tokenId,
         uint256 price,
+=======
+        uint tokenId,
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
         string collection,
         string JSONTokenURI
     );
@@ -73,8 +77,12 @@ contract Marketplace {
         address Creator,
         address seller,
         address token,
+<<<<<<< HEAD
         uint256 tokenId,
         uint256 price,
+=======
+        uint tokenId,
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
         string collection,
         string JSONTokenURI
     );
@@ -84,12 +92,21 @@ contract Marketplace {
     uint256 private _listingId = 0;
     uint256 private _defaultPrice = 1000 ether;
     address private _factoryAddress;
+<<<<<<< HEAD
     mapping(uint256 => Listing) private _listings;
     mapping(address => address[]) CollectionsOfOwner; // stocke les collections créer par une addresse
     mapping(uint256 => address[]) SellActivty; // stocke pour 1 NFT donné, la liste des addresses ayant ete en possesion du nft
     mapping(address => MyBuyedNFT[]) ListOfNFTfromUser; // stocke Uniquement les NFT achetés.
 
     constructor(address factoryAdress) {
+=======
+    mapping(uint=>Listing) _listings;
+    mapping(address =>address[]) CollectionsOfOwner; // stocke les collections créer par une addresse
+    mapping(uint=>address[]) SellActivty; // stocke pour 1 NFT donné, la liste des addresses ayant ete en possesion du nft
+    mapping (address=>MyBuyedNFT[]) ListOfNFTfromUser; // stocke Uniquement les NFT achetés.
+
+    function setFactoryAddress(address factoryAdress) public {
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
         _factoryAddress = factoryAdress;
     }
 
@@ -196,6 +213,7 @@ contract Marketplace {
 
         _listingId++;
         _listings[_listingId] = listing;
+<<<<<<< HEAD
         emit Showed(
             listing.status,
             _listingId,
@@ -206,6 +224,19 @@ contract Marketplace {
             _collectionName,
             _JSONTokenURI
         );
+=======
+        emit Showed(listing.status ,_listingId, msg.sender, msg.sender, _tokenContract, _tokenId, _collectionName, _JSONTokenURI); 
+    //        event  Showed(
+    //     ListingStatus status,
+    //     uint listingId,
+    //     address Creator,
+    //     address seller,
+    //     address token,
+    //     uint tokenId,
+    //     string collection,
+    //     string JSONTokenURI
+    // );
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
     }
 
     /**
@@ -225,6 +256,7 @@ contract Marketplace {
     {
         Listing storage listing = _listings[listingId];
         address testadress = address(this);
+<<<<<<< HEAD
         require(
             ERC721(listing.tokenContract).ownerOf((listing.tokenId)) ==
                 msg.sender,
@@ -234,6 +266,10 @@ contract Marketplace {
             listing.status == ListingStatus.Showable,
             "The NFT is already to sell."
         );
+=======
+        require(ERC721(listing.tokenContract).ownerOf((listing.tokenId)) == msg.sender, "You are not the owner");
+        require(listing.status == ListingStatus.Showable, "The NFT is already to sale");
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
 
         listing.price = _price;
         listing.status = ListingStatus.Active;
@@ -340,8 +376,16 @@ contract Marketplace {
             listing.tokenId,
             listing.price,
             listing.collection,
+<<<<<<< HEAD
             listing.JSONTokenURI
         );
+=======
+            listing.JSONTokenURI,
+            lengthOfListOfNFTfromUser
+        ));
+
+        emit Buyed(listing.status, listingId, listing.Creator, listing.seller, listing.tokenContract, listing.tokenId, listing.collection, listing.JSONTokenURI);
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
     }
 
     /**
@@ -376,6 +420,7 @@ contract Marketplace {
             listing.tokenId
         );
 
+<<<<<<< HEAD
         emit Cancelled(
             listing.status,
             listingId,
@@ -387,6 +432,9 @@ contract Marketplace {
             listing.collection,
             listing.JSONTokenURI
         );
+=======
+        emit Cancelled(listing.status ,listingId, listing.Creator, msg.sender, listing.tokenContract, listing.tokenId, listing.collection, listing.JSONTokenURI);
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
     }
 
     /**
@@ -422,11 +470,19 @@ contract Marketplace {
     }
 
     /**
+<<<<<<< HEAD
      * @notice Add a NFT to an existing collection.
      * @dev  Triggers 'mint' function in the collection address '_thisCollection'.
      * @param _thisCollection The collection address in wich the nft is added.
      */
     // _thisCollection provient du frontend en faisant un getUserCollections(msg.sender).call() puis pour chaque collection retourner : MyNFT(_addresseSelectionne).name() pour afficher le nom des collection sur l'interface et recuper l'addresse selctionné par l'user
+=======
+    * @notice Add a NFT to an existing collection.
+    * @dev  Triggers 'mint' function in the collection address '_thisCollection'. Can be improved with 'for' to set a number of item to add.
+    * @param _thisCollection The collection address in wich the nft is added.
+    */
+    // _thisCollection provient du frontend en faisant un getUserCollections(msg.sender).call() puis pour chaque collection retourner : MonNft(_addresseSelectionne).name() pour afficher le nom des collection sur l'interface et recuper l'addresse selctionné par l'user 
+>>>>>>> 24f3db8b3ab3cea816e810fc3941c96e1708f5b0
     function addItemToCollection(address _thisCollection) public {
         uint256 _tokenId = MyNFT(_thisCollection).mint(msg.sender);
         showToken(_thisCollection, _tokenId);
