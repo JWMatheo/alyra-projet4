@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import HyperModal from 'react-hyper-modal';
 import NFTCard from './NFTCard';
 import { Button, input, Section } from './style';
 
@@ -9,7 +8,6 @@ import { countdownMidnight, getDayLeft } from '../utils/handlerFactory';
 import { notification } from '../utils/notification';
 import { cancelListingNFT, listingNFT } from '../utils/web3/listingHandler';
 import { client } from '../lib/sanity';
-import Web3 from 'web3';
 import ListingModal from './ListingModal';
 
 const NFTsFavorite = ({ featuresNFT }) => {
@@ -24,13 +22,6 @@ const NFTsFavorite = ({ featuresNFT }) => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const openModal = (e) => {
-    e.preventDefault();
-    const listingId = e.target.dataset.listingid;
-
-    setListingMyNFT(listingId);
-    setIsModalOpen(!isModalOpen);
-  };
 
   const listingNFTHandler = async (e, sellable) => {
     e.preventDefault();
