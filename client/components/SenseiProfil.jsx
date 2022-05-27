@@ -43,11 +43,8 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
       // 1) Get all collections
       const getUserCollection = await getCollections();
       const getUser = await client.fetch(`*[_type == "users" && address == "${senseiConnected.toLowerCase()}"][0]`);
-<<<<<<< HEAD
+
       const getUserNFTs = await client.fetch(`*[_type == "nfts" && references("${getUser._id}")]{
-=======
-      const getUserNFTs = await client.fetch(`*[_type == "nft" && references("${getUser._id}")]{
->>>>>>> ef14b28b8bf79df83f32b3bd226458f17ecac85a
         ${NFTsDetails}
       }`);
 
@@ -107,10 +104,6 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
       setIsModalOpenListing,
       isModalOpenListing
     );
-<<<<<<< HEAD
-=======
- 
->>>>>>> ef14b28b8bf79df83f32b3bd226458f17ecac85a
   };
 
   const cancelListingHandler = async (e) => {
@@ -128,11 +121,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     }
   };
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> ef14b28b8bf79df83f32b3bd226458f17ecac85a
   const openModal = (e) => {
     e.preventDefault();
     const listingId = e.target.dataset.listingid;
@@ -140,11 +129,6 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     setListingMyNFT(listingId);
     setIsModalOpenListing(!isModalOpenListing);
   };
-<<<<<<< HEAD
-=======
-
-
->>>>>>> ef14b28b8bf79df83f32b3bd226458f17ecac85a
 
   return (
     <>
