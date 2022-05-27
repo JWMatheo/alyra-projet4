@@ -2,28 +2,28 @@ import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
 import { networkConnected, onChangeNetwork, walletConnected } from '../utils/web3/authHandler';
-import { getListing } from '../utils/web3/getter';
-import {mintNFTCollection} from '../utils/web3/mintHandler'
-
 
 function MyApp({ Component, pageProps }) {
   const [addressConnected, setAddressConnected] = useState();
   const [switchLayout, setSwitchLayout] = useState(false);
-
+  const [_window, set_window] = useState(null);
   useEffect(() => {
     const init = async () => {
-      //await networkConnected();
-      //await onChangeNetwork();
+      await networkConnected();
+      await onChangeNetwork();
       await walletConnected(setAddressConnected);
-    const n =  await getListing(4)
-    console.log(n);
-    //  await mintNFTCollection('Default', 'DFT', 'bafybeideszhe6x7q36ozqigc5cqhfqs7j5zq3qfnsvy3jhvwmh3wmk6wwy', 1)
     };
-
+    set_window(window);
     init();
   }, [setAddressConnected, addressConnected]);
 
+  if (_window) {
+    _window.ethereum.on('accountsChanged', async function (accounts) {
+      setAddressConnected(accounts[0]);
+    });
+  }
 
+  console.log(addressConnected);
   return (
     <Layout addressConnected={addressConnected} setAddressConnected={setAddressConnected}>
       <Component

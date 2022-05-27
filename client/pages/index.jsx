@@ -3,9 +3,7 @@ import { bestNFTsQuery, featuresQuery, NFTsQuery, senseiQuery } from '../lib/que
 import { client } from '../lib/sanity';
 
 export default function Home({ NFTs, allSenseis, bestNFTs, featuresNFT }) {
-console.log('====================================');
-console.log(bestNFTs);
-console.log('====================================');
+
   
   return (
     <>

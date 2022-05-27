@@ -105,7 +105,6 @@ export const connectWallet = async (setAddressConnected) => {
       notification('success', 'You are successful connected ! ');
       setAddressConnected(result[0]);
       // Set value to local storage
-      localStorage.setItem('isConnected', true);
       //await mintNFTCollection('Default', 'DFT', 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e', 0);
       return true;
     } else {
