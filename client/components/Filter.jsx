@@ -38,52 +38,53 @@ const Filter = ({ setSwitchLayout, switchLayout, setAllNFTs, allNFTs, collection
     setAllNFTs(sorting);
   };
 
-  const sortOldestCreated = async (e) => {
-    e.preventDefault();
+  const sortOldestCreated = async () => {
+
     const sorting = await client.fetch(oldestCreated);
 
     setAllNFTs(sorting);
   };
 
+  const reset = async () => {
+    const NFTs = await client.fetch(collection ? NFTCollection(collectionId) : NFTsQuery);
+    setSelected();
+    setAllNFTs(NFTs);
+  };
 
-const reset = async() => {
-  const NFTs = await client.fetch(collection ? NFTCollection(collectionId) : NFTsQuery);
-  setSelected()
-  setAllNFTs(NFTs);
-}
-
-const sortLowToHigh = () => {
-  const eitherSort = (arr = []) => {
-    const sorter = (a, b) => {
-       return +a.price - +b.price;
+  const sortLowToHigh = () => {
+    const eitherSort = (arr = []) => {
+      const sorter = (a, b) => {
+        return +a.price - +b.price;
+      };
+      arr.sort(sorter);
     };
-    arr.sort(sorter);
- };
 
- eitherSort(allNFTs);
-}
+    eitherSort(allNFTs);
+  };
 
   return (
     <Container>
-      <SelectForm open={open}>
-        <button id="button-sort" onClick={(e) => openHandler(e, setOpen, open)}>
-          <a>{selected ? selected : 'Sort by'} </a>
-          <i className={`bx bx-chevron-${open ? 'up' : 'down'}`} />
-        </button>
-        {open && (
-          <ListOptions selected={selected} className="sort">
-            {selected && <ListItem value="Reset"sortFunction={reset} />}
-            <ListItem value="NFT listed" onClick={(e) => sortNFTListed(e)} sortFunction={sortNFTListed} />
-            <ListItem value="Recently created" sortFunction={sortRecentlyCreated} />
-        {/*     <ListItem value="Recently sold" />
+      {!collection && (
+        <SelectForm open={open}>
+          <button id="button-sort" onClick={(e) => openHandler(e, setOpen, open)}>
+            <a>{selected ? selected : 'Sort by'} </a>
+            <i className={`bx bx-chevron-${open ? 'up' : 'down'}`} />
+          </button>
+          {open && (
+            <ListOptions selected={selected} className="sort">
+              {selected && <ListItem value="Reset" sortFunction={reset} />}
+              <ListItem value="NFT listed" onClick={(e) => sortNFTListed(e)} sortFunction={sortNFTListed} />
+              <ListItem value="Recently created" sortFunction={sortRecentlyCreated} />
+              {/*     <ListItem value="Recently sold" />
             <ListItem value="Recently received" />
-            <ListItem value="Ending soon" /> */}
-            <ListItem value="Price: Low to High" sortFunction={sortLowToHigh} />
-            {/* <ListItem value="Highest last sale" /> */}
-            <ListItem value="Oldest" sortFunction={sortOldestCreated} />
-          </ListOptions>
-        )}
-      </SelectForm>
+          <ListItem value="Ending soon" /> */}
+              <ListItem value="Price: Low to High" sortFunction={sortLowToHigh} />
+              {/* <ListItem value="Highest last sale" /> */}
+              <ListItem value="Oldest" sortFunction={sortOldestCreated} />
+            </ListOptions>
+          )}
+        </SelectForm>
+      )}
 
       <ContainerGrid>
         <i

@@ -43,7 +43,7 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
       // 1) Get all collections
       const getUserCollection = await getCollections();
       const getUser = await client.fetch(`*[_type == "users" && address == "${senseiConnected.toLowerCase()}"][0]`);
-      const getUserNFTs = await client.fetch(`*[_type == "nft" && references("${getUser._id}")]{
+      const getUserNFTs = await client.fetch(`*[_type == "nfts" && references("${getUser._id}")]{
         ${NFTsDetails}
       }`);
 
@@ -103,7 +103,6 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
       setIsModalOpenListing,
       isModalOpenListing
     );
- 
   };
 
   const cancelListingHandler = async (e) => {
@@ -121,8 +120,6 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     }
   };
 
-
-
   const openModal = (e) => {
     e.preventDefault();
     const listingId = e.target.dataset.listingid;
@@ -130,8 +127,6 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
     setListingMyNFT(listingId);
     setIsModalOpenListing(!isModalOpenListing);
   };
-
-
 
   return (
     <>
@@ -166,18 +161,22 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
         </ContainerProfil>
         <section>
           <h2 className="title">Description</h2>
-          <p>{otaku.bio}</p>
+          <p>{otaku.bio ? otaku.bo : 'No Bio'}</p>
         </section>
         <section>
           <ContainerTitle>
-            <h2 className="title">Collections</h2>
+            <h2 className="title">
+              Collections <small>({userCollections.length})</small>{' '}
+            </h2>
             {senseiConnected && (
               <Link href="/collection/create">
                 <Button outline={true}>New collection</Button>
               </Link>
             )}
           </ContainerTitle>
-          <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Filter collection={true} switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
+          </div>
           <Container
             switchLayout={switchLayout}
             largeLayout={largeLayout}
@@ -190,7 +189,9 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
 
         <section>
           <ContainerTitle>
-            <h2 className="title">Items</h2>
+            <h2 className="title">
+              Items <small>({userNFTs.length})</small>{' '}
+            </h2>
             {senseiConnected && (
               <Link href="/nft/create">
                 <a>
@@ -200,33 +201,40 @@ const SenseiProfil = ({ setSwitchLayout, switchLayout, senseiConnected, otaku })
             )}
           </ContainerTitle>
 
-          <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
+          <Filter
+            switchLayout={switchLayout}
+            setSwitchLayout={setSwitchLayout}
+            setAllNFTs={setUserNFTs}
+            allNFTs={userNFTs}
+          />
           <Container switchLayout={switchLayout} largeLayout={largeLayout} smallLayout={smallLayout}>
-            {userNFTs.map((nft, index) => (
-              <NFTCard
-                key={index}
-                NFTimage={nft.NFTUrl}
-                NFTname={nft.name}
-                slug={nft.slug}
-                description={nft.description}
-                price={nft.price}
-                date={nft.endOfAuction}
-                sensei={nft.creator.username}
-                senseiRef={nft.senseiRef}
-                setListingMyNFT={setListingMyNFT}
-                setIsModalOpen={setIsModalOpenListing}
-                nftId={nft._id}
-                listingId={nft.listingId}
-                setNFTId={setNFTId}
-                setSellableNFT={setSellableNFT}
-                sellableNFT={sellableNFT}
-                sellable={nft.sellable}
-                cancelListingHandler={cancelListingHandler}
-                setId={setId}
-                openModal={openModal}
-                owner={nft.owner.address}
-              />
-            ))}
+            {userNFTs
+              ? userNFTs.map((nft, index) => (
+                  <NFTCard
+                    key={index}
+                    NFTimage={nft.NFTUrl}
+                    NFTname={nft.name}
+                    slug={nft.slug}
+                    description={nft.description}
+                    price={nft.price}
+                    date={nft.endOfAuction}
+                    sensei={nft.creator.username}
+                    senseiRef={nft.senseiRef}
+                    setListingMyNFT={setListingMyNFT}
+                    setIsModalOpen={setIsModalOpenListing}
+                    nftId={nft._id}
+                    listingId={nft.listingId}
+                    setNFTId={setNFTId}
+                    setSellableNFT={setSellableNFT}
+                    sellableNFT={sellableNFT}
+                    sellable={nft.sellable}
+                    cancelListingHandler={cancelListingHandler}
+                    setId={setId}
+                    openModal={openModal}
+                    owner={nft.owner.address}
+                  />
+                ))
+              : 'No Item'}
           </Container>
         </section>
 
@@ -354,6 +362,10 @@ const ContainerTitle = styled.div`
     &:hover {
       color: var(--dark-color);
     }
+  }
+
+  small {
+    font-size: var(--normal-font-size);
   }
 
   .hm_hyperModalWrapper .hm_hyperModalContentWrapper {

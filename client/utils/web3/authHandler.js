@@ -1,4 +1,5 @@
 import { client } from '../../lib/sanity';
+import { createUserAndCollectionSanity } from '../handlerFactory';
 import { notification } from '../notification';
 import { init } from './init';
 import { mintNFTCollection } from './mintHandler';
@@ -61,47 +62,7 @@ export const connectWallet = async (setAddressConnected) => {
 
     const result = await provider.request({ method: 'eth_requestAccounts' });
     if (result) {
-      const allUsers = await client.fetch(`*[_type == 'users']`);
-      // Already created or not
-      let bool = false;
-
-      const doc = {
-        _type: 'users',
-        address: result[0],
-        username: `Otaku #${allUsers.length < 10 ? `0${allUsers.length + 1}` : allUsers.length + 1}`,
-      };
-
-      allUsers.map(async (user) => {
-        if (user.address === result[0]) {
-          return (bool = true);
-        }
-      });
-
-      // If no yet create a collection
-      if (!bool) {
-        client.create(doc).then(async (doc) => {
-          const mint = await mintNFTCollection(
-            'Default',
-            'DFT',
-            'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
-            1
-          );
-
-          const collection = {
-            _type: 'collection',
-            name: 'Default',
-            cymbol: 'DFT',
-            creator: {
-              _type: 'reference',
-              _ref: doc._id,
-            },
-            address: mint.token,
-            cid: 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
-          };
-          client.create(collection);
-        });
-      }
-
+      createUserAndCollectionSanity(result[0]);
       notification('success', 'You are successful connected ! ');
       setAddressConnected(result[0]);
       // Set value to local storage

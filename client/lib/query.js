@@ -12,6 +12,7 @@ metadata,
 description,
 endOfAuction,
 collection->{
+  _id,
   name,
   address
 },
@@ -32,7 +33,7 @@ owner->{
 },
 `;
 
-export const NFTsQuery = `*[ _type == "nft"]{
+export const NFTsQuery = `*[ _type == "nfts"]{
    ${NFTsDetails}
 }`;
 
@@ -51,21 +52,19 @@ export const featuresQuery = `*[ _type == "features"]{
 }`;
 
 export const NFTQuery = (pageSlug) => {
-  return `*[_type == "nft" && slug.current == "${pageSlug}"][0]{
+  return `*[_type == "nfts" && slug.current == "${pageSlug}"][0]{
     ${NFTsDetails}
   }`;
 };
 
 export const NFTCollection = (collectionId) => {
-  return `*[_type == "nft" && references("${pageSlug}")]{
+  return `*[_type == "nfts" && references("${collectionId}")]{
     ${NFTsDetails}
   }`;
-}
+};
 
+export const recentlyCreated = `*[_type == "nfts"] | order(_createdAt desc)`;
 
+export const oldestCreated = `*[_type == "nfts"] | order(_createdAt desc)`;
 
-export const recentlyCreated = `*[_type == "nft"] | order(_createdAt desc)`
-
-export const oldestCreated = `*[_type == "nft"] | order(_createdAt desc)`
-
-export const NFTListed = `*[_type == "nft"] &&  sellable == true`
+export const NFTListed = `*[_type == "nfts" &&  sellable == true]`;

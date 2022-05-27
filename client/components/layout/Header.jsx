@@ -52,6 +52,7 @@ const Header = ({ addressConnected, setAddressConnected }) => {
     }
     if (toggle) {
       window.addEventListener('click', (e) => {
+        
         if (e.target !== document.querySelector('.button-sort')) {
           setToggle(false);
         }
@@ -59,7 +60,7 @@ const Header = ({ addressConnected, setAddressConnected }) => {
     }
     window.addEventListener('resize', handleWidth);
     return () => {
-      window.removeEventListener('click', setToggle(false));
+      window.removeEventListener('click', null);
       window.removeEventListener('resize', handleWidth);
     };
   }, [addressConnected, sticky, toggle, setAvatarUrl]);
@@ -132,8 +133,8 @@ const Header = ({ addressConnected, setAddressConnected }) => {
           </ul>
         </Menu>
         {width < 810 && (
-          <Toggle onClick={handleToggle}>
-            <i className={toggle ? 'bx bx-x' : 'bx bx-grid-alt'}></i>
+          <Toggle className='button-sort' onClick={handleToggle}>
+            <i className={toggle ? 'bx bx-x' : 'bx bx-grid-alt '}></i>
           </Toggle>
         )}
       </Nav>

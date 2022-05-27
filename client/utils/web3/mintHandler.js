@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { client } from '../../lib/sanity';
 import { notification } from '../notification';
 import { init, instanceContract } from './init';
-import urlSlug from 'url-slug'
+import urlSlug from 'url-slug';
 
 // Mint a collection: require name, symbol, baseURI, and quantity
 export const mintNFTCollection = async (
@@ -18,6 +19,7 @@ export const mintNFTCollection = async (
   const owner = await web3.eth.getAccounts();
 
   // 1) Create collection on Blockchain
+  // notification(undefined, 'your collection is being created', 'toast-collection', true);
   const mint = await instance.methods
     .DeployMyNFTCollection(name, symbol, baseURI, NumberOfNftToMint)
     .send({ from: owner[0] });
@@ -68,7 +70,7 @@ export const mintNFTCollection = async (
           const NFTName = `${name} #${index < 10 ? `0${index}` : index}`;
           const NFTUrl = `https://${baseURI}.ipfs.dweb.link/${NFTImage[index].name}`;
           const nft = {
-            _type: 'nft',
+            _type: 'nfts',
             name: NFTName,
             description,
             token: minted.returnValues.token,
@@ -76,7 +78,7 @@ export const mintNFTCollection = async (
             listingId: minted.returnValues.listingId,
             slug: {
               _type: 'slug',
-              current: urlSlug(NFTName)
+              current: urlSlug(NFTName),
             },
             //address: data.address,
             owner: {
@@ -107,18 +109,13 @@ export const mintNFTCollection = async (
                       autoGenerateArrayKeys: true,
                     });
                 });
-
-                notification('success', 'Collection created successful !');
-                return true;
+                // notification('success', 'Collection created successful !', 'toast-collection');
               }
+              return true;
             });
           } else {
-            client.create(doc).then((nft) => {
-              if (nft._id) {
-                notification('success', 'Collection created successful !');
-                return true;
-              }
-            });
+            client.create(doc);
+            return true;
           }
         });
       });
@@ -153,7 +150,7 @@ export const addItemToCollection = async (
     _id
   }`);
     const nft = {
-      _type: 'nft',
+      _type: 'nfts',
       name,
       description,
       listingId: result.listingId,

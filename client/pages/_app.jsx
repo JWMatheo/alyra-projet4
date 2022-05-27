@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '../components';
 import '../styles/globals.css';
+import { createUserAndCollectionSanity } from '../utils/handlerFactory';
 import { networkConnected, onChangeNetwork, walletConnected } from '../utils/web3/authHandler';
 
 function MyApp({ Component, pageProps }) {
@@ -20,6 +21,7 @@ function MyApp({ Component, pageProps }) {
   if (_window) {
     _window.ethereum.on('accountsChanged', async function (accounts) {
       setAddressConnected(accounts[0]);
+      createUserAndCollectionSanity(accounts[0])
     });
   }
 

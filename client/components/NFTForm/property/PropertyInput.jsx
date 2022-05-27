@@ -23,7 +23,7 @@ const PropertyInput = ({ NFTImage, NFTPropertie, setNFTPropertie }) => {
           <i className="bx bxs-add-to-queue"></i>
         </Button>
       </ContainerProperties>
-      <PropertyDisplay NFTPropertie={NFTPropertie} setIndex={setIndex} index={index} />
+      <PropertyDisplay NFTPropertie={NFTPropertie}    setNFTPropertie={setNFTPropertie} setIndex={setIndex} index={index} />
       <PropertyModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}

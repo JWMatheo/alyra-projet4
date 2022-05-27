@@ -22,7 +22,6 @@ const NFTsFavorite = ({ featuresNFT }) => {
     setIsModalOpen(!isModalOpen);
   };
 
-
   const listingNFTHandler = async (e, sellable) => {
     e.preventDefault();
 
@@ -66,8 +65,7 @@ const NFTsFavorite = ({ featuresNFT }) => {
   };
 
   return (
-    <Section>
-      <h2 className="title">popular feature artwork</h2>
+    <>
       <NFTContainer>
         {featuresNFT.map((feature, index) => (
           <NFTCard
@@ -141,7 +139,7 @@ const NFTsFavorite = ({ featuresNFT }) => {
           </Button>
         </ContainerModal>
       </HyperModal> */}
-    </Section>
+    </>
   );
 };
 
@@ -149,6 +147,7 @@ const NFTContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-template-rows: 1fr;
+  justify-content: center;
   align-items: center;
   gap: 1rem;
 

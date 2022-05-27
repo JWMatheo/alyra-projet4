@@ -1,9 +1,9 @@
 import { toast } from 'react-toastify';
 
-export const notification = (status, message, id="notification"  ) => {
+export const notification = (status, message, id="notification", autoClose = true  ) => {
   let settings = {
     position: 'top-right',
-    autoClose: 5000,
+    autoClose: autoClose ? 5000: 15000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

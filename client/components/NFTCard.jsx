@@ -87,7 +87,7 @@ const NFTCard = ({
                   <p>{description} </p>
                 </div>
 
-                <ContainerInfo id="info">
+                <ContainerInfo sellableNFT={sellableNFT} id="info">
                   {sellableNFT ? (
                     <>
                       <Price>
@@ -272,8 +272,9 @@ const ContainerInfo = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 3rem;
-
-  span {
+  padding-block: ${({ sellableNFT }) =>
+      sellableNFT && `2%;`}
+    span {
     font-size: var(--normal-font-size);
     color: var(--first-color);
   }

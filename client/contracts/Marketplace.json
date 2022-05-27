@@ -27938,8 +27938,8 @@
     "4": {
       "events": {},
       "links": {},
-      "address": "0x67e963cE5CD3577B2AceF594a4688E601273106F",
-      "transactionHash": "0xbc3fa2678050037b18a8e5506207c53fd74abd15b25b6a4802d17e46bd7b131c"
+      "address": "0x4bf9f241dDDDB389bef3238971B465ECC6Bb4ee1",
+      "transactionHash": "0x0a13263c07d73b556a2da3b78d02b2c8b57b233665d046574153f8b6cff00689"
     },
     "5777": {
       "events": {},
@@ -27949,7 +27949,7 @@
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-05-26T23:48:34.224Z",
+  "updatedAt": "2022-05-27T11:06:51.676Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "JWMatheo - member of NFTSet Team",

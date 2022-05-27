@@ -9,20 +9,21 @@ const NFTCollection = ({ userCollections }) => {
     <>
       {userCollections.map((collection, index) => (
         <>
-{/*  <Link key={index} href={`/collection/${collection._id}`} passHref>
+          {/*  <Link key={index} href={`/collection/${collection._id}`} passHref>
         </Link> */}
-          <Container>
+          <Container key={index + 1854}>
             <div>
               <img style={{ borderRadius: '0.5rem 0.5rem 0 0' }} src={collection.collectionUrl} alt="" />
             </div>
 
             <ContainerInfo>
+              <li id="name">{collection.name} </li>
               <li>Items: {collection.items}</li>
               <li>Owner: {collection.owners.length} </li>
               <li>
                 Create at : {`${convertDate(collection._createdAt).month} ${convertDate(collection._createdAt).year} `}{' '}
               </li>
-              <li>View</li>
+              <li>View: {collection.view ? collection.view : 0}</li>
             </ContainerInfo>
           </Container>
         </>
@@ -35,7 +36,8 @@ const Container = styled.div`
   ${containerCard}
 
   &>div {
-    height: 300px;
+    // height: 300px;
+    height: 400px;
     img {
       height: 100%;
       width: 100%;
@@ -55,6 +57,13 @@ const ContainerInfo = styled.ul`
   border-top: 1px solid var(--body-color);
   border-radius: 0 0 0.5rem 0.5rem;
   color: var(--body-color);
+
+  #name {
+    font-size: var(--h2-font-size);
+    grid-column: 1/-1;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
 `;
 
 export default NFTCollection;

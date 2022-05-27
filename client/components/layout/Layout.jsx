@@ -12,7 +12,7 @@ const subtitle = router.pathname.split('/')[1]
     <>
       <Head>
         <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
-        <title>NFT{subtitle ? subtitle : 'Home'} </title>
+        <title>NFT {subtitle ? subtitle.charAt(0).toUpperCase() + subtitle.slice(1) : 'Home'} </title>
 {/*         <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_GA_TRACKING_ID}`} />
         <script
           dangerouslySetInnerHTML={{

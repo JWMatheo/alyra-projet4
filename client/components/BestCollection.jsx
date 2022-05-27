@@ -78,7 +78,7 @@ const BestCollection = ({ bestNFTs }) => {
           impedit distinctio unde velit mollitia. Neque, exercitationem error molestiae eum fugit eos harum illo ducimus
           incidunt unde quas facere. Quia aut animi provident fugiat et.
         </p>
-        <Link href={'/collection/kuroko-no-basket'}>
+        <Link href={'/collection/YaLUR16LAR66zf2wm9WbV6'}>
           <Button outline={true}>View Collection</Button>
         </Link>
       </DetailCollection>

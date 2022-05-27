@@ -11,6 +11,7 @@ import { addItemToCollection, mintNFTCollection } from '../../utils/web3/mintHan
 import { notification } from '../../utils/notification';
 import InputCollectionImage from './InputCollectionImage';
 import { client } from '../../lib/sanity';
+import { toast } from 'react-toastify';
 
 const NFTForm = ({ userCollections, addressConnected, collection }) => {
   const [NFTImage, setNFTImage] = useState();
@@ -22,6 +23,11 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
   const [NFTPropertie, setNFTPropertie] = useState([]);
   const hiddenFileInput = useRef(null);
 
+  const toastId = useRef(null);
+  const notify = () => (toastId.current = toast('Your collection is being created', { autoClose: false }));
+  const update = (message) =>
+    toast.update(toastId.current, { render: message, type: toast.TYPE.INFO, autoClose: 5000 });
+
   // Add nft to collection
   const mintNFTHandler = async (e) => {
     e.preventDefault();
@@ -31,15 +37,27 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
 
     const cid = await storeFiles();
     //Selected is Address collection choiced
-   const mint = await addItemToCollection(JSON.parse(selected.collection).address, NFTImage, NFTPropertie, description, cid, selected, name);
-   if(mint){
-    setName('');
-    setDescription('');
-    setNFTPropertie([]);
-    setNFTImage();
-    setSelected()
-  }
-  
+    notify();
+    const mint = await addItemToCollection(
+      JSON.parse(selected.collection).address,
+      NFTImage,
+      NFTPropertie,
+      description,
+      cid,
+      selected,
+      name
+    );
+    console.log('====================================');
+    console.log(mint);
+    console.log('====================================');
+    if (mint) {
+      update('Collection created successful !');
+      setName('');
+      setDescription('');
+      setNFTPropertie([]);
+      setNFTImage();
+      setSelected();
+    }
   };
 
   // Create a Collection
@@ -51,15 +69,21 @@ const NFTForm = ({ userCollections, addressConnected, collection }) => {
       return notification('error', 'You forget to enter a value.');
     }
     const cid = await storeFiles();
+    notify();
+    const mint = await mintNFTCollection(name, symbol, cid, NFTImage.length, NFTPropertie, NFTImage, description);
+
+    console.log('====================================');
+    console.log(mint);
+    console.log('====================================');
     // Mint a collection: require name, symbol, baseURI, and quantity
-   const mint = await mintNFTCollection(name, symbol, cid, NFTImage.length, NFTPropertie, NFTImage, description);
-   if(mint){
-     setName('');
-     setSymbol('');
-     setDescription('');
-     setNFTPropertie([]);
-     setNFTImage()
-   }
+    if (mint) {
+      update('Collection created successful !');
+      setName('');
+      setSymbol('');
+      setDescription('');
+      setNFTPropertie([]);
+      setNFTImage();
+    }
   };
 
   // Upload image to web3 storage

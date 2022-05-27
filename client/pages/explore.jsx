@@ -29,7 +29,7 @@ export default function Explore({ setSwitchLayout, switchLayout, NFTs }) {
     const asking = confirm('are you sure you want to cancel the listing of this NFT ? ');
 
     if (asking) {
-      const cancel = await cancelListingNFT(Number(e.target.dataset.listingid));
+      await cancelListingNFT(Number(e.target.dataset.listingid));
 
       client.patch(`${e.target.dataset.nftid}`).set({ sellable: false }).commit();
       setSellableNFT(false);

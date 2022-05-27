@@ -1,3 +1,5 @@
+import { client } from '../lib/sanity';
+
 // Day Left
 export const getDayLeft = (endDate) => {
   const today = new Date();
@@ -76,19 +78,57 @@ export const handlerClickOutSide = (open, setOpen, target) => {
   }
 };
 
-
 export const convertDate = (date) => {
   const initialDate = new Date(date);
   const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(initialDate);
   const year = initialDate.getFullYear();
 
-  return {month, year}
-}
-
+  return { month, year };
+};
 
 export const viewsPage = async (documentId) => {
-  await client
-  .patch(`${documentId}`)
-  .inc({ view: 1 })
-  .commit();
-}
+  await client.patch(`${documentId}`).inc({ view: 1 }).commit();
+};
+
+export const createUserAndCollectionSanity = async (addressFromWallet) => {
+  const allUsers = await client.fetch(`*[_type == 'users']`);
+  // Already created or not
+  let bool = false;
+
+  const doc = {
+    _type: 'users',
+    address: addressFromWallet,
+    username: `Otaku #${allUsers.length < 10 ? `0${allUsers.length + 1}` : allUsers.length + 1}`,
+  };
+
+  allUsers.map(async (user) => {
+    if (user.address === addressFromWallet) {
+      return (bool = true);
+    }
+  });
+
+  // If no yet create a collection
+  if (!bool) {
+    client.create(doc).then(async (doc) => {
+      const mint = await mintNFTCollection(
+        'Default',
+        'DFT',
+        'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
+        1
+      );
+
+      const collection = {
+        _type: 'collection',
+        name: 'Default',
+        cymbol: 'DFT',
+        creator: {
+          _type: 'reference',
+          _ref: doc._id,
+        },
+        address: mint.token,
+        cid: 'bafybeihyfa5kjobgqvtnzwew2g2qnyabx3t3g6qst2q75eufmvwbsjy62e',
+      };
+      client.create(collection);
+    });
+  }
+};

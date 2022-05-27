@@ -2,21 +2,20 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { Filter, Heading, NFTCard, NFTsFavorite } from '../../components';
 import { largeLayout, Section, smallLayout } from '../../components/style';
-import { NFTCollection } from '../../lib/query';
+import { NFTsDetails } from '../../lib/query';
 import { client } from '../../lib/sanity';
 
-import koruko from '../../public/assets/bestOf01.jpeg';
-import kagami from '../../public/assets/bestOf2.jpeg';
-import aomine from '../../public/assets/bestOf3.jpeg';
 import { viewsPage } from '../../utils/handlerFactory';
 
 export async function getServerSideProps(pageContext) {
-  const NFTCollection = await client.fetch(NFTCollection(pageContext.query.id));
+  const NFTCollection = await client.fetch(`*[_type == "nfts" && references("${pageContext.query.id}")]{
+    ${NFTsDetails}
+  }`);
 
   return {
     props: {
       NFTCollection,
-      collectionId: pageContext.query.id
+      collectionId: pageContext.query.id,
     },
   };
 }
@@ -24,8 +23,8 @@ export async function getServerSideProps(pageContext) {
 export default function Collection({ setSwitchLayout, switchLayout, NFTCollection, collectionId }) {
   useEffect(() => {
     // Add view page
-    viewsPage(NFTId);
-  }, []);
+    viewsPage(NFTCollection[0].collection._id);
+  }, [NFTCollection]);
 
   return (
     <>
@@ -36,8 +35,14 @@ export default function Collection({ setSwitchLayout, switchLayout, NFTCollectio
 
       <Section>
         <h2 className="title">All items</h2>
-
-        <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} collection={true} collectionId={collectionId} />
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '2rem' }}>
+          <Filter
+            switchLayout={switchLayout}
+            setSwitchLayout={setSwitchLayout}
+            collection={true}
+            collectionId={collectionId}
+          />
+        </div>
         <NFTsFavorite featuresNFT={NFTCollection} />
       </Section>
     </>
