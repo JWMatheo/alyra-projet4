@@ -8,8 +8,8 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, '../client/contracts'),
   networks: {
     development: {
-      host: '127.0.0.1', 
-      port: 7545, 
+      host: '127.0.0.1',
+      port: 7545,
       network_id: '*',
     },
     ropsten: {
@@ -61,7 +61,7 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: '0.8.13',
+      version: '0.8.14',
     },
   },
 };
