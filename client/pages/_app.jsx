@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }) {
     });
   }
 
-  console.log(addressConnected);
+
   return (
     <Layout addressConnected={addressConnected} setAddressConnected={setAddressConnected}>
       <Component

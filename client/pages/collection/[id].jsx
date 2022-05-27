@@ -1,14 +1,32 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
-import { Filter, Heading, NFTCard } from '../../components';
+import { Filter, Heading, NFTCard, NFTsFavorite } from '../../components';
 import { largeLayout, Section, smallLayout } from '../../components/style';
-
+import { NFTCollection } from '../../lib/query';
+import { client } from '../../lib/sanity';
 
 import koruko from '../../public/assets/bestOf01.jpeg';
 import kagami from '../../public/assets/bestOf2.jpeg';
 import aomine from '../../public/assets/bestOf3.jpeg';
+import { viewsPage } from '../../utils/handlerFactory';
 
+export async function getServerSideProps(pageContext) {
+  const NFTCollection = await client.fetch(NFTCollection(pageContext.query.id));
 
-export default function Collection({ setSwitchLayout, switchLayout }) {
+  return {
+    props: {
+      NFTCollection,
+      collectionId: pageContext.query.id
+    },
+  };
+}
+
+export default function Collection({ setSwitchLayout, switchLayout, NFTCollection, collectionId }) {
+  useEffect(() => {
+    // Add view page
+    viewsPage(NFTId);
+  }, []);
+
   return (
     <>
       <Heading
@@ -19,41 +37,12 @@ export default function Collection({ setSwitchLayout, switchLayout }) {
       <Section>
         <h2 className="title">All items</h2>
 
-        <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} />
-          <Container switchLayout={switchLayout} largeLayout={largeLayout} smallLayout={smallLayout}>
-            <NFTCard
-              NFTimage={koruko}
-              NFTname="Kuroko #1"
-              alt="Koruko"
-              description="Our Kibertopiks will give you nothing"
-              price="1.3"
-              date="11 days left"
-              creator="ShonenJump"
-            />
-            <NFTCard
-              NFTimage={kagami}
-              NFTname="Kagami #2"
-              alt="Koruko"
-              description="Our Kibertopiks will give you nothing"
-              price="1.5"
-              date="11 days left"
-              creator="ShonenJump"
-            />
-            <NFTCard
-              NFTimage={aomine}
-              NFTname="Aomine #3"
-              alt="Koruko"
-              description="Our Kibertopiks will give you nothing"
-              price="2.3"
-              date="11 days left"
-              creator="ShonenJump"
-            />
-          </Container>
+        <Filter switchLayout={switchLayout} setSwitchLayout={setSwitchLayout} collection={true} collectionId={collectionId} />
+        <NFTsFavorite featuresNFT={NFTCollection} />
       </Section>
     </>
   );
 }
-
 
 const Container = styled.div`
   display: grid;
