@@ -56,6 +56,14 @@ export const NFTQuery = (pageSlug) => {
   }`;
 };
 
+export const NFTCollection = (collectionId) => {
+  return `*[_type == "nft" && references("${pageSlug}")]{
+    ${NFTsDetails}
+  }`;
+}
+
+
+
 export const recentlyCreated = `*[_type == "nft"] | order(_createdAt desc)`
 
 export const oldestCreated = `*[_type == "nft"] | order(_createdAt desc)`

@@ -84,3 +84,11 @@ export const convertDate = (date) => {
 
   return {month, year}
 }
+
+
+export const viewsPage = async (documentId) => {
+  await client
+  .patch(`${documentId}`)
+  .inc({ view: 1 })
+  .commit();
+}

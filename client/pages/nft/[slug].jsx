@@ -8,6 +8,7 @@ import ListingModal from '../../components/ListingModal';
 import { Button, Section } from '../../components/style';
 import { NFTQuery } from '../../lib/query';
 import { client } from '../../lib/sanity';
+import { viewsPage } from '../../utils/handlerFactory';
 import { notification } from '../../utils/notification';
 import { walletConnected } from '../../utils/web3/authHandler';
 import { buyNFT, cancelListingNFT, listingNFT } from '../../utils/web3/listingHandler';
@@ -81,6 +82,9 @@ export default function Nft({
     setTimeout(() => {
       convert();
     }, 1000);
+
+    // Add view page
+    viewsPage(NFTId);
   }, [price, sellable]);
 
   const listingNFTHandler = async (e, sellable) => {
@@ -120,7 +124,6 @@ export default function Nft({
     await buyNFT(Number(e.target.dataset.listingid), price, NFTId, name, ownerAdress);
     setTimeout(() => {
       window.location.reload();
-      
     }, 7000);
   };
   return (

@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { Button, SelectForm } from './style';
 import { handlerClickOutSide, openHandler } from '../utils/handlerFactory';
 import { client } from '../lib/sanity';
-import { NFTListed, NFTsQuery, oldestCreated, recentlyCreated } from '../lib/query';
+import { NFTCollection, NFTListed, NFTsQuery, oldestCreated, recentlyCreated } from '../lib/query';
 import { css } from 'styled-components';
 
-const Filter = ({ setSwitchLayout, switchLayout, setAllNFTs, allNFTs }) => {
+const Filter = ({ setSwitchLayout, switchLayout, setAllNFTs, allNFTs, collection, collectionId }) => {
   const [selected, setSelected] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -47,7 +47,7 @@ const Filter = ({ setSwitchLayout, switchLayout, setAllNFTs, allNFTs }) => {
 
 
 const reset = async() => {
-  const NFTs = await client.fetch(NFTsQuery);
+  const NFTs = await client.fetch(collection ? NFTCollection(collectionId) : NFTsQuery);
   setSelected()
   setAllNFTs(NFTs);
 }

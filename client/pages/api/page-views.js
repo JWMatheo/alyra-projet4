@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { google } from 'googleapis';
+//import { google } from 'googleapis';
 
-export default async (req, res) => {
+/*====== export default async (req, res) => {
   const startDate = req.query.startDate || '2020-01-01';
   const slug = req.query.slug;
   try {
@@ -36,3 +36,4 @@ export default async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+ =======*/

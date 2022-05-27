@@ -3,16 +3,17 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from './Footer';
 import Header from './Header';
-
+import { useRouter } from 'next/router'
 const Layout = ({ children, addressConnected, setAddressConnected }) => {
-
-
+  const router = useRouter()
+  console.log(router.pathname);
+const subtitle = router.pathname.split('/')[1]
   return (
     <>
       <Head>
         <link href="https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css" rel="stylesheet" />
-        <title>NFT</title>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_GA_TRACKING_ID}`} />
+        <title>NFT{subtitle ? subtitle : 'Home'} </title>
+{/*         <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GOOGLE_GA_TRACKING_ID}`} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -22,7 +23,7 @@ const Layout = ({ children, addressConnected, setAddressConnected }) => {
                 gtag('config', '${process.env.GOOGLE_GA_TRACKING_ID}');
               `,
           }}
-        />
+        /> */}
       </Head>
 
       <Header addressConnected={addressConnected} setAddressConnected={setAddressConnected} />
