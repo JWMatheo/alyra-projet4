@@ -22,7 +22,13 @@ export default async function handler(req, res) {
       }
       break;
 
+<<<<<<< HEAD
     case 'GET':
       await client.fetch(`*[ _type == "nfts"]`).then((res) => res.status(200).json(res));
+=======
+      case'GET':
+      await client.fetch(`*[ _type == "nft"]`).then((res) => res.status(200).json(res))
+
+>>>>>>> ef14b28b8bf79df83f32b3bd226458f17ecac85a
   }
 }

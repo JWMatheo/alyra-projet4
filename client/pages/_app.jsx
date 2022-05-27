@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }) {
     init();
   }, [setAddressConnected, addressConnected]);
 
+  // Change account event
   if (_window) {
     _window.ethereum.on('accountsChanged', async function (accounts) {
       setAddressConnected(accounts[0]);
